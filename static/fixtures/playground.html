@@ -4,9 +4,13 @@
 <meta charset="utf-8">
 <title>Vibium docs playground</title>
 <style>
-  body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; }
+  body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
   nav a { margin-right: 1rem; }
   label { display: block; margin-top: .75rem; }
+  section { margin-top: 2rem; }
+  #panel[hidden] { display: none; }
+  #status { font-weight: 600; }
+  .filler p { color: #444; }
 </style>
 </head>
 <body>
@@ -36,7 +40,62 @@
     <button type="button" title="Close dialog">×</button>
   </form>
 
-  <h2>Notes</h2>
-  <p id="status">Ready</p>
+  <section id="interactions">
+    <h2>Interactions</h2>
+
+    <button type="button" id="counter">Count</button>
+    <button type="button" id="locked" disabled>Locked</button>
+    <button type="button" id="reveal">Reveal panel</button>
+
+    <div id="panel" hidden>
+      <p id="panel-text">Panel is open</p>
+    </div>
+
+    <p><a href="playground2.html" id="next-page">Next page</a></p>
+
+    <p>Status: <span id="status">Ready</span></p>
+  </section>
+
+  <section class="filler">
+    <h2>Reference notes</h2>
+    <p>The paragraphs below exist only to make this page taller than the
+    viewport, so that <code>vibium screenshot --full-page</code> has something
+    to capture below the fold.</p>
+    <p>Vibium assigns element references in document order. Adding markup at the
+    end of a page therefore leaves earlier references unchanged, which is why
+    the interactive section above sits after the form.</p>
+    <p>Element references do not survive a navigation. After following a link,
+    re-run <code>vibium map</code> before using a reference.</p>
+    <p>Commands that read the page, such as <code>text</code> and
+    <code>html</code>, accept the same selectors and references as commands that
+    act on it.</p>
+    <p>The daemon keeps one browser between invocations, so state set by one
+    command is visible to the next.</p>
+    <p>A scoped map renumbers from the first element inside the scope, rather
+    than filtering a full-page numbering.</p>
+    <p>Semantic locators match on meaning rather than structure, and generally
+    survive restyling better than CSS selectors do.</p>
+    <p>This page is served from the documentation repository itself, so its
+    markup changes only when the reference is deliberately updated.</p>
+  </section>
+
+<script>
+  var count = 0;
+  document.getElementById('counter').addEventListener('click', function () {
+    count += 1;
+    document.getElementById('status').textContent = 'Counted ' + count;
+  });
+  document.getElementById('reveal').addEventListener('click', function () {
+    // Deliberately delayed, so auto-waiting has something to wait for.
+    setTimeout(function () {
+      document.getElementById('panel').hidden = false;
+      document.getElementById('status').textContent = 'Panel revealed';
+    }, 1000);
+  });
+  document.querySelector('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('status').textContent = 'Form submitted';
+  });
+</script>
 </body>
 </html>
