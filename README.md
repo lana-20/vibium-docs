@@ -61,14 +61,14 @@ which the generator will never overwrite it.
 
 <!-- BEGIN COMMAND STATUS -->
 
-**13 of 67 verified** — 54 still generated from `--help`. Measured against `vibium v26.8.21`.
+**15 of 67 verified** — 52 still generated from `--help`. Measured against `vibium v26.8.21`.
 
 <details open>
-<summary><strong>Navigation</strong> — 5/6 verified</summary>
+<summary><strong>Navigation</strong> — 6/6 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
-| [ ] | [`go`](https://lana-20.github.io/vibium-docs/docs/commands/go) | Go to a URL and print page info |
+| [x] | [`go`](https://lana-20.github.io/vibium-docs/docs/commands/go) | Go to a URL and print page info |
 | [x] | [`back`](https://lana-20.github.io/vibium-docs/docs/commands/back) | Navigate back in browser history |
 | [x] | [`forward`](https://lana-20.github.io/vibium-docs/docs/commands/forward) | Navigate forward in browser history |
 | [x] | [`reload`](https://lana-20.github.io/vibium-docs/docs/commands/reload) | Reload the current page |
@@ -78,12 +78,12 @@ which the generator will never overwrite it.
 </details>
 
 <details open>
-<summary><strong>Mapping & references</strong> — 1/2 verified</summary>
+<summary><strong>Mapping & references</strong> — 2/2 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
 | [x] | [`map`](https://lana-20.github.io/vibium-docs/docs/commands/map) | Map interactive page elements with @refs |
-| [ ] | [`diff`](https://lana-20.github.io/vibium-docs/docs/commands/diff) | Compare current state vs previous |
+| [x] | [`diff`](https://lana-20.github.io/vibium-docs/docs/commands/diff) | Compare current state vs previous |
 
 </details>
 

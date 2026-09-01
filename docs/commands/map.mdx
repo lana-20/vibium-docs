@@ -66,6 +66,27 @@ Note `@e11`: `map` lists the disabled "Locked" button even though nothing can
 click it. The listing describes what is *on* the page, not what is actionable —
 use [`vibium is enabled`](/docs/commands/is) to tell the difference.
 
+**Hidden elements are the opposite case**: they are left out entirely. The
+fixture's panel contains a button that does not appear above, because the panel
+is `hidden` — it shows up only once something reveals it:
+
+```sh
+$ vibium click "#reveal"
+Clicked element: #reveal
+
+$ vibium wait "#panel" --state visible
+Element "#panel" reached state: visible
+
+$ vibium map | tail -2
+@e13 [button type="button"] "Panel action"
+@e14 [a] "Next page"
+```
+
+So `map` lists what is *rendered*, whether or not it can be acted on: disabled
+but visible is in, present but hidden is out. That is also what makes
+[`vibium diff map`](/docs/commands/diff) useful for spotting what an action
+revealed.
+
 Note `@e5`: a `<select>` is labelled with its options' text run together, so a
 two-option dropdown reads as `"United StatesGermany"`. That is the label, not
 the value — use [`vibium value`](/docs/commands/value) to read what is selected.

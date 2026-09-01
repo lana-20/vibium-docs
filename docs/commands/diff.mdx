@@ -6,41 +6,106 @@ description: "Compare current state vs previous"
 
 # vibium diff
 
-Compare current state vs previous.
+Show what changed on the page since the last [`map`](/docs/commands/map). The
+one subcommand is `diff map`.
 
-:::info[Generated reference]
-Derived from `vibium help diff` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium diff
-```
-
-## Subcommands
-
-| Subcommand | Description |
-| --- | --- |
-| [`vibium diff map`](#vibium-diff-map) | Compare current page elements vs last map |
-
-### `vibium diff map`
-
-Compare current page elements vs last map.
-
-```
 vibium diff map
 ```
 
+## Flags
+
+`diff` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Seeing what an action changed
+
+Take a map, act, then diff. The fixture's "Reveal panel" button un-hides a panel
+containing a button, so a new interactive element appears:
+
 ```sh
-vibium map           # take initial snapshot
-vibium click @e3     # interact with page
-vibium diff map      # see what changed
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
+
+$ vibium map | tail -1
+@e13 [a] "Next page"
+
+$ vibium click "#reveal"
+Clicked element: #reveal
+
+$ vibium wait "#panel" --state visible
+Element "#panel" reached state: visible
+
+$ vibium diff map
+- @e13 [a] "Next page"
++ @e13 [button type="button"] "Panel action"
++ @e14 [a] "Next page"
+```
+
+## Reading the output
+
+One element appeared, and the diff shows **one removal and two additions**.
+
+That is because `diff map` compares the rendered `@eN` lines, not the elements
+behind them. Inserting an element renumbers everything after it, so "Next page"
+moves from `@e13` to `@e14` and is reported as a line that went away and a line
+that arrived.
+
+The practical reading: an insertion near the top of a page produces a diff
+roughly as long as the page. Look at *what* the `+` lines say rather than
+counting them.
+
+:::warning[`diff map` resets the comparison point]
+Each `diff map` becomes the new baseline. Running it twice in a row reports
+nothing the second time, even though the page has not changed back:
+
+```sh
+$ vibium diff map
+No changes detected
+```
+
+So `diff map` is a one-shot read. If you need the same comparison twice, capture
+its output rather than running it again.
+:::
+
+## Hidden elements are not "changes"
+
+`map` lists only what is rendered, so markup that exists but is hidden does not
+appear in a diff until it becomes visible. In the example above, the panel's
+button was in the DOM the whole time — it was `hidden`, so it counted as an
+addition only once the panel was shown.
+
+A disabled element is the opposite case: it *is* listed, because it is rendered.
+See [`map`](/docs/commands/map).
+
+## When nothing has changed
+
+```sh
+$ vibium diff map
+No changes detected
+```
+
+Same line under `--json`:
+
+```sh
+$ vibium diff map --json
+{"ok":true,"result":"No changes detected"}
 ```
 
 ## See also
 
+- [`vibium map`](/docs/commands/map) — takes the baseline that `diff` compares against.
+- [`vibium wait`](/docs/commands/wait) — settle the page before diffing.
+- [`vibium click`](/docs/commands/click) — the action whose effect you are diffing.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Mapping & references](/docs/commands#mapping--references) — related commands.

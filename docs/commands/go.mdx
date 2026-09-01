@@ -6,21 +6,108 @@ description: "Go to a URL and print page info"
 
 # vibium go
 
-Go to a URL and print page info.
+Navigate the active page to a URL.
 
-:::info[Generated reference]
-Derived from `vibium help go` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium go [url]
+vibium go <url>
+```
+
+## Flags
+
+`go` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Navigating
+
+```sh
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
+```
+
+`go` blocks until the navigation commits, so the next command sees the new page
+without an explicit [`wait`](/docs/commands/wait). Re-navigating to the URL you
+are already on reloads it and reports the same line.
+
+Element references from [`map`](/docs/commands/map) and
+[`find`](/docs/commands/find) do not survive the navigation — re-map afterwards.
+
+## The URL needs a scheme
+
+A bare hostname is rejected. This is the single most common surprise with `go`,
+because most tools accept one:
+
+```sh
+$ vibium go "example.com"
+Error: failed to navigate: BiDi error: invalid argument - invalid argument
+$ echo $?
+1
+```
+
+Write `https://example.com`.
+
+## A failed navigation leaves the browser on an error page
+
+:::danger[Check the exit code — a failed `go` does not leave you where you were]
+When navigation fails, the browser lands on the engine's own error page rather
+than staying put. Subsequent commands then operate on *that*, and they succeed,
+because it is a perfectly good page:
+
+```sh
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
+
+$ vibium map | wc -l
+13
+
+$ vibium go "https://no-such-host.invalid"
+Error: failed to navigate: BiDi error: unknown error - unknown error
+$ echo $?
+1
+
+$ vibium url
+chrome-error://chromewebdata/
+
+$ vibium title
+no-such-host.invalid
+
+$ vibium map
+@e1 [a] "Checking the proxy, firewall, and DNS configuration"
+@e2 [button] "Reload"
+@e3 [button] "Details"
+$ echo $?
+0
+```
+
+That last `map` exits **0**. A script that does not check `go`'s exit status
+will carry on and interact with the browser's error page, and every command
+after it will look like it worked.
+
+`title` is especially misleading here — it returns the hostname you asked for,
+which reads like a successful navigation.
+:::
+
+## JSON output
+
+```sh
+$ vibium go "$PLAYGROUND" --json
+{"ok":true,"result":"Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html"}
 ```
 
 ## See also
 
+- [`vibium url`](/docs/commands/url) — confirm where you actually landed.
+- [`vibium back`](/docs/commands/back) / [`forward`](/docs/commands/forward) — move through history.
+- [`vibium reload`](/docs/commands/reload) — reload without leaving the entry.
+- [`vibium map`](/docs/commands/map) — re-map after arriving.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Navigation](/docs/commands#navigation) — related commands.
