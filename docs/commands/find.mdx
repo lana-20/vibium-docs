@@ -52,6 +52,7 @@ $ vibium find "a" --all
 @e1 [a] "Home"
 @e2 [a] "Docs"
 @e3 [a] "About"
+@e4 [a] "Next page"
 
 $ vibium find "a" --all --limit 2
 @e1 [a] "Home"
@@ -102,10 +103,26 @@ $ vibium find role button
 
 $ vibium find role heading
 @e1 [h1] "Playground"
-
-$ vibium find role button --name "Sign In"
-@e1 [button type="submit"] "Sign In"
 ```
+
+The page has five buttons, and a bare `role button` returns only the first.
+`--name` picks the one you meant:
+
+```sh
+$ vibium find "button" --all
+@e1 [button type="submit"] "Sign In"
+@e2 [button type="button"] title="Close dialog"
+@e3 [button type="button"] "Count"
+@e4 [button type="button"] "Locked"
+@e5 [button type="button"] "Reveal panel"
+
+$ vibium find role button --name "Count"
+@e1 [button type="button"] "Count"
+```
+
+Note `@e4` above: `find` returns the disabled "Locked" button like any other
+match. Matching an element says nothing about whether it can be acted on — see
+[`vibium is enabled`](/docs/commands/is).
 
 ### `vibium find testid`
 
@@ -173,7 +190,7 @@ $ vibium find "a" --json
 {"ok":true,"result":"@e1 [a] \"Home\""}
 
 $ vibium find "a" --all --json
-{"ok":true,"result":"@e1 [a] \"Home\"\n@e2 [a] \"Docs\"\n@e3 [a] \"About\""}
+{"ok":true,"result":"@e1 [a] \"Home\"\n@e2 [a] \"Docs\"\n@e3 [a] \"About\"\n@e4 [a] \"Next page\""}
 ```
 
 As with [`map`](/docs/commands/map), matches arrive as one newline-joined string

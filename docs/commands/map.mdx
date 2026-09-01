@@ -56,7 +56,15 @@ $ vibium map
 @e7 [input type="search"] placeholder="Search docs"
 @e8 [button type="submit"] "Sign In"
 @e9 [button type="button"] title="Close dialog"
+@e10 [button type="button"] "Count"
+@e11 [button type="button"] "Locked"
+@e12 [button type="button"] "Reveal panel"
+@e13 [a] "Next page"
 ```
+
+Note `@e11`: `map` lists the disabled "Locked" button even though nothing can
+click it. The listing describes what is *on* the page, not what is actionable —
+use [`vibium is enabled`](/docs/commands/is) to tell the difference.
 
 Note `@e5`: a `<select>` is labelled with its options' text run together, so a
 two-option dropdown reads as `"United StatesGermany"`. That is the label, not
@@ -72,19 +80,17 @@ $ vibium map --selector "nav"
 @e2 [a] "Docs"
 @e3 [a] "About"
 
-$ vibium map --selector "form"
-@e1 [input type="email"] placeholder="you@example.com"
-@e2 [select] "United StatesGermany"
-@e3 [input type="checkbox"] name="terms"
-@e4 [input type="search"] placeholder="Search docs"
-@e5 [button type="submit"] "Sign In"
-@e6 [button type="button"] title="Close dialog"
+$ vibium map --selector "#interactions"
+@e1 [button type="button"] "Count"
+@e2 [button type="button"] "Locked"
+@e3 [button type="button"] "Reveal panel"
+@e4 [a] "Next page"
 ```
 
 :::warning[Scoped refs are renumbered, not filtered]
 A scoped map always numbers from `@e1`. In the output above, `@e1` means the
-"Home" link when scoped to `nav` but the email input when scoped to `form` —
-and on the unscoped map, `@e1` is "Home" while the email input is `@e4`.
+"Home" link when scoped to `nav` but the "Count" button when scoped to
+`#interactions` — and on the unscoped map, that same button is `@e10`.
 
 Refs are only meaningful relative to the map that produced them. Never carry a
 ref across two different `map` invocations.
@@ -96,7 +102,7 @@ ref across two different `map` invocations.
 `find` after a `map` overwrites the numbering:
 
 ```sh
-$ vibium map
+$ vibium map | head -3
 @e1 [a] "Home"
 @e2 [a] "Docs"
 @e3 [a] "About"
@@ -124,7 +130,7 @@ string in `result`, not as an array:
 
 ```sh
 $ vibium map --json
-{"ok":true,"result":"@e1 [a] \"Home\"\n@e2 [a] \"Docs\"\n@e3 [a] \"About\"\n@e4 [input type=\"email\"] placeholder=\"you@example.com\"\n@e5 [select] \"United StatesGermany\"\n@e6 [input type=\"checkbox\"] name=\"terms\"\n@e7 [input type=\"search\"] placeholder=\"Search docs\"\n@e8 [button type=\"submit\"] \"Sign In\"\n@e9 [button type=\"button\"] title=\"Close dialog\""}
+{"ok":true,"result":"@e1 [a] \"Home\"\n@e2 [a] \"Docs\"\n@e3 [a] \"About\"\n@e4 [input type=\"email\"] placeholder=\"you@example.com\"\n@e5 [select] \"United StatesGermany\"\n@e6 [input type=\"checkbox\"] name=\"terms\"\n@e7 [input type=\"search\"] placeholder=\"Search docs\"\n@e8 [button type=\"submit\"] \"Sign In\"\n@e9 [button type=\"button\"] title=\"Close dialog\"\n@e10 [button type=\"button\"] \"Count\"\n@e11 [button type=\"button\"] \"Locked\"\n@e12 [button type=\"button\"] \"Reveal panel\"\n@e13 [a] \"Next page\""}
 ```
 
 ## See also

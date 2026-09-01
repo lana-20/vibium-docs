@@ -60,23 +60,26 @@ That is exactly the size of `shot.png` above: **756 × 469**.
 
 ## Capturing the whole page
 
-`--full-page` captures everything below the fold. On a short page the difference
-is negligible, but on a long one it is dramatic — here is the same command
-against this reference's own `find` page:
+A plain capture stops at the fold. `--full-page` captures the entire scrollable
+document — the fixture is about twice the viewport height:
 
 ```sh
-$ vibium go https://lana-20.github.io/vibium-docs/docs/commands/find
-$ vibium screenshot -o vp.png
-$ vibium screenshot -o fp.png --full-page
+$ vibium screenshot -o shot.png
+Screenshot saved to /tmp/shots/shot.png
+
+$ vibium screenshot -o full.png --full-page
+Screenshot saved to /tmp/shots/full.png
 ```
 
 | File | Flags | Dimensions |
 | --- | --- | --- |
-| `vp.png` | — | 756 × 469 |
-| `fp.png` | `--full-page` | 756 × 5408 |
+| `shot.png` | — | 756 × 469 |
+| `full.png` | `--full-page` | 756 × 1052 |
 
-The width is unchanged; only the height grows, to the full scroll height of the
-document.
+The width never changes; only the height grows, to the full scroll height of the
+document. On a long page the difference is dramatic — the same pair against this
+reference's own [`find`](/docs/commands/find) page gives 756 × 469 and
+756 × 5408.
 
 ## Annotating interactive elements
 
@@ -84,19 +87,25 @@ document.
 line up with the refs from [`vibium map`](/docs/commands/map) — badge **6** is
 `@e6` — which makes it the fastest way to see what a ref actually points at:
 
+The two flags combine, which is usually what you want — badges below the fold
+are only captured with `--full-page`:
+
 ```sh
-$ vibium screenshot -o annotated.png --annotate
-Screenshot saved to /tmp/shots/annotated.png
+$ vibium screenshot -o annotated-full.png --annotate --full-page
+Screenshot saved to /tmp/shots/annotated-full.png
 ```
 
-![A screenshot of the playground fixture with nine numbered red badges overlaying its links, inputs, select, checkbox and buttons](/img/annotate-example.png)
+![The playground fixture captured full-page, with thirteen numbered red badges overlaying its links, inputs, select, checkbox and buttons](/img/annotate-example.png)
 
 That is the real output of the command above. Compare it with the `map` listing
-on the [map page](/docs/commands/map): nine elements, nine badges, same order.
+on the [map page](/docs/commands/map): thirteen elements, thirteen badges, same
+order. Badge **11** is the disabled "Locked" button — `--annotate` labels it like
+any other, since it numbers what `map` lists rather than what can be clicked.
 
 :::note[Badges are drawn over the page, not beside it]
 A badge sits on top of the element it labels, so it can obscure the start of a
-short label — `@e4`'s badge covers the beginning of the email placeholder above.
+short label — `@e4`'s badge covers the beginning of the email placeholder, and
+`@e10`'s covers the start of "Count".
 The annotated capture is for orientation; use a plain capture when you need to
 read the page itself.
 :::

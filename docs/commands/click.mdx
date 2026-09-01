@@ -34,66 +34,119 @@ Global flags apply as well — see [Global flags](/docs/global-flags).
 ## Clicking by ref
 
 The usual flow is [`map`](/docs/commands/map) to discover, then `click` to act.
-`click` echoes back the element it resolved, which is worth reading: with a ref
-it reports the *selector* it resolved to, not the ref you passed.
+`click` echoes the element it resolved, which is worth reading: given a ref it
+reports the *selector* it resolved to, not the ref you passed.
 
 ```sh
 $ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
 $ vibium go "$PLAYGROUND"
 Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-$ vibium map
-@e1 [a] "Home"
-@e2 [a] "Docs"
-@e3 [a] "About"
-@e4 [input type="email"] placeholder="you@example.com"
-@e5 [select] "United StatesGermany"
-@e6 [input type="checkbox"] name="terms"
-@e7 [input type="search"] placeholder="Search docs"
-@e8 [button type="submit"] "Sign In"
-@e9 [button type="button"] title="Close dialog"
+$ vibium map | tail -4
+@e10 [button type="button"] "Count"
+@e11 [button type="button"] "Locked"
+@e12 [button type="button"] "Reveal panel"
+@e13 [a] "Next page"
 
-$ vibium click @e6
-Clicked element: #terms
+$ vibium click @e10
+Clicked element: #counter
 ```
 
 ## Confirming the click landed
 
 `click` reports that it dispatched a click, not that the page did anything with
-it. When the effect matters, assert on it — for a checkbox, with
-[`vibium is checked`](/docs/commands/is):
+it. When the effect matters, assert on it:
 
 ```sh
-$ vibium is checked "#terms"
-false
+$ vibium text "#status"
+Ready
 
-$ vibium click @e6
-Clicked element: #terms
+$ vibium click @e10
+Clicked element: #counter
 
-$ vibium is checked "#terms"
-true
+$ vibium text "#status"
+Counted 1
 ```
 
-:::warning[`click` toggles, it does not set]
-Clicking a checkbox a second time unchecks it. `click` is not idempotent:
+:::warning[`click` acts, it does not set]
+Every click is another click. The counter above increments again rather than
+settling:
 
 ```sh
-$ vibium click "#terms"
-Clicked element: #terms
+$ vibium click @e10
+Clicked element: #counter
 
-$ vibium is checked "#terms"
-false
+$ vibium text "#status"
+Counted 2
 ```
 
-Use [`vibium check`](/docs/commands/check) and
-[`vibium uncheck`](/docs/commands/uncheck) when you want a *state* rather than a
-toggle — those are idempotent and safe to repeat.
+The same applies to checkboxes, where a second click unchecks. Use
+[`vibium check`](/docs/commands/check) and
+[`vibium uncheck`](/docs/commands/uncheck) when you want a *state* rather than
+an action — those are idempotent and safe to repeat.
+:::
+
+## Effects can be asynchronous
+
+`click` returns as soon as the click is dispatched. If the page reacts later,
+the very next command can still observe the old state. The fixture's "Reveal
+panel" button updates its status a second after the click:
+
+```sh
+$ vibium click @e12
+Clicked element: #reveal
+
+$ vibium text "#status"
+Ready
+
+$ vibium wait text "Panel revealed"
+Text "Panel revealed" found on page
+
+$ vibium text "#status"
+Panel revealed
+```
+
+The first read is not a bug — it is the page's real state at that moment. Follow
+a click with [`vibium wait`](/docs/commands/wait) whenever the effect is not
+synchronous.
+
+## Elements that cannot be clicked
+
+`click` waits for the element to become *actionable*, not merely present. A
+disabled button is found immediately but never becomes clickable, so the command
+waits out its timeout and **exits 1**:
+
+```sh
+$ vibium is enabled "#locked"
+false
+
+$ vibium click "#locked" --timeout 3s
+Error: failed to click: timeout after 3s: enabled check failed — disabled attribute
+$ echo $?
+1
+```
+
+The error names the check that failed — `enabled check failed — disabled
+attribute` — which distinguishes "the element is not there" from "the element is
+there but not usable". A missing element reports differently:
+
+```sh
+$ vibium click ".nope" --timeout 2s
+Error: failed to click: timeout after 2s: element not found
+$ echo $?
+1
+```
+
+:::note[Error wording differs from `find`]
+[`find`](/docs/commands/find) reports the same missing element as
+`element not found: .nope (timeout 2s)`. Both exit 1, but do not match on
+message text if you script against both.
 :::
 
 ## Clicking by CSS selector
 
 A ref is not required; any CSS selector works, and is often clearer in a script
-that has no `map` step:
+with no `map` step:
 
 ```sh
 $ vibium click "a[href='#docs']"
@@ -105,7 +158,7 @@ https://lana-20.github.io/vibium-docs/fixtures/playground.html#docs
 
 ## Navigating first
 
-Given two arguments, the first is a URL to navigate to before clicking. This
+Given two arguments, the first is a URL to navigate to before clicking, which
 collapses a `go` and a `click` into one command:
 
 ```sh
@@ -116,24 +169,31 @@ $ vibium url
 https://lana-20.github.io/vibium-docs/fixtures/playground.html#about
 ```
 
-Note that a ref from a previous page would be meaningless here — the navigation
-invalidates it. Use a selector with this form, not an `@eN`.
+## Clicks that navigate invalidate refs
 
-## When nothing matches
-
-`click` waits for the element to be actionable until `--timeout` expires, then
-writes to stderr and **exits 1**:
+Following a link discards the ref table. The ref you just clicked is not valid
+on the page it took you to:
 
 ```sh
-$ vibium click ".nope" --timeout 2s
-Error: failed to click: timeout after 2s: element not found
+$ vibium map | tail -1
+@e13 [a] "Next page"
+
+$ vibium click @e13
+Clicked element: #next-page
+
+$ vibium title
+Playground — second page
+
+$ vibium click @e13 --timeout 3s
+Error: failed to click: timeout after 3s: element not found
 $ echo $?
 1
+
+$ vibium map
+@e1 [a] "Back to the playground"
 ```
 
-The wording differs from [`find`](/docs/commands/find), which reports
-`element not found: .nope (timeout 2s)`. Both exit 1, but do not match on the
-message text if you are scripting against both.
+Re-map after any navigation before using a ref again.
 
 ## JSON output
 
@@ -146,6 +206,6 @@ $ vibium click "#terms" --json
 
 - [`vibium map`](/docs/commands/map) — discover what there is to click.
 - [`vibium check`](/docs/commands/check) — set a checkbox rather than toggle it.
-- [`vibium dblclick`](/docs/commands/dblclick) — double-click instead.
+- [`vibium is`](/docs/commands/is) — test actionability before clicking.
 - [`vibium wait`](/docs/commands/wait) — block on the result of a click.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
