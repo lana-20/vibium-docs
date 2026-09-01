@@ -195,6 +195,13 @@ $ vibium map
 
 Re-map after any navigation before using a ref again.
 
+## The same click focuses text fields
+
+[`type`](/docs/commands/type) and [`press`](/docs/commands/press) reach an
+element by clicking its centre, exactly as `click` does. In a text field that
+also places the caret at the click point, which is why neither appends to an
+existing value — see [`type`](/docs/commands/type#type-does-not-append).
+
 ## JSON output
 
 ```sh

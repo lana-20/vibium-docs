@@ -6,34 +6,138 @@ description: "Press a key on a specific element or the focused element"
 
 # vibium press
 
-Press a key on a specific element or the focused element.
+Press a single key. Given a selector, `press` clicks that element to focus it
+first; without one, it presses on whatever is already focused.
 
-:::info[Generated reference]
-Derived from `vibium help press` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium press [key] [selector]
+vibium press <key> [selector]
 ```
 
-## Examples
+The key comes **first**, which is the opposite order from most other commands.
+
+## Flags
+
+`press` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Pressing a key on an element
 
 ```sh
-vibium press Enter
-# Press Enter on the currently focused element
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium press Enter "input[name=search]"
-# Click to focus the input, then press Enter
+$ vibium fill "#email" ""
+Filled "" into #email
 
-vibium press "Control+a"
-# Select all
+$ vibium press "a" "#email"
+Pressed a
+
+$ vibium value "#email"
+a
+```
+
+## Submitting a form with Enter
+
+```sh
+$ vibium fill "#email" "a@b.com"
+Filled "a@b.com" into #email
+
+$ vibium press "Enter" "#email"
+Pressed Enter
+
+$ vibium text "#status"
+Form submitted
+```
+
+:::warning[A form that fails validation will not submit, and `press` still reports success]
+`press` reports that the key was delivered, not that the page acted on it. The
+fixture's email field is `type="email"`, so an invalid value makes the browser
+block submission — and the only difference in the output is the page state you
+have to go and check yourself:
+
+```sh
+$ vibium fill "#email" "a"
+Filled "a" into #email
+
+$ vibium press "Enter" "#email"
+Pressed Enter
+
+$ vibium text "#status"
+Ready
+```
+
+Same command, same success line, no submission. Assert on the consequence — a
+[`text`](/docs/commands/text) read or
+[`vibium wait text`](/docs/commands/wait) — rather than on `press` exiting 0.
+:::
+
+## The focus click moves the caret
+
+With a selector, `press` clicks the element's **centre** to focus it, which
+places the caret at that point rather than at the end of any existing text. A
+key pressed into a field that already has content can therefore land in the
+middle of it:
+
+```sh
+$ vibium fill "#email" "abcdefghijklmnopqrstuvwxyz"
+Filled "abcdefghijklmnopqrstuvwxyz" into #email
+
+$ vibium press "Z" "#email"
+Pressed Z
+
+$ vibium value "#email"
+abcdefghijklZmnopqrstuvwxyz
+```
+
+This is the same focus-click that affects [`vibium type`](/docs/commands/type),
+where the consequences and their measurement are documented in full. The help
+text does say `press` clicks to focus; what it does not say is that the caret
+moves with the click.
+
+## Pressing on the focused element
+
+Omitting the selector presses on whatever currently has focus. There is no
+click, so the caret stays where it was — this is the form to use when position
+matters:
+
+```sh
+$ vibium focus "#email"
+Focused element: #email
+
+$ vibium press "Enter"
+Pressed Enter
+```
+
+[`vibium keys`](/docs/commands/keys) works the same way and additionally handles
+combinations:
+
+```sh
+$ vibium keys "Enter"
+Pressed keys: Enter
+```
+
+## JSON output
+
+```sh
+$ vibium press "b" "#email" --json
+{"ok":true,"result":"Pressed b"}
 ```
 
 ## See also
 
+- [`vibium keys`](/docs/commands/keys) — key combinations such as `Control+a`.
+- [`vibium focus`](/docs/commands/focus) — focus without clicking.
+- [`vibium type`](/docs/commands/type) — several characters, same focus-click.
+- [`vibium fill`](/docs/commands/fill) — set a value without keystrokes.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

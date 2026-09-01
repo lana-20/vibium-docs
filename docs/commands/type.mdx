@@ -6,18 +6,27 @@ description: "Type text into an element (optionally navigate to URL first)"
 
 # vibium type
 
-Type text into an element (optionally navigate to URL first).
+Send text to an element as keystrokes, after clicking it to focus.
 
-:::info[Generated reference]
-Derived from `vibium help type` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
+:::
+
+:::danger[Prefer `fill` unless you specifically need keystrokes]
+`type` has two behaviours on this version that cost people real time — it does
+**not** append, and it reports success on elements it cannot type into. Both are
+documented below. [`vibium fill`](/docs/commands/fill) has neither problem and is
+the right default whenever you want a known final value.
 :::
 
 ## Synopsis
 
 ```
-vibium type [url] [selector] [text]
+vibium type [url] <selector> <text>
 ```
 
 ## Flags
@@ -28,20 +37,174 @@ vibium type [url] [selector] [text]
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Basic use
+
+Into an empty field, `type` behaves as you would expect:
 
 ```sh
-vibium type "input" "12345"
-# Types on current page
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium type https://the-internet.herokuapp.com/inputs "input" "12345"
-# Navigates to URL first, then types
+$ vibium fill "#email" ""
+Filled "" into #email
 
-vibium type https://the-internet.herokuapp.com/inputs "input" "12345" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium type "#email" "hello"
+Typed into element: #email
+
+$ vibium value "#email"
+hello
 ```
+
+## `type` does not append
+
+The documented contract is that `type` "appends to existing content". It does
+not. `type` clicks the element's **centre** to focus it, which puts the caret
+wherever that click lands — so text already in the field that reaches the
+midpoint gets the new text spliced into the middle of it:
+
+```sh
+$ vibium fill "#email" "abc"
+Filled "abc" into #email
+$ vibium type "#email" "XX"
+Typed into element: #email
+$ vibium value "#email"
+abcXX
+
+$ vibium fill "#email" "abcdefghijklmnop"
+Filled "abcdefghijklmnop" into #email
+$ vibium type "#email" "XX"
+Typed into element: #email
+$ vibium value "#email"
+abcdefghijklXXmnop
+```
+
+The command exits 0 and prints its usual success line in both cases.
+
+### The insertion point is a property of the field, not the text
+
+The caret lands at a fixed pixel offset — half the field's width — so the index
+depends on how wide the input is rendered, not on what is in it:
+
+| field width | value after `fill "abcdefghijklmnopqrstuvwxyz"` then `type "XX"` | index |
+| --- | --- | --- |
+| 100px | `abcdefgXXhijklmnopqrstuvwxyz` | 7 |
+| 300px | `abcdefghijklmnopqrstuvwXXxyz` | 23 |
+| 600px | `abcdefghijklmnopqrstuvwxyzXX` | 26 (appended) |
+
+Text length does not move it. Two values differing by ten characters take the
+insertion at the *same* index in the same field:
+
+| value before `type "XX"` | value after | index |
+| --- | --- | --- |
+| `abc` | `abcXX` | 3 (appended — the click falls past the text) |
+| `abcdefghijklmnop` | `abcdefghijklXXmnop` | 12 |
+| `abcdefghijklmnopqrstuvwxyz` | `abcdefghijklXXmnopqrstuvwxyz` | 12 |
+
+Short values append only because the click lands past the end of the text. That
+is why the problem is invisible on small fixtures and appears on real data.
+
+:::warning[The offset differs between engines]
+Default font metrics differ, so the same page and value corrupt at different
+points on each engine — Chrome inserts at 7 where Firefox inserts at 20 on a
+100px field. A cross-engine suite asserting on a typed value will disagree with
+itself.
+:::
+
+**To append reliably**, read the value and set the whole thing with
+[`fill`](/docs/commands/fill):
+
+```sh
+vibium fill "#email" "$(vibium value '#email')more"
+```
+
+## `type` reports success on elements it cannot type into
+
+`type` checks that the element is clickable, not that it is *editable*. A
+heading passes those checks, so `type` clicks it, sends the keystrokes nowhere,
+prints success and exits 0:
+
+```sh
+$ vibium text "h1"
+Playground
+
+$ vibium type "h1" "INJECTED"
+Typed into element: h1
+
+$ vibium text "h1"
+Playground
+```
+
+Nothing changed, and nothing said so. [`fill`](/docs/commands/fill) rejects the
+same call, because it checks editability:
+
+```sh
+$ vibium fill "h1" "x" --timeout 2s
+Error: failed to fill: timeout after 2s: editable check failed — not a text input element
+```
+
+A disabled element *is* caught, since that fails the enabled check:
+
+```sh
+$ vibium type "#locked" "x" --timeout 3s
+Error: failed to type: timeout after 3s: enabled check failed — disabled attribute
+$ echo $?
+1
+```
+
+So the silent no-op is specific to elements that are clickable but not editable.
+
+## Navigating first
+
+Given three arguments, the first is a URL to visit before typing:
+
+```sh
+$ vibium type "$PLAYGROUND" "#email" "viaurl"
+Typed into element: #email
+
+$ vibium value "#email"
+viaurl
+```
+
+## When the element is missing
+
+```sh
+$ vibium type ".nope" "x" --timeout 2s
+Error: failed to type: timeout after 2s: element not found
+$ echo $?
+1
+```
+
+## JSON output
+
+```sh
+$ vibium type "#email" "j" --json
+{"ok":true,"result":"Typed into element: #email"}
+```
+
+## Known issue: `--help` does not work on this version
+
+`type` is one of four commands whose `--help` is broken at v26.8.21 — it sets
+`DisableFlagParsing`, so the flag is read as a missing argument:
+
+```sh
+$ vibium type --help
+Error: accepts between 2 and 3 arg(s), received 0
+$ echo $?
+1
+```
+
+Use `vibium help type` instead. The same applies to
+[`fill`](/docs/commands/fill), [`geolocation`](/docs/commands/geolocation) and
+[`sleep`](/docs/commands/sleep). Reported upstream as
+[#422](https://github.com/VibiumDev/vibium/issues/422) and
+[#423](https://github.com/VibiumDev/vibium/issues/423), and fixed after this
+release.
 
 ## See also
 
+- [`vibium fill`](/docs/commands/fill) — set a known value; no caret involved.
+- [`vibium press`](/docs/commands/press) — one key; shares the focus-click.
+- [`vibium keys`](/docs/commands/keys) — key combinations on the focused element.
+- [`vibium value`](/docs/commands/value) — read the field back and check.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

@@ -107,6 +107,9 @@ A longer value behaves the same way: `abcdefghijklmnopqrstuvwxyz` becomes
 position 12 — a fixed pixel offset, not a proportion of the text. The short
 value appends only because the click lands past the end of the text.
 
+`type` also reports success on elements it cannot type into at all. Both
+behaviours are documented in full on the [`type` page](/docs/commands/type).
+
 Use `fill` whenever you want a known final value. Reach for `type` only when
 you specifically need per-key input events.
 :::

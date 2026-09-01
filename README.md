@@ -61,7 +61,7 @@ which the generator will never overwrite it.
 
 <!-- BEGIN COMMAND STATUS -->
 
-**11 of 67 verified** — 56 still generated from `--help`. Measured against `vibium v26.8.21`.
+**13 of 67 verified** — 54 still generated from `--help`. Measured against `vibium v26.8.21`.
 
 <details open>
 <summary><strong>Navigation</strong> — 5/6 verified</summary>
@@ -100,15 +100,15 @@ which the generator will never overwrite it.
 </details>
 
 <details open>
-<summary><strong>Interacting</strong> — 2/16 verified</summary>
+<summary><strong>Interacting</strong> — 4/16 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
 | [x] | [`click`](https://lana-20.github.io/vibium-docs/docs/commands/click) | Click an element (optionally navigate to URL first) |
 | [ ] | [`dblclick`](https://lana-20.github.io/vibium-docs/docs/commands/dblclick) | Double-click an element |
 | [x] | [`fill`](https://lana-20.github.io/vibium-docs/docs/commands/fill) | Clear an input field and type new text |
-| [ ] | [`type`](https://lana-20.github.io/vibium-docs/docs/commands/type) | Type text into an element (optionally navigate to URL first) |
-| [ ] | [`press`](https://lana-20.github.io/vibium-docs/docs/commands/press) | Press a key on a specific element or the focused element |
+| [x] | [`type`](https://lana-20.github.io/vibium-docs/docs/commands/type) | Type text into an element (optionally navigate to URL first) |
+| [x] | [`press`](https://lana-20.github.io/vibium-docs/docs/commands/press) | Press a key on a specific element or the focused element |
 | [ ] | [`keys`](https://lana-20.github.io/vibium-docs/docs/commands/keys) | Press a key or key combination |
 | [ ] | [`check`](https://lana-20.github.io/vibium-docs/docs/commands/check) | Check a checkbox or radio button |
 | [ ] | [`uncheck`](https://lana-20.github.io/vibium-docs/docs/commands/uncheck) | Uncheck a checkbox |
