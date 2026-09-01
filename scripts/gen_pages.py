@@ -313,6 +313,54 @@ def render_global_flags(root_help: str, version: str) -> str:
     return "\n".join(out)
 
 
+README_BEGIN = "<!-- BEGIN COMMAND STATUS -->"
+README_END = "<!-- END COMMAND STATUS -->"
+
+
+def gh_escape(s: str) -> str:
+    """GitHub renders raw tags in README tables as HTML; `<select>` would vanish."""
+    return s.replace("<", "&lt;").replace(">", "&gt;")
+
+
+def render_status_block(summaries: dict[str, str], version: str) -> str:
+    """The verified/generated tracker, written into README.md between markers.
+
+    Generated from the same CATEGORIES and CURATED that drive the pages, so the
+    tracker cannot drift from what the site actually ships.
+    """
+    total = len(summaries)
+    verified = sorted(CURATED)
+    out = [README_BEGIN, "",
+           f"**{len(verified)} of {total} verified** — "
+           f"{total - len(verified)} still generated from `--help`. "
+           f"Measured against `{version}`.", ""]
+    for _, label, cmds in CATEGORIES:
+        done = sum(1 for c in cmds if c in CURATED)
+        out += [f"<details{' open' if done else ''}>",
+                f"<summary><strong>{label}</strong> — {done}/{len(cmds)} verified</summary>",
+                "", "| | Command | Description |", "| --- | --- | --- |"]
+        for c in cmds:
+            mark = "x" if c in CURATED else " "
+            out.append(f"| [{mark}] | [`{c}`](https://lana-20.github.io/vibium-docs/docs/commands/{c}) "
+                       f"| {gh_escape(summaries.get(c, ''))} |")
+        out += ["", "</details>", ""]
+    out.append(README_END)
+    return "\n".join(out)
+
+
+def update_readme(summaries: dict[str, str], version: str) -> bool:
+    readme = Path("README.md")
+    if not readme.exists():
+        return False
+    text = readme.read_text()
+    if README_BEGIN not in text or README_END not in text:
+        return False
+    head, rest = text.split(README_BEGIN, 1)
+    _, tail = rest.split(README_END, 1)
+    readme.write_text(head + render_status_block(summaries, version) + tail)
+    return True
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--bin", default="vibium")
@@ -372,9 +420,12 @@ def main() -> int:
     Path(outdir).parent.joinpath("global-flags.mdx").write_text(
         render_global_flags(root, version))
 
+    readme_done = update_readme(summaries, version)
+
     print(f"{version}: {len(listed)} commands — {written} generated "
           f"({subs_total[0]} subcommands documented inline), "
-          f"{skipped} curated left untouched")
+          f"{skipped} curated left untouched"
+          + (", README tracker updated" if readme_done else ""))
     return 0
 
 
