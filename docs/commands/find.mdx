@@ -13,8 +13,9 @@ element — by its text, its label, its ARIA role.
 :::tip[Verified against a live browser]
 Every example on this page is real terminal output captured from **vibium
 v26.8.21**, run against this site's own
-[playground fixture](pathname:///vibium-docs/fixtures/playground.html). Running the docs locally serves
-it at `http://localhost:3000/vibium-docs/fixtures/playground.html`.
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
@@ -40,9 +41,9 @@ With no locator, the argument is a CSS selector. `find` returns **only the first
 match** unless you pass `--all`:
 
 ```sh
-$ PLAYGROUND=http://localhost:3000/vibium-docs/fixtures/playground.html
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
 $ vibium go "$PLAYGROUND"
-Navigated to http://localhost:3000/vibium-docs/fixtures/playground.html
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
 $ vibium find "a"
 @e1 [a] "Home"
