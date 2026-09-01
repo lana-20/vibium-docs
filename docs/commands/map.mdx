@@ -6,12 +6,15 @@ description: "Map interactive page elements with @refs"
 
 # vibium map
 
-Map interactive page elements with @refs.
+List every interactive element on the page and assign each one a numbered
+reference — `@e1`, `@e2`, and so on — that other commands accept in place of a
+CSS selector.
 
-:::info[Generated reference]
-Derived from `vibium help map` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html). Running the docs locally serves
+it at `http://localhost:3000/vibium-docs/fixtures/playground.html`.
 :::
 
 ## Synopsis
@@ -28,18 +31,104 @@ vibium map
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Description
+
+`map` is the usual first step after navigating: it tells you what is on the page
+and gives you a handle for each thing you might act on. It lists only
+*interactive* elements — links, buttons, inputs, selects — not every node.
+
+Each entry shows the ref, the tag with any type, and whatever best identifies
+the element: its text if it has any, otherwise a distinguishing attribute.
 
 ```sh
-vibium map
-# Lists interactive elements with refs like @e1, @e2
-# Use refs with other commands: vibium click @e1
+$ PLAYGROUND=http://localhost:3000/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to http://localhost:3000/vibium-docs/fixtures/playground.html
 
-vibium map --selector "nav"
-# Only map elements inside the <nav> element
+$ vibium map
+@e1 [a] "Home"
+@e2 [a] "Docs"
+@e3 [a] "About"
+@e4 [input type="email"] placeholder="you@example.com"
+@e5 [select] "United StatesGermany"
+@e6 [input type="checkbox"] name="terms"
+@e7 [input type="search"] placeholder="Search docs"
+@e8 [button type="submit"] "Sign In"
+@e9 [button type="button"] title="Close dialog"
+```
+
+Note `@e5`: a `<select>` is labelled with its options' text run together, so a
+two-option dropdown reads as `"United StatesGermany"`. That is the label, not
+the value — use [`vibium value`](/docs/commands/value) to read what is selected.
+
+## Scoping with `--selector`
+
+On a large page, `--selector` restricts the map to one subtree:
+
+```sh
+$ vibium map --selector "nav"
+@e1 [a] "Home"
+@e2 [a] "Docs"
+@e3 [a] "About"
+
+$ vibium map --selector "form"
+@e1 [input type="email"] placeholder="you@example.com"
+@e2 [select] "United StatesGermany"
+@e3 [input type="checkbox"] name="terms"
+@e4 [input type="search"] placeholder="Search docs"
+@e5 [button type="submit"] "Sign In"
+@e6 [button type="button"] title="Close dialog"
+```
+
+:::warning[Scoped refs are renumbered, not filtered]
+A scoped map always numbers from `@e1`. In the output above, `@e1` means the
+"Home" link when scoped to `nav` but the email input when scoped to `form` —
+and on the unscoped map, `@e1` is "Home" while the email input is `@e4`.
+
+Refs are only meaningful relative to the map that produced them. Never carry a
+ref across two different `map` invocations.
+:::
+
+## Refs are rebound by `find`, too
+
+[`vibium find`](/docs/commands/find) assigns refs from the same table, so a
+`find` after a `map` overwrites the numbering:
+
+```sh
+$ vibium map
+@e1 [a] "Home"
+@e2 [a] "Docs"
+@e3 [a] "About"
+
+$ vibium text @e1
+Home
+
+$ vibium find "button"
+@e1 [button type="submit"] "Sign In"
+
+$ vibium text @e1
+Sign In
+```
+
+`@e1` now refers to the button. Re-map before using a ref if anything has
+happened in between.
+
+Refs also do not survive a navigation — see
+[`vibium back`](/docs/commands/back).
+
+## JSON output
+
+`map` honours the global `--json` flag. The refs come back as one newline-joined
+string in `result`, not as an array:
+
+```sh
+$ vibium map --json
+{"ok":true,"result":"@e1 [a] \"Home\"\n@e2 [a] \"Docs\"\n@e3 [a] \"About\"\n@e4 [input type=\"email\"] placeholder=\"you@example.com\"\n@e5 [select] \"United StatesGermany\"\n@e6 [input type=\"checkbox\"] name=\"terms\"\n@e7 [input type=\"search\"] placeholder=\"Search docs\"\n@e8 [button type=\"submit\"] \"Sign In\"\n@e9 [button type=\"button\"] title=\"Close dialog\""}
 ```
 
 ## See also
 
+- [`vibium find`](/docs/commands/find) — locate one element instead of listing all.
+- [`vibium diff map`](/docs/commands/diff) — what changed since the last map.
+- [`vibium click`](/docs/commands/click) — act on a ref.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Mapping & references](/docs/commands#mapping--references) — related commands.

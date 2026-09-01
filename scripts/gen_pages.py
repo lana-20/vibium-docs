@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 # Pages written by hand against real terminal output. Never overwritten.
-CURATED = {"back", "forward", "reload", "url", "title"}
+CURATED = {"back", "forward", "reload", "url", "title", "map", "find"}
 
 # Every top-level command, grouped for the sidebar. Checked for drift against
 # the binary at run time: an uncategorized command is a hard error, so a new

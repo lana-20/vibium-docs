@@ -6,18 +6,22 @@ description: "Find elements by CSS selector or semantic locator"
 
 # vibium find
 
-Find elements by CSS selector or semantic locator.
+Locate an element and bind it to a ref. `find` takes either a CSS selector or
+one of eight semantic locators that match the way a person would describe the
+element — by its text, its label, its ARIA role.
 
-:::info[Generated reference]
-Derived from `vibium help find` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html). Running the docs locally serves
+it at `http://localhost:3000/vibium-docs/fixtures/playground.html`.
 :::
 
 ## Synopsis
 
 ```
 vibium find [selector]
+vibium find <locator> <value>
 ```
 
 ## Flags
@@ -25,182 +29,165 @@ vibium find [selector]
 | Flag | Argument | Description |
 | --- | --- | --- |
 | `--all` | — | Find all matching elements |
-| `--limit` | `int` | Maximum number of elements to return (with --all) (default 10) |
+| `--limit` | `int` | Maximum number of elements to return (with `--all`) (default 10) |
 | `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## By CSS selector
+
+With no locator, the argument is a CSS selector. `find` returns **only the first
+match** unless you pass `--all`:
 
 ```sh
-vibium find "a"
-# → @e1 [a] "More information..."
+$ PLAYGROUND=http://localhost:3000/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to http://localhost:3000/vibium-docs/fixtures/playground.html
 
-vibium find "a" --all
-# → @e1 [a] "Home"  @e2 [a] "About"  ...
+$ vibium find "a"
+@e1 [a] "Home"
 
-vibium find text "Sign In"
-# → @e1 [button] "Sign In"
+$ vibium find "a" --all
+@e1 [a] "Home"
+@e2 [a] "Docs"
+@e3 [a] "About"
 
-vibium find role button
-# → @e1 [button] "Submit"
-
-vibium find role heading --name "Example"
-# Find heading with accessible name "Example"
+$ vibium find "a" --all --limit 2
+@e1 [a] "Home"
+@e2 [a] "Docs"
 ```
 
-## Subcommands
+## Semantic locators
 
-| Subcommand | Description |
-| --- | --- |
-| [`vibium find alt`](#vibium-find-alt) | Find element by alt attribute |
-| [`vibium find label`](#vibium-find-label) | Find input by associated label text |
-| [`vibium find placeholder`](#vibium-find-placeholder) | Find element by placeholder attribute |
-| [`vibium find role`](#vibium-find-role) | Find element by ARIA role |
-| [`vibium find testid`](#vibium-find-testid) | Find element by data-testid attribute |
-| [`vibium find text`](#vibium-find-text) | Find element by text content |
-| [`vibium find title`](#vibium-find-title) | Find element by title attribute |
-| [`vibium find xpath`](#vibium-find-xpath) | Find element by XPath expression |
+Eight subcommands match on meaning rather than structure. They are usually more
+durable than CSS selectors, because they survive the restyling and class-name
+churn that breaks selectors.
 
-### `vibium find alt`
+### `vibium find text`
 
-Find element by alt attribute.
-
-```
-vibium find alt [alt]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Match on visible text content.
 
 ```sh
-vibium find alt "Logo"
+$ vibium find text "Sign In"
+@e1 [button type="submit"] "Sign In"
 ```
 
 ### `vibium find label`
 
-Find input by associated label text.
-
-```
-vibium find label [label]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Match an input by its associated `<label>` — the text a person sees next to the
+field, rather than anything in the input itself.
 
 ```sh
-vibium find label "Email"
-# → @e1 [input type="email"] placeholder="Email"
+$ vibium find label "Email"
+@e1 [input type="email"] placeholder="you@example.com"
 ```
 
 ### `vibium find placeholder`
 
-Find element by placeholder attribute.
-
-```
-vibium find placeholder [placeholder]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Match an input by its placeholder attribute.
 
 ```sh
-vibium find placeholder "Search..."
-# → @e1 [input] placeholder="Search..."
+$ vibium find placeholder "Search docs"
+@e1 [input type="search"] placeholder="Search docs"
 ```
 
 ### `vibium find role`
 
-Find element by ARIA role.
-
-```
-vibium find role [role]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--name` | `string` | Accessible name filter |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Match by ARIA role. Add `--name` to disambiguate by accessible name.
 
 ```sh
-vibium find role button
-# → @e1 [button] "Submit"
+$ vibium find role button
+@e1 [button type="submit"] "Sign In"
 
-vibium find role heading --name "Example"
-# Find heading with accessible name "Example"
+$ vibium find role heading
+@e1 [h1] "Playground"
+
+$ vibium find role button --name "Sign In"
+@e1 [button type="submit"] "Sign In"
 ```
 
 ### `vibium find testid`
 
-Find element by data-testid attribute.
-
-```
-vibium find testid [testid]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Match on `data-testid`. The most stable locator of all, since the attribute
+exists only for automation and nothing else should be changing it.
 
 ```sh
-vibium find testid "submit-btn"
-# → @e1 [button] data-testid="submit-btn"
+$ vibium find testid "submit-btn"
+@e1 [button type="submit"] "Sign In"
 ```
 
-### `vibium find text`
+### `vibium find alt`
 
-Find element by text content.
-
-```
-vibium find text [text]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Match an image by its `alt` text.
 
 ```sh
-vibium find text "Sign In"
-# → @e1 [button] "Sign In"
+$ vibium find alt "Company logo"
+@e1 [img] src="logo.svg"
 ```
 
 ### `vibium find title`
 
-Find element by title attribute.
-
-```
-vibium find title [title]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Match by the `title` attribute — useful for icon-only controls, which often have
+no text at all.
 
 ```sh
-vibium find title "Close"
+$ vibium find title "Close dialog"
+@e1 [button type="button"] title="Close dialog"
 ```
 
 ### `vibium find xpath`
 
-Find element by XPath expression.
-
-```
-vibium find xpath [expression]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Match by XPath, for the cases the other locators cannot express.
 
 ```sh
-vibium find xpath "//div[@class='main']"
-# → @e1 [div.main] ...
+$ vibium find xpath "//a[@href='#docs']"
+@e1 [a] "Docs"
 ```
+
+## When nothing matches
+
+`find` waits for the element until `--timeout` expires, then writes an error to
+stderr and **exits 1** — so it is safe to use in a conditional without parsing
+output:
+
+```sh
+$ vibium find ".missing" --timeout 2s
+Error: element not found: .missing (timeout 2s)
+$ echo $?
+1
+
+$ vibium find text "Nope" --timeout 2s
+Error: element not found: text=Nope (timeout 2s)
+$ echo $?
+1
+```
+
+The error names the locator in the form it was resolved (`text=Nope`), which is
+worth knowing when debugging a semantic locator that did not match.
+
+## JSON output
+
+```sh
+$ vibium find "a" --json
+{"ok":true,"result":"@e1 [a] \"Home\""}
+
+$ vibium find "a" --all --json
+{"ok":true,"result":"@e1 [a] \"Home\"\n@e2 [a] \"Docs\"\n@e3 [a] \"About\""}
+```
+
+As with [`map`](/docs/commands/map), matches arrive as one newline-joined string
+in `result` rather than as an array.
+
+## Refs are shared with `map`
+
+`find` writes into the same ref table as [`vibium map`](/docs/commands/map), and
+always numbers its results from `@e1`. A `find` after a `map` therefore rebinds
+`@e1` — see [Refs are rebound by `find`](/docs/commands/map#refs-are-rebound-by-find-too)
+for a worked example.
 
 ## See also
 
+- [`vibium map`](/docs/commands/map) — list every interactive element at once.
+- [`vibium count`](/docs/commands/count) — count matches without binding refs.
+- [`vibium wait`](/docs/commands/wait) — block until an element appears.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Finding elements](/docs/commands#finding-elements) — related commands.
