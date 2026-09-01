@@ -6,12 +6,15 @@ description: "Capture a screenshot (optionally navigate to URL first)"
 
 # vibium screenshot
 
-Capture a screenshot (optionally navigate to URL first).
+Capture the page as a PNG — the viewport by default, the whole scrollable page
+with `--full-page`, or with every interactive element labelled with `--annotate`.
 
-:::info[Generated reference]
-Derived from `vibium help screenshot` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
@@ -24,32 +27,103 @@ vibium screenshot [url]
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--annotate` | — | Annotate interactive elements with numbered labels |
-| `--full-page` | — | Capture the full page instead of just the viewport |
 | `--output`, `-o` | `string` | Output file path (default "screenshot.png") |
+| `--full-page` | — | Capture the full page instead of just the viewport |
+| `--annotate` | — | Annotate interactive elements with numbered labels |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Basic capture
+
+With no `-o`, the file lands at `./screenshot.png`. The command prints the
+absolute path it wrote, which is the reliable thing to parse:
 
 ```sh
-vibium screenshot
-# Saves ./screenshot.png in the current directory
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium screenshot -o shot.png
-# Screenshots the current page to ./shot.png
+$ vibium screenshot -o shot.png
+Screenshot saved to /tmp/shots/shot.png
+```
 
-vibium screenshot -o ~/Pictures/shot.png
-# Paths are honored as given
+The capture is the viewport, so its dimensions are the viewport's — check them
+with [`vibium viewport`](/docs/commands/viewport) if a screenshot comes back an
+unexpected size:
 
-vibium screenshot https://example.com -o shot.png
-# Navigates to URL first, then screenshots
+```sh
+$ vibium viewport
+{"width":756,"height":469,"devicePixelRatio":1}
+```
 
-vibium screenshot -o full.png --full-page
-# Capture the entire page (not just the viewport)
+That is exactly the size of `shot.png` above: **756 × 469**.
+
+## Capturing the whole page
+
+`--full-page` captures everything below the fold. On a short page the difference
+is negligible, but on a long one it is dramatic — here is the same command
+against this reference's own `find` page:
+
+```sh
+$ vibium go https://lana-20.github.io/vibium-docs/docs/commands/find
+$ vibium screenshot -o vp.png
+$ vibium screenshot -o fp.png --full-page
+```
+
+| File | Flags | Dimensions |
+| --- | --- | --- |
+| `vp.png` | — | 756 × 469 |
+| `fp.png` | `--full-page` | 756 × 5408 |
+
+The width is unchanged; only the height grows, to the full scroll height of the
+document.
+
+## Annotating interactive elements
+
+`--annotate` overlays a numbered badge on every interactive element. The numbers
+line up with the refs from [`vibium map`](/docs/commands/map) — badge **6** is
+`@e6` — which makes it the fastest way to see what a ref actually points at:
+
+```sh
+$ vibium screenshot -o annotated.png --annotate
+Screenshot saved to /tmp/shots/annotated.png
+```
+
+![A screenshot of the playground fixture with nine numbered red badges overlaying its links, inputs, select, checkbox and buttons](/img/annotate-example.png)
+
+That is the real output of the command above. Compare it with the `map` listing
+on the [map page](/docs/commands/map): nine elements, nine badges, same order.
+
+:::note[Badges are drawn over the page, not beside it]
+A badge sits on top of the element it labels, so it can obscure the start of a
+short label — `@e4`'s badge covers the beginning of the email placeholder above.
+The annotated capture is for orientation; use a plain capture when you need to
+read the page itself.
+:::
+
+## Navigating first
+
+Given a URL argument, `screenshot` navigates before capturing:
+
+```sh
+$ vibium screenshot "$PLAYGROUND" -o nav.png
+Screenshot saved to /tmp/shots/nav.png
+```
+
+## JSON output
+
+`screenshot` honours the global `--json` flag. The path comes back inside the
+envelope rather than on its own line:
+
+```sh
+$ vibium screenshot -o j.png --json
+{"ok":true,"result":"Screenshot saved to /tmp/shots/j.png"}
 ```
 
 ## See also
 
+- [`vibium pdf`](/docs/commands/pdf) — save the page as a PDF instead.
+- [`vibium viewport`](/docs/commands/viewport) — set the size a capture will be.
+- [`vibium map`](/docs/commands/map) — the refs that `--annotate` numbers.
+- [`vibium record`](/docs/commands/record) — capture a whole session, not one frame.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Capture](/docs/commands#capture) — related commands.

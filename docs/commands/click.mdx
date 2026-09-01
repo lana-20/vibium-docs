@@ -6,12 +6,15 @@ description: "Click an element (optionally navigate to URL first)"
 
 # vibium click
 
-Click an element (optionally navigate to URL first).
+Click an element, identified by a ref from [`map`](/docs/commands/map) or
+[`find`](/docs/commands/find), or by a CSS selector directly.
 
-:::info[Generated reference]
-Derived from `vibium help click` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
@@ -28,20 +31,121 @@ vibium click [url] [selector]
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Clicking by ref
+
+The usual flow is [`map`](/docs/commands/map) to discover, then `click` to act.
+`click` echoes back the element it resolved, which is worth reading: with a ref
+it reports the *selector* it resolved to, not the ref you passed.
 
 ```sh
-vibium click "a"
-# Clicks on current page
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium click https://example.com "a"
-# Navigates to URL first, then clicks
+$ vibium map
+@e1 [a] "Home"
+@e2 [a] "Docs"
+@e3 [a] "About"
+@e4 [input type="email"] placeholder="you@example.com"
+@e5 [select] "United StatesGermany"
+@e6 [input type="checkbox"] name="terms"
+@e7 [input type="search"] placeholder="Search docs"
+@e8 [button type="submit"] "Sign In"
+@e9 [button type="button"] title="Close dialog"
 
-vibium click https://example.com "a" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium click @e6
+Clicked element: #terms
+```
+
+## Confirming the click landed
+
+`click` reports that it dispatched a click, not that the page did anything with
+it. When the effect matters, assert on it — for a checkbox, with
+[`vibium is checked`](/docs/commands/is):
+
+```sh
+$ vibium is checked "#terms"
+false
+
+$ vibium click @e6
+Clicked element: #terms
+
+$ vibium is checked "#terms"
+true
+```
+
+:::warning[`click` toggles, it does not set]
+Clicking a checkbox a second time unchecks it. `click` is not idempotent:
+
+```sh
+$ vibium click "#terms"
+Clicked element: #terms
+
+$ vibium is checked "#terms"
+false
+```
+
+Use [`vibium check`](/docs/commands/check) and
+[`vibium uncheck`](/docs/commands/uncheck) when you want a *state* rather than a
+toggle — those are idempotent and safe to repeat.
+:::
+
+## Clicking by CSS selector
+
+A ref is not required; any CSS selector works, and is often clearer in a script
+that has no `map` step:
+
+```sh
+$ vibium click "a[href='#docs']"
+Clicked element: a[href='#docs']
+
+$ vibium url
+https://lana-20.github.io/vibium-docs/fixtures/playground.html#docs
+```
+
+## Navigating first
+
+Given two arguments, the first is a URL to navigate to before clicking. This
+collapses a `go` and a `click` into one command:
+
+```sh
+$ vibium click "$PLAYGROUND" "a[href='#about']"
+Clicked element: a[href='#about']
+
+$ vibium url
+https://lana-20.github.io/vibium-docs/fixtures/playground.html#about
+```
+
+Note that a ref from a previous page would be meaningless here — the navigation
+invalidates it. Use a selector with this form, not an `@eN`.
+
+## When nothing matches
+
+`click` waits for the element to be actionable until `--timeout` expires, then
+writes to stderr and **exits 1**:
+
+```sh
+$ vibium click ".nope" --timeout 2s
+Error: failed to click: timeout after 2s: element not found
+$ echo $?
+1
+```
+
+The wording differs from [`find`](/docs/commands/find), which reports
+`element not found: .nope (timeout 2s)`. Both exit 1, but do not match on the
+message text if you are scripting against both.
+
+## JSON output
+
+```sh
+$ vibium click "#terms" --json
+{"ok":true,"result":"Clicked element: #terms"}
 ```
 
 ## See also
 
+- [`vibium map`](/docs/commands/map) — discover what there is to click.
+- [`vibium check`](/docs/commands/check) — set a checkbox rather than toggle it.
+- [`vibium dblclick`](/docs/commands/dblclick) — double-click instead.
+- [`vibium wait`](/docs/commands/wait) — block on the result of a click.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.
