@@ -6,18 +6,21 @@ description: "Clear an input field and type new text"
 
 # vibium fill
 
-Clear an input field and type new text.
+Replace the contents of a text field. `fill` clears whatever is there and sets
+the value you give it.
 
-:::info[Generated reference]
-Derived from `vibium help fill` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium fill [selector] [text]
+vibium fill <selector> <text>
 ```
 
 ## Flags
@@ -28,19 +31,146 @@ vibium fill [selector] [text]
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Setting a value
+
+Both arguments are required. `fill` echoes the value it set and the selector it
+resolved:
 
 ```sh
-vibium fill "input[name=email]" "user@example.com"
-# Clear the field and type new value
-vibium fill "#search" "vibium"
-# Replace search field contents
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium fill "#search" "vibium" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium value "#email"
+
+$ vibium fill "#email" "user@example.com"
+Filled "user@example.com" into #email
+
+$ vibium value "#email"
+user@example.com
 ```
+
+Refs work in place of a selector, and are reported as the selector they resolve
+to:
+
+```sh
+$ vibium fill @e4 "ref@example.com"
+Filled "ref@example.com" into #email
+```
+
+## `fill` replaces; it does not append
+
+A second `fill` overwrites the first rather than adding to it:
+
+```sh
+$ vibium fill "#email" "second@example.com"
+Filled "second@example.com" into #email
+
+$ vibium value "#email"
+second@example.com
+```
+
+Passing an empty string is therefore how you clear a field:
+
+```sh
+$ vibium fill "#email" ""
+Filled "" into #email
+
+$ vibium value "#email"
+
+```
+
+:::danger[`type` is not simply "fill that appends"]
+[`vibium type`](/docs/commands/type) inserts at the caret, and the caret lands
+where `type` clicks to focus the field — a fixed point near the middle of the
+element, not the end of the text. For a value wide enough to reach that point,
+the insertion happens **mid-string**:
+
+```sh
+$ vibium fill "#email" "abc"
+Filled "abc" into #email
+$ vibium type "#email" "XX"
+Typed into element: #email
+$ vibium value "#email"
+abcXX
+
+$ vibium fill "#email" "abcdefghijklmnop"
+Filled "abcdefghijklmnop" into #email
+$ vibium type "#email" "XX"
+Typed into element: #email
+$ vibium value "#email"
+abcdefghijklXXmnop
+```
+
+A longer value behaves the same way: `abcdefghijklmnopqrstuvwxyz` becomes
+`abcdefghijklXXmnopqrstuvwxyz`. Both long values take the insertion at exactly
+position 12 — a fixed pixel offset, not a proportion of the text. The short
+value appends only because the click lands past the end of the text.
+
+Use `fill` whenever you want a known final value. Reach for `type` only when
+you specifically need per-key input events.
+:::
+
+## Fields that cannot be filled
+
+`fill` waits for the element to be present *and* editable. The two failures are
+reported differently, and both **exit 1**:
+
+```sh
+$ vibium fill ".nope" "x" --timeout 2s
+Error: failed to fill: timeout after 2s: element not found
+$ echo $?
+1
+
+$ vibium fill "h1" "x" --timeout 2s
+Error: failed to fill: timeout after 2s: editable check failed — not a text input element
+$ echo $?
+1
+```
+
+The second names the check that failed, the same way
+[`click`](/docs/commands/click) reports `enabled check failed` on a disabled
+button.
+
+## JSON output
+
+```sh
+$ vibium fill "#email" "json@example.com" --json
+{"ok":true,"result":"Filled \"json@example.com\" into #email"}
+```
+
+## Known issue: `--help` does not work on this version
+
+`fill` is one of four commands whose `--help` is broken at v26.8.21. It sets
+`DisableFlagParsing` and parses its own flags, which bypasses cobra's help
+short-circuit, so the flag is read as a missing argument:
+
+```sh
+$ vibium fill --help
+Error: accepts 2 arg(s), received 0
+$ echo $?
+1
+```
+
+Use `vibium help fill` instead, which takes a different path and works:
+
+```sh
+$ vibium help fill
+Clear an input field and type new text
+...
+```
+
+The same applies to [`type`](/docs/commands/type),
+[`geolocation`](/docs/commands/geolocation) and [`sleep`](/docs/commands/sleep).
+Reported upstream as
+[#422](https://github.com/VibiumDev/vibium/issues/422) and
+[#423](https://github.com/VibiumDev/vibium/issues/423), and fixed after this
+release.
 
 ## See also
 
+- [`vibium type`](/docs/commands/type) — per-key input; see the warning above.
+- [`vibium value`](/docs/commands/value) — read a field back.
+- [`vibium select`](/docs/commands/select) — set a dropdown instead.
+- [`vibium upload`](/docs/commands/upload) — set a file input.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

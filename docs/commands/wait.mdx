@@ -6,18 +6,22 @@ description: "Wait for an element, URL, text, page load, or JS condition"
 
 # vibium wait
 
-Wait for an element, URL, text, page load, or JS condition.
+Block until the page reaches a condition — an element in some state, a URL, some
+text, a finished load, or an arbitrary JavaScript expression.
 
-:::info[Generated reference]
-Derived from `vibium help wait` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
 vibium wait [selector]
+vibium wait <fn|load|text|url> <value>
 ```
 
 ## Flags
@@ -29,109 +33,160 @@ vibium wait [selector]
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## When you need it
+
+Most interaction commands auto-wait for their target, so `wait` is not needed
+before a [`click`](/docs/commands/click). It is needed when you must observe a
+*consequence* — the click returns as soon as it is dispatched, and the page may
+react later.
+
+## Waiting for an element
+
+The bare form takes a selector and, by default, waits for it to be **attached**
+to the DOM:
 
 ```sh
-vibium wait "div.loaded"
-# Wait for element to exist in DOM
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium wait "div.loaded" --state visible
-# Wait for element to be visible
-
-vibium wait "div.spinner" --state hidden --timeout 5s
-# Wait for spinner to disappear (5s, or 5000 for milliseconds)
+$ vibium wait "#panel"
+Element "#panel" reached state: attached
 ```
 
-## Subcommands
-
-| Subcommand | Description |
-| --- | --- |
-| [`vibium wait fn`](#vibium-wait-fn) | Wait until a JS expression returns truthy |
-| [`vibium wait load`](#vibium-wait-load) | Wait until the page is fully loaded |
-| [`vibium wait text`](#vibium-wait-text) | Wait until text appears on the page |
-| [`vibium wait url`](#vibium-wait-url) | Wait until the page URL contains a substring |
-
-### `vibium wait fn`
-
-Wait until a JS expression returns truthy.
-
-```
-vibium wait fn [expression]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+:::warning[`attached` is satisfied by a hidden element]
+The command above returned immediately, and yet the panel is not on screen:
 
 ```sh
-vibium wait fn "document.readyState === 'complete'"
-# Wait for page to be fully loaded
-
-vibium wait fn "window.ready === true" --timeout 10s
-# Wait for custom condition (10s, or 10000 for milliseconds)
+$ vibium is visible "#panel"
+false
 ```
 
-### `vibium wait load`
+`attached` means *in the DOM*, which a hidden element is. Waiting for something
+the user can actually see requires `--state visible` — otherwise a wait for a
+lazily-shown element passes the instant its markup exists, long before it
+appears.
+:::
 
-Wait until the page is fully loaded.
+## `--state visible` and `--state hidden`
 
-```
-vibium wait load
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+The fixture's "Reveal panel" button un-hides the panel a second after it is
+clicked, which is exactly the case the bare form gets wrong:
 
 ```sh
-vibium wait load
-# Wait until document.readyState is "complete"
+$ vibium click "#reveal"
+Clicked element: #reveal
 
-vibium wait load --timeout 10s
-# Wait up to 10 seconds (or 10000 for milliseconds)
+$ vibium wait "#panel" --state visible
+Element "#panel" reached state: visible
+
+$ vibium is visible "#panel"
+true
 ```
 
-### `vibium wait text`
-
-Wait until text appears on the page.
-
-```
-vibium wait text [text]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+`--state hidden` is the inverse, and is the usual way to wait out a spinner. It
+fails if the element stays visible:
 
 ```sh
-vibium wait text "Welcome"
-# Waits until "Welcome" appears on the page
-
-vibium wait text "Success" --timeout 10s
-# Wait with custom timeout (10s, or 10000 for milliseconds)
+$ vibium wait "#panel" --state hidden --timeout 2s
+Error: timeout after 2s: element still visible
+$ echo $?
+1
 ```
 
-### `vibium wait url`
+## `vibium wait text`
 
-Wait until the page URL contains a substring.
-
-```
-vibium wait url [pattern]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Wait for text to appear anywhere on the page. Often the simplest way to confirm
+an action landed, since it does not require knowing which element will hold the
+result:
 
 ```sh
-vibium wait url "/dashboard"
-# Wait until URL contains "/dashboard"
+$ vibium wait text "Panel revealed"
+Text "Panel revealed" found on page
+```
 
-vibium wait url "success" --timeout 10s
-# Wait up to 10 seconds (or 10000 for milliseconds)
+## `vibium wait url`
+
+Wait until the URL contains a substring — the standard way to confirm a
+navigation finished:
+
+```sh
+$ vibium click "#next-page"
+Clicked element: #next-page
+
+$ vibium wait url "playground2"
+URL matches pattern "playground2": https://lana-20.github.io/vibium-docs/fixtures/playground2.html
+```
+
+The match is a substring, not a pattern, despite the wording of the output.
+
+## `vibium wait load`
+
+Wait until the document has finished loading. The output names the `readyState`
+it settled on:
+
+```sh
+$ vibium wait load
+Page loaded (readyState: complete)
+```
+
+## `vibium wait fn`
+
+Wait until a JavaScript expression returns truthy — the escape hatch when no
+other form expresses the condition:
+
+```sh
+$ vibium wait fn "document.readyState === 'complete'"
+Expression returned truthy: true
+
+$ vibium click "#counter"
+Clicked element: #counter
+
+$ vibium wait fn "document.querySelector('#status').textContent === 'Counted 1'"
+Expression returned truthy: true
+```
+
+## Timeouts
+
+Every form exits **1** on timeout. The messages are not consistent with one
+another, which matters if you are matching on them:
+
+```sh
+$ vibium wait ".nope" --timeout 2s
+Error: timeout after 2s waiting for '.nope': element not found
+
+$ vibium wait url "nowhere" --timeout 2s
+Error: timeout after 2s waiting for URL matching 'nowhere'
+
+$ vibium wait text "Nope" --timeout 2s
+Error: timeout waiting for text "Nope" to appear
+
+$ vibium wait fn "false" --timeout 2s
+Error: timeout waiting for expression to return truthy: false
+```
+
+:::note[Only some messages name the duration]
+The selector and URL forms report `timeout after 2s`; the text and expression
+forms omit the duration entirely, even though `--timeout 2s` was honoured in
+all four cases. Match on the exit code, not the message.
+:::
+
+## JSON output
+
+```sh
+$ vibium wait "#panel" --json
+{"ok":true,"result":"Element \"#panel\" reached state: attached"}
+
+$ vibium wait load --json
+{"ok":true,"result":"Page loaded (readyState: complete)"}
+
+$ vibium wait text "Ready" --json
+{"ok":true,"result":"Text \"Ready\" found on page"}
 ```
 
 ## See also
 
+- [`vibium click`](/docs/commands/click) — the action whose effects you wait on.
+- [`vibium is`](/docs/commands/is) — test a state now instead of waiting for it.
+- [`vibium sleep`](/docs/commands/sleep) — a fixed delay, when no signal exists.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Waiting](/docs/commands#waiting) — related commands.
