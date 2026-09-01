@@ -1,0 +1,51 @@
+---
+title: "vibium media"
+sidebar_label: media
+description: "Override CSS media features"
+---
+
+# vibium media
+
+Override CSS media features.
+
+:::info[Generated reference]
+Derived from `vibium help media` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium media
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--color-scheme` | `string` | Color scheme: light, dark, no-preference |
+| `--contrast` | `string` | Contrast: more, less, no-preference |
+| `--forced-colors` | `string` | Forced colors: active, none |
+| `--media` | `string` | Media type: screen, print |
+| `--reduced-motion` | `string` | Reduced motion: reduce, no-preference |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium media --color-scheme dark
+# Enable dark mode
+
+vibium media --reduced-motion reduce
+# Reduce motion
+
+vibium media --color-scheme light --forced-colors active
+# Override multiple features
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Browser & session](/docs/commands#browser--session) — related commands.

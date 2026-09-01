@@ -1,0 +1,50 @@
+---
+title: "vibium html"
+sidebar_label: html
+description: "Get HTML content of the page or an element"
+---
+
+# vibium html
+
+Get HTML content of the page or an element.
+
+:::info[Generated reference]
+Derived from `vibium help html` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium html [selector]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--outer` | — | Return outerHTML instead of innerHTML |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium html
+# Get full page HTML
+
+vibium html "div.content"
+# Get innerHTML of a specific element
+
+vibium html "div.content" --outer
+# Get outerHTML of a specific element
+
+vibium html https://example.com "h1"
+# Navigate then get element HTML
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Reading page state](/docs/commands#reading-page-state) — related commands.

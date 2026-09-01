@@ -1,0 +1,55 @@
+---
+title: vibium forward
+sidebar_label: forward
+description: Navigate the active page to the next entry in session history.
+---
+
+# vibium forward
+
+Navigate the active page to the next entry in session history.
+
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium v26.8.21**,
+not transcribed help text.
+:::
+
+## Synopsis
+
+```
+vibium forward
+```
+
+## Description
+
+Equivalent to clicking the browser's forward button, undoing a
+[`vibium back`](/docs/commands/back). The command prints `Navigated forward` once the
+navigation has committed.
+
+Like `back`, it never fails: at the end of history it stays where it is and
+still reports success. Navigating to a new URL with [`vibium go`](/docs/commands/go)
+discards any forward entries, so a `forward` after a fresh `go` has nothing
+to move to.
+
+## Examples
+
+```sh
+$ vibium go https://example.com
+Navigated to https://example.com
+
+$ vibium go https://example.com/index.html
+Navigated to https://example.com/index.html
+
+$ vibium back
+Navigated back
+
+$ vibium forward
+Navigated forward
+
+$ vibium url
+https://example.com/index.html
+```
+
+## See also
+
+- [`vibium back`](/docs/commands/back) — the inverse.
+- [`vibium url`](/docs/commands/url) — confirm where you landed.

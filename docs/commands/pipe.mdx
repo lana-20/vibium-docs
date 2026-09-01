@@ -1,0 +1,55 @@
+---
+title: "vibium pipe"
+sidebar_label: pipe
+description: "Start vibium in pipe mode where protocol messages are exchanged"
+---
+
+# vibium pipe
+
+Start vibium in pipe mode where protocol messages are exchanged.
+
+:::info[Generated reference]
+Derived from `vibium help pipe` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+over stdin (commands) and stdout (responses/events) as newline-delimited JSON.
+Diagnostic output goes to stderr. This mode is used by client libraries.
+
+Use --connect to proxy to a remote BiDi endpoint instead of launching a local browser.
+
+## Synopsis
+
+```
+vibium pipe
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--connect` | `string` | Connect to a remote BiDi WebSocket URL instead of launching a local browser |
+| `--connect-header` | `stringArray` | HTTP header for WebSocket connect (repeatable, format: "Key: Value") |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+{ echo '{"id":1,"method":"vibium:browser.page","params":{}}'; cat; } | vibium pipe --headless
+# Drive the protocol by hand; Ctrl-C when done. cat holds stdin open past
+# the browser launch. A bare echo closes it first and the command comes
+# back {"type":"error","message":"connection closed"}.
+
+# Connect to a remote browser
+vibium pipe --connect ws://remote:9515
+
+# Connect with auth header
+vibium pipe --connect wss://cloud.example.com/bidi --connect-header "Authorization: Bearer token"
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Agent integration](/docs/commands#agent-integration) — related commands.

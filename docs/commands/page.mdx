@@ -1,0 +1,82 @@
+---
+title: "vibium page"
+sidebar_label: page
+description: "Manage browser pages (new, close, switch)"
+---
+
+# vibium page
+
+Manage browser pages (new, close, switch).
+
+:::info[Generated reference]
+Derived from `vibium help page` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium page
+```
+
+## Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| [`vibium page close`](#vibium-page-close) | Close a browser page by index (default: current page) |
+| [`vibium page new`](#vibium-page-new) | Open a new browser page |
+| [`vibium page switch`](#vibium-page-switch) | Switch to a browser page by index or URL substring |
+
+### `vibium page close`
+
+Close a browser page by index (default: current page).
+
+```
+vibium page close [index]
+```
+
+```sh
+vibium page close
+# Close current page (index 0)
+
+vibium page close 1
+# Close page at index 1
+```
+
+### `vibium page new`
+
+Open a new browser page.
+
+```
+vibium page new [url]
+```
+
+```sh
+vibium page new
+# Open a blank new page
+
+vibium page new https://example.com
+# Open a new page and navigate to URL
+```
+
+### `vibium page switch`
+
+Switch to a browser page by index or URL substring.
+
+```
+vibium page switch [index or url]
+```
+
+```sh
+vibium page switch 1
+# Switch to page at index 1
+
+vibium page switch google.com
+# Switch to page containing "google.com" in URL
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Browser & session](/docs/commands#browser--session) — related commands.

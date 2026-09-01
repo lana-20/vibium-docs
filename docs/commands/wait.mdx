@@ -1,0 +1,137 @@
+---
+title: "vibium wait"
+sidebar_label: wait
+description: "Wait for an element, URL, text, page load, or JS condition"
+---
+
+# vibium wait
+
+Wait for an element, URL, text, page load, or JS condition.
+
+:::info[Generated reference]
+Derived from `vibium help wait` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium wait [selector]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--state` | `string` | State to wait for: attached, visible, hidden (default "attached") |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium wait "div.loaded"
+# Wait for element to exist in DOM
+
+vibium wait "div.loaded" --state visible
+# Wait for element to be visible
+
+vibium wait "div.spinner" --state hidden --timeout 5s
+# Wait for spinner to disappear (5s, or 5000 for milliseconds)
+```
+
+## Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| [`vibium wait fn`](#vibium-wait-fn) | Wait until a JS expression returns truthy |
+| [`vibium wait load`](#vibium-wait-load) | Wait until the page is fully loaded |
+| [`vibium wait text`](#vibium-wait-text) | Wait until text appears on the page |
+| [`vibium wait url`](#vibium-wait-url) | Wait until the page URL contains a substring |
+
+### `vibium wait fn`
+
+Wait until a JS expression returns truthy.
+
+```
+vibium wait fn [expression]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium wait fn "document.readyState === 'complete'"
+# Wait for page to be fully loaded
+
+vibium wait fn "window.ready === true" --timeout 10s
+# Wait for custom condition (10s, or 10000 for milliseconds)
+```
+
+### `vibium wait load`
+
+Wait until the page is fully loaded.
+
+```
+vibium wait load
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium wait load
+# Wait until document.readyState is "complete"
+
+vibium wait load --timeout 10s
+# Wait up to 10 seconds (or 10000 for milliseconds)
+```
+
+### `vibium wait text`
+
+Wait until text appears on the page.
+
+```
+vibium wait text [text]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium wait text "Welcome"
+# Waits until "Welcome" appears on the page
+
+vibium wait text "Success" --timeout 10s
+# Wait with custom timeout (10s, or 10000 for milliseconds)
+```
+
+### `vibium wait url`
+
+Wait until the page URL contains a substring.
+
+```
+vibium wait url [pattern]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium wait url "/dashboard"
+# Wait until URL contains "/dashboard"
+
+vibium wait url "success" --timeout 10s
+# Wait up to 10 seconds (or 10000 for milliseconds)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Waiting](/docs/commands#waiting) — related commands.

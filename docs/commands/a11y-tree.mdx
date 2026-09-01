@@ -1,0 +1,44 @@
+---
+title: "vibium a11y-tree"
+sidebar_label: a11y-tree
+description: "Get the accessibility tree of the current page"
+---
+
+# vibium a11y-tree
+
+Get the accessibility tree of the current page.
+
+:::info[Generated reference]
+Derived from `vibium help a11y-tree` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium a11y-tree
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--everything` | — | Show all nodes including generic containers |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium a11y-tree
+# Print the accessibility tree (interesting nodes only)
+
+vibium a11y-tree --everything
+# Include all nodes (generic containers, etc.)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Reading page state](/docs/commands#reading-page-state) — related commands.

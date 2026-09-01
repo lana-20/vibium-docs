@@ -1,0 +1,46 @@
+---
+title: "vibium diff"
+sidebar_label: diff
+description: "Compare current state vs previous"
+---
+
+# vibium diff
+
+Compare current state vs previous.
+
+:::info[Generated reference]
+Derived from `vibium help diff` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium diff
+```
+
+## Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| [`vibium diff map`](#vibium-diff-map) | Compare current page elements vs last map |
+
+### `vibium diff map`
+
+Compare current page elements vs last map.
+
+```
+vibium diff map
+```
+
+```sh
+vibium map           # take initial snapshot
+vibium click @e3     # interact with page
+vibium diff map      # see what changed
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Mapping & references](/docs/commands#mapping--references) — related commands.

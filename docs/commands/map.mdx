@@ -1,0 +1,45 @@
+---
+title: "vibium map"
+sidebar_label: map
+description: "Map interactive page elements with @refs"
+---
+
+# vibium map
+
+Map interactive page elements with @refs.
+
+:::info[Generated reference]
+Derived from `vibium help map` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium map
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--selector` | `string` | Scope to elements within this CSS selector |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium map
+# Lists interactive elements with refs like @e1, @e2
+# Use refs with other commands: vibium click @e1
+
+vibium map --selector "nav"
+# Only map elements inside the <nav> element
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Mapping & references](/docs/commands#mapping--references) — related commands.

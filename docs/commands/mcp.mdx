@@ -1,0 +1,84 @@
+---
+title: "vibium mcp"
+sidebar_label: mcp
+description: "Start the Model Context Protocol (MCP) server."
+---
+
+# vibium mcp
+
+Start the Model Context Protocol (MCP) server.
+
+:::info[Generated reference]
+Derived from `vibium help mcp` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+This runs a JSON-RPC 2.0 server over stdin/stdout, designed for integration
+with LLM agents like Claude Code.
+
+The server provides browser automation tools:
+  - browser_start: Start a browser session
+  - browser_navigate: Go to a URL
+  - browser_click: Click an element
+  - browser_type: Type into an element
+  - browser_screenshot: Capture the page
+  - browser_find: Find element info
+  - browser_evaluate: Execute JavaScript
+  - browser_stop: Stop the browser
+  - browser_get_text: Get page/element text
+  - browser_get_url: Get current URL
+  - browser_get_title: Get page title
+  - browser_get_html: Get page/element HTML
+  - browser_find_all: Find all matching elements
+  - browser_wait: Wait for element state
+  - browser_hover: Hover over an element
+  - browser_select: Select a dropdown option
+  - browser_scroll: Scroll the page
+  - browser_keys: Press keys
+  - browser_new_page: Open a new page
+  - browser_list_pages: List open pages
+  - browser_switch_page: Switch pages
+  - browser_close_page: Close a page
+
+## Synopsis
+
+```
+vibium mcp
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--headless` | — | Launch browsers in headless mode (no visible window) |
+| `--screenshot-dir` | `string` | Directory for saving screenshots (default: ~/Pictures/Vibium, use "" to disable) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+# Run directly (for testing)
+vibium mcp
+
+# Launch browsers with no visible window (servers, CI)
+vibium mcp --headless
+
+# Configure in Claude Code
+claude mcp add vibium -- vibium mcp
+
+# Custom screenshot directory
+vibium mcp --screenshot-dir ./screenshots
+
+# Disable screenshot file saving (inline only)
+vibium mcp --screenshot-dir ""
+
+# Test with echo
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"capabilities":{}}}' | vibium mcp
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Agent integration](/docs/commands#agent-integration) — related commands.

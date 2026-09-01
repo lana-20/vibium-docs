@@ -1,0 +1,47 @@
+---
+title: "vibium viewport"
+sidebar_label: viewport
+description: "Get or set the browser viewport size"
+---
+
+# vibium viewport
+
+Get or set the browser viewport size.
+
+:::info[Generated reference]
+Derived from `vibium help viewport` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium viewport [width] [height]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--dpr` | `float` | Device pixel ratio (e.g., 2 for Retina) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium viewport
+# {"width":1280,"height":720,"devicePixelRatio":1}
+
+vibium viewport 1280 720
+# Set viewport to 1280x720
+
+vibium viewport 375 812 --dpr 3
+# Simulate iPhone X viewport
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Browser & session](/docs/commands#browser--session) — related commands.

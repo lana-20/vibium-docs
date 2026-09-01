@@ -1,0 +1,108 @@
+---
+title: "vibium is"
+sidebar_label: is
+description: "Check element state (visible, enabled, checked, actionable)"
+---
+
+# vibium is
+
+Check element state (visible, enabled, checked, actionable).
+
+:::info[Generated reference]
+Derived from `vibium help is` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium is
+```
+
+## Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| [`vibium is actionable`](#vibium-is-actionable) | Check actionability of an element (Visible, Stable, ReceivesEvents, Enabled, Editable) |
+| [`vibium is checked`](#vibium-is-checked) | Check if a checkbox or radio is checked |
+| [`vibium is enabled`](#vibium-is-enabled) | Check if an element is enabled |
+| [`vibium is visible`](#vibium-is-visible) | Check if an element is visible on the page |
+
+### `vibium is actionable`
+
+Check actionability of an element (Visible, Stable, ReceivesEvents, Enabled, Editable).
+
+```
+vibium is actionable [url] [selector]
+```
+
+```sh
+vibium is actionable "a"
+# Output:
+# Checking actionability for selector: a
+# ✓ Visible: true
+# ✓ Stable: true
+# ✓ ReceivesEvents: true
+# ✓ Enabled: true
+# ✗ Editable: false
+
+vibium is actionable https://example.com "a"
+# Navigate first, then check
+```
+
+### `vibium is checked`
+
+Check if a checkbox or radio is checked.
+
+```
+vibium is checked [selector]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--fail` | — | Exit non-zero when the answer is false |
+
+```sh
+vibium is checked "input[type=checkbox]"
+# Prints true or false
+```
+
+### `vibium is enabled`
+
+Check if an element is enabled.
+
+```
+vibium is enabled [selector]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--fail` | — | Exit non-zero when the answer is false |
+
+```sh
+vibium is enabled "button[type=submit]"
+# Prints true or false
+```
+
+### `vibium is visible`
+
+Check if an element is visible on the page.
+
+```
+vibium is visible [selector]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--fail` | — | Exit non-zero when the answer is false |
+
+```sh
+vibium is visible "h1"
+# Prints true or false
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Reading page state](/docs/commands#reading-page-state) — related commands.

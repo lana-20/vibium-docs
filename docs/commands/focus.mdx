@@ -1,0 +1,47 @@
+---
+title: "vibium focus"
+sidebar_label: focus
+description: "Focus an element"
+---
+
+# vibium focus
+
+Focus an element.
+
+:::info[Generated reference]
+Derived from `vibium help focus` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium focus [selector]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium focus "input[name=email]"
+# Focus the email input
+
+vibium focus @e1
+# Focus element from map
+
+vibium focus "input[name=email]" --timeout 5s
+# Custom timeout (5s, or 5000 for milliseconds)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Interacting](/docs/commands#interacting) — related commands.

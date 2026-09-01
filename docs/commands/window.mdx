@@ -1,0 +1,50 @@
+---
+title: "vibium window"
+sidebar_label: window
+description: "Get or set the OS browser window size, position, or state"
+---
+
+# vibium window
+
+Get or set the OS browser window size, position, or state.
+
+:::info[Generated reference]
+Derived from `vibium help window` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium window [width] [height] [x] [y]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--state` | `string` | Window state: normal, maximized, minimized, fullscreen |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium window
+# {"state":"normal","x":0,"y":25,"width":1280,"height":720}
+
+vibium window 1920 1080
+# Set window to 1920x1080
+
+vibium window 1920 1080 0 0
+# Set window to 1920x1080 at position (0, 0)
+
+vibium window --state maximized
+# Maximize the window
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Browser & session](/docs/commands#browser--session) — related commands.

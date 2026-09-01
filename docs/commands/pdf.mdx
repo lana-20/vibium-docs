@@ -1,0 +1,44 @@
+---
+title: "vibium pdf"
+sidebar_label: pdf
+description: "Save page as PDF"
+---
+
+# vibium pdf
+
+Save page as PDF.
+
+:::info[Generated reference]
+Derived from `vibium help pdf` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium pdf [url]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--output`, `-o` | `string` | Output file path (default "page.pdf") |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium pdf -o page.pdf
+# Save current page as PDF
+
+vibium pdf https://example.com -o page.pdf
+# Navigate to URL first, then save as PDF
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Capture](/docs/commands#capture) — related commands.

@@ -1,0 +1,42 @@
+---
+title: "vibium text"
+sidebar_label: text
+description: "Get text content of the page or an element"
+---
+
+# vibium text
+
+Get text content of the page or an element.
+
+:::info[Generated reference]
+Derived from `vibium help text` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium text [selector]
+```
+
+## Examples
+
+```sh
+vibium text
+# Get all page text
+
+vibium text "h1"
+# Get text of a specific element
+
+vibium text https://example.com
+# Navigate then get all page text
+
+vibium text https://example.com "h1"
+# Navigate then get element text
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Reading page state](/docs/commands#reading-page-state) — related commands.

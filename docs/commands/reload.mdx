@@ -1,0 +1,55 @@
+---
+title: vibium reload
+sidebar_label: reload
+description: Reload the active page.
+---
+
+# vibium reload
+
+Reload the active page.
+
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium v26.8.21**,
+not transcribed help text.
+:::
+
+## Synopsis
+
+```
+vibium reload
+```
+
+## Description
+
+Re-requests the current URL and prints `Page reloaded` once the page has
+loaded again. The history entry does not change, so [`vibium back`](/docs/commands/back)
+still returns to the page you were on before.
+
+A reload discards everything the page held in memory — element references
+from [`vibium map`](/docs/commands/map), form input that was never submitted, and any
+state your scripts kept in variables. Cookies and browser storage survive.
+
+Reach for it when a page needs to pick up state you changed out of band, or
+to retry a page that loaded incompletely.
+
+## Examples
+
+```sh
+$ vibium go https://example.com
+Navigated to https://example.com
+
+$ vibium reload
+Page reloaded
+```
+
+Re-map after reloading, because the old references are gone:
+
+```sh
+vibium reload
+vibium map
+```
+
+## See also
+
+- [`vibium go`](/docs/commands/go) — navigate somewhere new instead.
+- [`vibium wait`](/docs/commands/wait) — block until the reloaded page is ready.

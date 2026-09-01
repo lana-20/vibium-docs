@@ -1,0 +1,44 @@
+---
+title: "vibium uncheck"
+sidebar_label: uncheck
+description: "Uncheck a checkbox"
+---
+
+# vibium uncheck
+
+Uncheck a checkbox.
+
+:::info[Generated reference]
+Derived from `vibium help uncheck` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium uncheck [selector]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium uncheck "input[name=agree]"
+# Uncheck the "agree" checkbox (idempotent)
+
+vibium uncheck "input[name=agree]" --timeout 5s
+# Custom timeout (5s, or 5000 for milliseconds)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Interacting](/docs/commands#interacting) — related commands.

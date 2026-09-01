@@ -1,0 +1,206 @@
+---
+title: "vibium find"
+sidebar_label: find
+description: "Find elements by CSS selector or semantic locator"
+---
+
+# vibium find
+
+Find elements by CSS selector or semantic locator.
+
+:::info[Generated reference]
+Derived from `vibium help find` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium find [selector]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--all` | — | Find all matching elements |
+| `--limit` | `int` | Maximum number of elements to return (with --all) (default 10) |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium find "a"
+# → @e1 [a] "More information..."
+
+vibium find "a" --all
+# → @e1 [a] "Home"  @e2 [a] "About"  ...
+
+vibium find text "Sign In"
+# → @e1 [button] "Sign In"
+
+vibium find role button
+# → @e1 [button] "Submit"
+
+vibium find role heading --name "Example"
+# Find heading with accessible name "Example"
+```
+
+## Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| [`vibium find alt`](#vibium-find-alt) | Find element by alt attribute |
+| [`vibium find label`](#vibium-find-label) | Find input by associated label text |
+| [`vibium find placeholder`](#vibium-find-placeholder) | Find element by placeholder attribute |
+| [`vibium find role`](#vibium-find-role) | Find element by ARIA role |
+| [`vibium find testid`](#vibium-find-testid) | Find element by data-testid attribute |
+| [`vibium find text`](#vibium-find-text) | Find element by text content |
+| [`vibium find title`](#vibium-find-title) | Find element by title attribute |
+| [`vibium find xpath`](#vibium-find-xpath) | Find element by XPath expression |
+
+### `vibium find alt`
+
+Find element by alt attribute.
+
+```
+vibium find alt [alt]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium find alt "Logo"
+```
+
+### `vibium find label`
+
+Find input by associated label text.
+
+```
+vibium find label [label]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium find label "Email"
+# → @e1 [input type="email"] placeholder="Email"
+```
+
+### `vibium find placeholder`
+
+Find element by placeholder attribute.
+
+```
+vibium find placeholder [placeholder]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium find placeholder "Search..."
+# → @e1 [input] placeholder="Search..."
+```
+
+### `vibium find role`
+
+Find element by ARIA role.
+
+```
+vibium find role [role]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--name` | `string` | Accessible name filter |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium find role button
+# → @e1 [button] "Submit"
+
+vibium find role heading --name "Example"
+# Find heading with accessible name "Example"
+```
+
+### `vibium find testid`
+
+Find element by data-testid attribute.
+
+```
+vibium find testid [testid]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium find testid "submit-btn"
+# → @e1 [button] data-testid="submit-btn"
+```
+
+### `vibium find text`
+
+Find element by text content.
+
+```
+vibium find text [text]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium find text "Sign In"
+# → @e1 [button] "Sign In"
+```
+
+### `vibium find title`
+
+Find element by title attribute.
+
+```
+vibium find title [title]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium find title "Close"
+```
+
+### `vibium find xpath`
+
+Find element by XPath expression.
+
+```
+vibium find xpath [expression]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium find xpath "//div[@class='main']"
+# → @e1 [div.main] ...
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Finding elements](/docs/commands#finding-elements) — related commands.

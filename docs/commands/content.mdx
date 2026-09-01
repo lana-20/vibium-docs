@@ -1,0 +1,44 @@
+---
+title: "vibium content"
+sidebar_label: content
+description: "Replace the page HTML content"
+---
+
+# vibium content
+
+Replace the page HTML content.
+
+:::info[Generated reference]
+Derived from `vibium help content` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium content [html]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--stdin` | — | Read HTML from stdin |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium content "<h1>Hello World</h1>"
+# Set page content directly
+
+echo "<h1>Hello</h1>" | vibium content --stdin
+# Set page content from stdin
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Reading page state](/docs/commands#reading-page-state) — related commands.

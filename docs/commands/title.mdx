@@ -1,0 +1,51 @@
+---
+title: vibium title
+sidebar_label: title
+description: Print the title of the active page.
+---
+
+# vibium title
+
+Print the title of the active page.
+
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium v26.8.21**,
+not transcribed help text.
+:::
+
+## Synopsis
+
+```
+vibium title
+```
+
+## Description
+
+Writes the current document title to stdout, followed by a newline. A page
+with no title prints an empty line, so a blank result means the page loaded
+without one — not that the command failed.
+
+The title is read at the moment you run the command. Single-page apps often
+update it after the initial load, so pair this with [`vibium wait`](/docs/commands/wait)
+when the title is what you are waiting for.
+
+## Examples
+
+```sh
+$ vibium go https://example.com
+Navigated to https://example.com
+
+$ vibium title
+Example Domain
+```
+
+Use it as an assertion in a script:
+
+```sh
+[ "$(vibium title)" = "Example Domain" ] && echo pass || echo fail
+```
+
+## See also
+
+- [`vibium url`](/docs/commands/url) — the page URL instead of its title.
+- [`vibium text`](/docs/commands/text) — the visible text of the page or an element.

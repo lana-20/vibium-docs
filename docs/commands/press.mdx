@@ -1,0 +1,39 @@
+---
+title: "vibium press"
+sidebar_label: press
+description: "Press a key on a specific element or the focused element"
+---
+
+# vibium press
+
+Press a key on a specific element or the focused element.
+
+:::info[Generated reference]
+Derived from `vibium help press` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium press [key] [selector]
+```
+
+## Examples
+
+```sh
+vibium press Enter
+# Press Enter on the currently focused element
+
+vibium press Enter "input[name=search]"
+# Click to focus the input, then press Enter
+
+vibium press "Control+a"
+# Select all
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Interacting](/docs/commands#interacting) — related commands.

@@ -1,0 +1,73 @@
+---
+title: Introduction
+sidebar_position: 1
+description: An independent, complete command reference for the Vibium CLI.
+---
+
+# Vibium CLI reference
+
+[Vibium](https://github.com/VibiumDev/vibium) is a browser automation CLI for AI
+agents and humans. It exposes **67 commands**, and this site documents all of
+them, including their 37 subcommands.
+
+:::note[Why this site exists]
+The official documentation covers 16 of the 67 commands. This is an independent
+reference that covers the rest. It is community-maintained and not affiliated
+with the Vibium project; where behaviour here disagrees with upstream, upstream
+wins.
+:::
+
+## Two tiers of page
+
+The reference is deliberately honest about where each page comes from, because
+the two kinds are not equally trustworthy.
+
+| Tier | What it means |
+| --- | --- |
+| **Verified** | Examples are real terminal output, captured from a live browser at the version named on the page. |
+| **Generated** | Derived from the command's own `--help` output. Accurate as to syntax and flags; the examples are the binary's built-in samples. |
+
+Every page says which it is, at the top. Pages get promoted from Generated to
+Verified as their behaviour is actually exercised — see [Contributing](#contributing).
+
+## Install
+
+```sh
+brew install vibium
+```
+
+Or run any command without installing:
+
+```sh
+npx -y vibium go https://example.com
+```
+
+## A first session
+
+```sh
+vibium go https://example.com     # navigate
+vibium map                        # list interactive elements as @eN refs
+vibium click @e1                  # act on one
+vibium text                       # read the page back
+```
+
+All commands share a single browser and daemon, so state persists between
+invocations — there is no session to thread through by hand.
+
+## Where to go next
+
+- **[Command reference](/docs/commands)** — all 67 commands, grouped by purpose.
+- **[Global flags](/docs/global-flags)** — the flags every command accepts.
+
+## Contributing
+
+The generated pages come from `scripts/gen_pages.py`, which reads the installed
+binary. After a vibium release:
+
+```sh
+python3 scripts/gen_pages.py
+```
+
+Curated pages are listed in that script's `CURATED` set and are never
+overwritten, so promoting a page means writing real output into it and adding
+its name to that set.

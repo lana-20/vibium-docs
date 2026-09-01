@@ -1,0 +1,77 @@
+---
+title: "vibium scroll"
+sidebar_label: scroll
+description: "Scroll the page or an element"
+---
+
+# vibium scroll
+
+Scroll the page or an element.
+
+:::info[Generated reference]
+Derived from `vibium help scroll` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium scroll [direction]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--amount` | `int` | Number of scroll increments (default 3) |
+| `--selector` | `string` | CSS selector for element to scroll to |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium scroll
+# Scroll down by default
+
+vibium scroll up
+# Scroll up
+
+vibium scroll down --amount 5
+# Scroll down 5 increments
+
+vibium scroll down --selector "div.content"
+# Scroll within a specific element
+```
+
+## Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| [`vibium scroll into-view`](#vibium-scroll-into-view) | Scroll an element into view |
+
+### `vibium scroll into-view`
+
+Scroll an element into view.
+
+```
+vibium scroll into-view [selector]
+```
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+```sh
+vibium scroll into-view "#footer"
+# Scroll the footer element into view (centered on screen)
+
+vibium scroll into-view "#footer" --timeout 5s
+# Custom timeout (5s, or 5000 for milliseconds)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Interacting](/docs/commands#interacting) — related commands.

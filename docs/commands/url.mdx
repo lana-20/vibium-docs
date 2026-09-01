@@ -1,0 +1,53 @@
+---
+title: vibium url
+sidebar_label: url
+description: Print the URL of the active page.
+---
+
+# vibium url
+
+Print the URL of the active page.
+
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium v26.8.21**,
+not transcribed help text.
+:::
+
+## Synopsis
+
+```
+vibium url
+```
+
+## Description
+
+Writes the current URL to stdout, followed by a newline. Nothing else is
+printed, so the output can be captured or compared directly in a shell.
+
+The URL is the browser's normalized form, which is not always the string you
+typed: navigating to `https://example.com` reports `https://example.com/`.
+Compare against the normalized value, or match on a substring.
+
+## Examples
+
+```sh
+$ vibium go https://example.com
+Navigated to https://example.com
+
+$ vibium url
+https://example.com/
+```
+
+Use it as an assertion in a script:
+
+```sh
+case "$(vibium url)" in
+  *"/dashboard"*) echo "signed in" ;;
+  *) echo "unexpected page: $(vibium url)"; exit 1 ;;
+esac
+```
+
+## See also
+
+- [`vibium title`](/docs/commands/title) — the page title instead of its URL.
+- [`vibium wait`](/docs/commands/wait) — block until the URL contains a substring.

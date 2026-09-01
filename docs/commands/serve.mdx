@@ -1,0 +1,47 @@
+---
+title: "vibium serve"
+sidebar_label: serve
+description: "Start WebSocket proxy server for browser automation"
+---
+
+# vibium serve
+
+Start WebSocket proxy server for browser automation.
+
+:::info[Generated reference]
+Derived from `vibium help serve` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium serve
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--port`, `-p` | `int` | Port to listen on (default 9515) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium serve
+# Starts server on default port 9515, visible browser
+
+vibium serve --port 8080
+# Starts server on port 8080
+
+vibium serve --headless
+# Starts server with headless browser
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Agent integration](/docs/commands#agent-integration) — related commands.

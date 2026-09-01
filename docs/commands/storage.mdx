@@ -1,0 +1,63 @@
+---
+title: "vibium storage"
+sidebar_label: storage
+description: "Export or restore browser state (cookies, localStorage, sessionStorage)"
+---
+
+# vibium storage
+
+Export or restore browser state (cookies, localStorage, sessionStorage).
+
+:::info[Generated reference]
+Derived from `vibium help storage` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium storage
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--output`, `-o` | `string` | Output file path |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium storage
+# Print state as JSON
+
+vibium storage -o state.json
+# Save state to file
+```
+
+## Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| [`vibium storage restore`](#vibium-storage-restore) | Restore browser state from a JSON file |
+
+### `vibium storage restore`
+
+Restore browser state from a JSON file.
+
+```
+vibium storage restore [path]
+```
+
+```sh
+vibium storage restore state.json
+# Restore cookies and storage from saved state
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Browser & session](/docs/commands#browser--session) — related commands.

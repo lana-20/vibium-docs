@@ -1,0 +1,29 @@
+---
+title: Global flags
+sidebar_position: 2
+description: Flags accepted by every vibium command.
+---
+
+# Global flags
+
+Accepted by every command at **vibium v26.8.21**. Several are also settable
+through the environment, which is usually the better choice in CI.
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--channel` | `string` | Engine release channel to install and run: release (default) or beta; Firefox only for now (env: VIBIUM_ENGINE_CHANNEL) |
+| `--engine` | `string` | Browser engine to launch: chrome or firefox (env: VIBIUM_ENGINE) (default "chrome") |
+| `--headless` | — | Hide browser window (visible by default) |
+| `--json` | — | Output as JSON |
+| `--session` | `string` | Named daemon session for isolated concurrent use (env: VIBIUM_SESSION) |
+| `--verbose`, `-v` | — | Enable debug logging |
+| `--version` | — | version for vibium |
+
+## Notes
+
+- `--json` is honoured by most commands but not all. The gap is tracked
+  upstream in [vibium#451](https://github.com/VibiumDev/vibium/issues/451).
+- `--headless` is a persistent root flag; `vibium mcp` redeclared it,
+  which is tracked in [vibium#452](https://github.com/VibiumDev/vibium/issues/452).
+- `--verbose` is accepted everywhere but has no effect on commands that
+  delegate to the daemon.

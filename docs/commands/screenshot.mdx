@@ -1,0 +1,55 @@
+---
+title: "vibium screenshot"
+sidebar_label: screenshot
+description: "Capture a screenshot (optionally navigate to URL first)"
+---
+
+# vibium screenshot
+
+Capture a screenshot (optionally navigate to URL first).
+
+:::info[Generated reference]
+Derived from `vibium help screenshot` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium screenshot [url]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--annotate` | — | Annotate interactive elements with numbered labels |
+| `--full-page` | — | Capture the full page instead of just the viewport |
+| `--output`, `-o` | `string` | Output file path (default "screenshot.png") |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium screenshot
+# Saves ./screenshot.png in the current directory
+
+vibium screenshot -o shot.png
+# Screenshots the current page to ./shot.png
+
+vibium screenshot -o ~/Pictures/shot.png
+# Paths are honored as given
+
+vibium screenshot https://example.com -o shot.png
+# Navigates to URL first, then screenshots
+
+vibium screenshot -o full.png --full-page
+# Capture the entire page (not just the viewport)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Capture](/docs/commands#capture) — related commands.

@@ -1,0 +1,62 @@
+---
+title: "vibium dialog"
+sidebar_label: dialog
+description: "Handle browser dialogs (alert, confirm, prompt)"
+---
+
+# vibium dialog
+
+Handle browser dialogs (alert, confirm, prompt).
+
+:::info[Generated reference]
+Derived from `vibium help dialog` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium dialog
+```
+
+## Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| [`vibium dialog accept`](#vibium-dialog-accept) | Accept a dialog (optionally with prompt text) |
+| [`vibium dialog dismiss`](#vibium-dialog-dismiss) | Dismiss a dialog |
+
+### `vibium dialog accept`
+
+Accept a dialog (optionally with prompt text).
+
+```
+vibium dialog accept [text]
+```
+
+```sh
+vibium dialog accept
+# Accept an alert or confirm dialog
+
+vibium dialog accept "my input"
+# Accept a prompt dialog with text
+```
+
+### `vibium dialog dismiss`
+
+Dismiss a dialog.
+
+```
+vibium dialog dismiss
+```
+
+```sh
+vibium dialog dismiss
+# Dismiss/cancel a dialog
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Browser & session](/docs/commands#browser--session) — related commands.

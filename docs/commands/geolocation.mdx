@@ -1,0 +1,44 @@
+---
+title: "vibium geolocation"
+sidebar_label: geolocation
+description: "Override the browser geolocation"
+---
+
+# vibium geolocation
+
+Override the browser geolocation.
+
+:::info[Generated reference]
+Derived from `vibium help geolocation` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium geolocation [latitude] [longitude]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--accuracy` | `float` | Accuracy in meters (default: 1) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium geolocation 40.7128 -74.006
+# Set location to New York City
+
+vibium geolocation 51.5074 -0.1278 --accuracy 10
+# Set location to London with 10m accuracy
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Browser & session](/docs/commands#browser--session) — related commands.

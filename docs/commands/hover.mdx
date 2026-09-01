@@ -1,0 +1,47 @@
+---
+title: "vibium hover"
+sidebar_label: hover
+description: "Hover over an element by CSS selector"
+---
+
+# vibium hover
+
+Hover over an element by CSS selector.
+
+:::info[Generated reference]
+Derived from `vibium help hover` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium hover [selector]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium hover "a"
+# Hover over first link
+
+vibium hover https://example.com "a"
+# Navigate then hover
+
+vibium hover "a" --timeout 5s
+# Custom timeout (5s, or 5000 for milliseconds)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Interacting](/docs/commands#interacting) — related commands.

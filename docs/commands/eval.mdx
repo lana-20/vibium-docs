@@ -1,0 +1,47 @@
+---
+title: "vibium eval"
+sidebar_label: eval
+description: "Evaluate a JavaScript expression (optionally navigate to URL first)"
+---
+
+# vibium eval
+
+Evaluate a JavaScript expression (optionally navigate to URL first).
+
+:::info[Generated reference]
+Derived from `vibium help eval` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium eval [url] [expression]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--stdin` | — | Read expression from stdin |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium eval "document.title"
+# Evaluates on current page
+
+vibium eval https://example.com "document.title"
+# Navigates to URL first, then evaluates
+
+echo 'document.title' | vibium eval --stdin
+# Read expression from stdin (avoids shell quoting issues)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Capture](/docs/commands#capture) — related commands.

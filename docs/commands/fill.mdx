@@ -1,0 +1,46 @@
+---
+title: "vibium fill"
+sidebar_label: fill
+description: "Clear an input field and type new text"
+---
+
+# vibium fill
+
+Clear an input field and type new text.
+
+:::info[Generated reference]
+Derived from `vibium help fill` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium fill [selector] [text]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium fill "input[name=email]" "user@example.com"
+# Clear the field and type new value
+vibium fill "#search" "vibium"
+# Replace search field contents
+
+vibium fill "#search" "vibium" --timeout 5s
+# Custom timeout (5s, or 5000 for milliseconds)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Interacting](/docs/commands#interacting) — related commands.

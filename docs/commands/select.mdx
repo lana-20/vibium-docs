@@ -1,0 +1,44 @@
+---
+title: "vibium select"
+sidebar_label: select
+description: "Select an option in a <select> element"
+---
+
+# vibium select
+
+Select an option in a &lt;select&gt; element.
+
+:::info[Generated reference]
+Derived from `vibium help select` at **vibium v26.8.21**. The examples below are the
+command's own built-in samples, not captured terminal output. Pages marked
+*Verified* instead carry output from a live browser run.
+:::
+
+## Synopsis
+
+```
+vibium select [selector] [value]
+```
+
+## Flags
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Examples
+
+```sh
+vibium select "select#color" "blue"
+# Select "blue" in the color dropdown
+
+vibium select "select#color" "blue" --timeout 5s
+# Custom timeout (5s, or 5000 for milliseconds)
+```
+
+## See also
+
+- [Command reference](/docs/commands) — all commands, grouped by purpose.
+- [Interacting](/docs/commands#interacting) — related commands.
