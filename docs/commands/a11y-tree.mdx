@@ -6,12 +6,15 @@ description: "Get the accessibility tree of the current page"
 
 # vibium a11y-tree
 
-Get the accessibility tree of the current page.
+Print the page's accessibility tree — roles and structure as assistive
+technology sees them.
 
-:::info[Generated reference]
-Derived from `vibium help a11y-tree` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
@@ -28,17 +31,96 @@ vibium a11y-tree
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Output
+
+One line of JSON, printed whether or not `--json` is given:
 
 ```sh
-vibium a11y-tree
-# Print the accessibility tree (interesting nodes only)
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium a11y-tree --everything
-# Include all nodes (generic containers, etc.)
+$ vibium a11y-tree
+{"role":"WebArea","name":"Vibium docs playground","children":[{"role":"navigation","children":[{"role":"link"},{"role":"link"},{"role":"link"}]},{"role":"heading","level":1},{"role":"img","name":"Company logo"},{"role":"form","children":[{"role":"textbox","name":"Email"},{"role":"combobox","name":"Country","children":[{"role":"option"},{"role":"option"}]},{"role":"checkbox","checked":false},{"role":"searchbox","name":"Search docs"},{"role":"button"},{"role":"button","name":"Close dialog"}]},{"role":"region","children":[{"role":"heading","level":2},{"role":"button"},{"role":"button","disabled":true},{"role":"button"},{"role":"button"},{"role":"link"}]},{"role":"region","children":[{"role":"heading","level":2}]}]}
 ```
+
+Pipe it through a parser to work with it:
+
+```sh
+vibium a11y-tree | python3 -m json.tool
+```
+
+## Names are missing when they come from text content
+
+:::danger[Most nodes come back unnamed, which makes the default output hard to use]
+An element named by an attribute or a label keeps its name — `img` has
+`"Company logo"` from `alt`, `textbox` has `"Email"` from its `<label>`, and the
+icon button has `"Close dialog"` from `title`.
+
+An element named by its own **text content** does not. All three nav links, and
+four of the six buttons, come back as bare `{"role":"link"}` and
+`{"role":"button"}` — even though the page plainly names them:
+
+```sh
+$ vibium eval "document.querySelector('#counter').textContent"
+Count
+```
+
+The "Count" button is `{"role":"button"}` in the tree above. So the default
+output tells you *how many* buttons there are and their structure, but not which
+is which — which is usually the question. Use
+[`vibium map`](/docs/commands/map) when you need to identify elements, and
+`a11y-tree` when you need roles and nesting.
+:::
+
+## Hidden elements are included
+
+Unlike [`map`](/docs/commands/map), the tree contains elements that are not
+rendered. The fixture has six buttons in the DOM, one of them inside a hidden
+panel:
+
+```sh
+$ vibium eval "document.querySelectorAll('button').length"
+6
+
+$ vibium map | grep -c button
+5
+
+$ vibium a11y-tree | grep -o '"role":"button"' | wc -l
+6
+```
+
+`map` reports five, the tree reports six. Do not use `a11y-tree` to decide what
+is on screen.
+
+## `--everything`
+
+The default hides generic containers. `--everything` includes them, which on
+this small fixture is about 70% more output:
+
+```sh
+$ vibium a11y-tree | wc -c
+     722
+
+$ vibium a11y-tree --everything | wc -c
+    1231
+```
+
+## `--json` double-encodes
+
+The command already emits JSON, so `--json` wraps a JSON *string* in an
+envelope, and consumers have to decode twice:
+
+```sh
+$ vibium a11y-tree --json
+{"ok":true,"result":"{\"role\":\"WebArea\",\"name\":\"Vibium docs playground\",\"children\":[{\"role\":\"navigation\"...
+```
+
+The bare form is the more useful one for scripting.
 
 ## See also
 
+- [`vibium map`](/docs/commands/map) — identifies elements and excludes hidden ones.
+- [`vibium find role`](/docs/commands/find) — locate an element by its ARIA role.
+- [`vibium html`](/docs/commands/html) — the markup behind the tree.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Reading page state](/docs/commands#reading-page-state) — related commands.

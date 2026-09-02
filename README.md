@@ -61,7 +61,7 @@ which the generator will never overwrite it.
 
 <!-- BEGIN COMMAND STATUS -->
 
-**15 of 67 verified** — 52 still generated from `--help`. Measured against `vibium v26.8.21`.
+**22 of 67 verified** — 45 still generated from `--help`. Measured against `vibium v26.8.21`.
 
 <details open>
 <summary><strong>Navigation</strong> — 6/6 verified</summary>
@@ -123,18 +123,18 @@ which the generator will never overwrite it.
 
 </details>
 
-<details>
-<summary><strong>Reading page state</strong> — 0/7 verified</summary>
+<details open>
+<summary><strong>Reading page state</strong> — 7/7 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
-| [ ] | [`text`](https://lana-20.github.io/vibium-docs/docs/commands/text) | Get text content of the page or an element |
-| [ ] | [`html`](https://lana-20.github.io/vibium-docs/docs/commands/html) | Get HTML content of the page or an element |
-| [ ] | [`attr`](https://lana-20.github.io/vibium-docs/docs/commands/attr) | Get an HTML attribute value from an element |
-| [ ] | [`value`](https://lana-20.github.io/vibium-docs/docs/commands/value) | Get the current value of a form element |
-| [ ] | [`a11y-tree`](https://lana-20.github.io/vibium-docs/docs/commands/a11y-tree) | Get the accessibility tree of the current page |
-| [ ] | [`is`](https://lana-20.github.io/vibium-docs/docs/commands/is) | Check element state (visible, enabled, checked, actionable) |
-| [ ] | [`content`](https://lana-20.github.io/vibium-docs/docs/commands/content) | Replace the page HTML content |
+| [x] | [`text`](https://lana-20.github.io/vibium-docs/docs/commands/text) | Get text content of the page or an element |
+| [x] | [`html`](https://lana-20.github.io/vibium-docs/docs/commands/html) | Get HTML content of the page or an element |
+| [x] | [`attr`](https://lana-20.github.io/vibium-docs/docs/commands/attr) | Get an HTML attribute value from an element |
+| [x] | [`value`](https://lana-20.github.io/vibium-docs/docs/commands/value) | Get the current value of a form element |
+| [x] | [`a11y-tree`](https://lana-20.github.io/vibium-docs/docs/commands/a11y-tree) | Get the accessibility tree of the current page |
+| [x] | [`is`](https://lana-20.github.io/vibium-docs/docs/commands/is) | Check element state (visible, enabled, checked, actionable) |
+| [x] | [`content`](https://lana-20.github.io/vibium-docs/docs/commands/content) | Replace the page HTML content |
 
 </details>
 

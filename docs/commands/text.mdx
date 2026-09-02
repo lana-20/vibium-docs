@@ -6,37 +6,132 @@ description: "Get text content of the page or an element"
 
 # vibium text
 
-Get text content of the page or an element.
+Read text from the page, or from one element.
 
-:::info[Generated reference]
-Derived from `vibium help text` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium text [selector]
+vibium text [url] [selector]
 ```
 
-## Examples
+## Flags
+
+`text` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Reading an element
+
+A selector or a ref both work, and the ref is resolved through the same table
+[`map`](/docs/commands/map) fills:
 
 ```sh
-vibium text
-# Get all page text
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium text "h1"
-# Get text of a specific element
+$ vibium text "h1"
+Playground
 
-vibium text https://example.com
-# Navigate then get all page text
+$ vibium text "#status"
+Ready
 
-vibium text https://example.com "h1"
-# Navigate then get element text
+$ vibium map | head -1
+@e1 [a] "Home"
+
+$ vibium text @e1
+Home
+```
+
+## Reading the whole page
+
+With no selector, `text` returns the page's text:
+
+```sh
+$ vibium text
+Home Docs About
+Playground
+
+A fixed page for the examples in this reference.
+
+Email
+Country
+United States
+Germany
+ Accept terms
+ Sign In ×
+Interactions
+Count Locked Reveal panel
+```
+
+Layout is not preserved in any dependable way — inline elements run together
+(`Sign In ×`), and whitespace comes from the markup rather than the rendering.
+Match on substrings, not on exact shape.
+
+## `text` reads hidden content
+
+:::warning[This is not what the user can see]
+`text` returns an element's text whether or not it is rendered. The fixture's
+panel is hidden, and `text` reads it anyway:
+
+```sh
+$ vibium is visible "#panel-text"
+false
+
+$ vibium text "#panel-text"
+Panel is open
+```
+
+That makes `text` the wrong tool for "has this appeared yet". Use
+[`vibium is visible`](/docs/commands/is), or
+[`vibium wait --state visible`](/docs/commands/wait).
+
+It is also the opposite of [`map`](/docs/commands/map), which lists only
+rendered elements. The two disagree by design.
+:::
+
+## Inputs have no text
+
+A form field's content is its *value*, not its text, so `text` returns nothing
+and still exits 0:
+
+```sh
+$ vibium text "#email"
+$ echo $?
+0
+```
+
+Use [`vibium value`](/docs/commands/value) for form fields.
+
+## When the element is missing
+
+Unlike a hidden or empty element, a missing one is an error:
+
+```sh
+$ vibium text ".nope"
+Error: failed to get text: element not found
+$ echo $?
+1
+```
+
+## JSON output
+
+```sh
+$ vibium text "h1" --json
+{"ok":true,"result":"Playground"}
 ```
 
 ## See also
 
+- [`vibium value`](/docs/commands/value) — form fields, which have no text.
+- [`vibium html`](/docs/commands/html) — markup rather than text.
+- [`vibium is`](/docs/commands/is) — whether an element is actually visible.
+- [`vibium wait text`](/docs/commands/wait) — block until text appears.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Reading page state](/docs/commands#reading-page-state) — related commands.

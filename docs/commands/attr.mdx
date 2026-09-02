@@ -6,31 +6,101 @@ description: "Get an HTML attribute value from an element"
 
 # vibium attr
 
-Get an HTML attribute value from an element.
+Read one attribute from an element.
 
-:::info[Generated reference]
-Derived from `vibium help attr` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium attr [selector] [attribute]
+vibium attr <selector> <attribute>
 ```
 
-## Examples
+## Flags
+
+`attr` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Reading an attribute
 
 ```sh
-vibium attr "a" "href"
-# Get the href of the first link
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium attr "img" "src"
-# Get the image source URL
+$ vibium attr "a" "href"
+#home
+
+$ vibium attr "img" "alt"
+Company logo
+
+$ vibium attr "img" "src"
+logo.svg
+```
+
+:::note[Attributes are returned as written, not as resolved]
+`src` comes back as `logo.svg`, the literal attribute, not the absolute URL the
+browser fetched. [`find alt`](/docs/commands/find) reports the same raw value.
+If you need the resolved URL, read the DOM property instead:
+
+```sh
+vibium eval "document.querySelector('img').src"
+```
+:::
+
+## Three outcomes, all exit 0
+
+`attr` never fails on the attribute — only on the element. The three cases are
+distinguished only by what lands on stdout:
+
+| case | example | output |
+| --- | --- | --- |
+| attribute present with a value | `attr "img" "alt"` | `Company logo` |
+| attribute absent | `attr "h1" "href"` | `null` |
+| present but valueless (boolean) | `attr "#locked" "disabled"` | *(empty)* |
+
+```sh
+$ vibium attr "h1" "href"
+null
+$ echo $?
+0
+
+$ vibium attr "#locked" "disabled"
+$ echo $?
+0
+```
+
+:::warning[`null` is a string, and empty means present]
+An absent attribute prints the four characters `null`, which is
+indistinguishable from an attribute whose value genuinely is `"null"`. A present
+boolean attribute prints an **empty line** — so empty output means *present and
+valueless*, not missing.
+
+For boolean attributes, test the property rather than the attribute:
+
+```sh
+$ vibium is enabled "#locked"
+false
+```
+:::
+
+## JSON output
+
+```sh
+$ vibium attr "img" "alt" --json
+{"ok":true,"result":"Company logo"}
 ```
 
 ## See also
 
+- [`vibium value`](/docs/commands/value) — the current value of a form field, which is not an attribute.
+- [`vibium is`](/docs/commands/is) — boolean state, done properly.
+- [`vibium html`](/docs/commands/html) — all the markup at once.
+- [`vibium eval`](/docs/commands/eval) — DOM properties rather than attributes.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Reading page state](/docs/commands#reading-page-state) — related commands.

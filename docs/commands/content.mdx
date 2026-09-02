@@ -6,18 +6,21 @@ description: "Replace the page HTML content"
 
 # vibium content
 
-Replace the page HTML content.
+Replace the current page's HTML with markup you supply.
 
-:::info[Generated reference]
-Derived from `vibium help content` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium content [html]
+vibium content <html>
+vibium content --stdin
 ```
 
 ## Flags
@@ -28,17 +31,95 @@ vibium content [html]
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Replacing the page
+
+The command reports the number of characters it set:
 
 ```sh
-vibium content "<h1>Hello World</h1>"
-# Set page content directly
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-echo "<h1>Hello</h1>" | vibium content --stdin
-# Set page content from stdin
+$ vibium text "h1"
+Playground
+
+$ vibium content "<h1>Replaced</h1><p>New body</p>"
+Page content set (32 chars)
+
+$ vibium text "h1"
+Replaced
+```
+
+This is the quickest way to get a known page under test without hosting a
+fixture — useful for reproducing a bug against exact markup.
+
+## The URL does not change, and the title is lost
+
+:::warning[After `content`, the page's identity is misleading]
+`content` replaces the document but not the address bar, and the replacement
+discards `<head>`:
+
+```sh
+$ vibium url
+https://lana-20.github.io/vibium-docs/fixtures/playground.html
+
+$ vibium title
+
+```
+
+`url` still reports the page you navigated to, though none of its content
+remains; `title` is now empty. Neither is a reliable signal about what the
+browser is actually showing after a `content` call.
+
+Scripts and styles from the original page are gone too — the fixture's counter
+button stops working, because its handler went with the old document.
+:::
+
+## Reading from stdin
+
+`--stdin` avoids shell quoting problems, and is the better choice for anything
+with nested quotes or newlines:
+
+```sh
+$ echo "<button id=fromstdin>From stdin</button>" | vibium content --stdin
+Page content set (41 chars)
+
+$ vibium map
+@e1 [button] "From stdin"
+```
+
+## Getting back
+
+`content` does not affect history, so re-navigating restores the real page:
+
+```sh
+vibium go "$PLAYGROUND"
+```
+
+## When the new content has nothing interactive
+
+[`map`](/docs/commands/map) says so plainly, and exits 0:
+
+```sh
+$ vibium content "<h1>Replaced</h1><p>New body</p>"
+Page content set (32 chars)
+
+$ vibium map
+No interactive elements found
+$ echo $?
+0
+```
+
+## JSON output
+
+```sh
+$ vibium content "<p>j</p>" --json
+{"ok":true,"result":"Page content set (8 chars)"}
 ```
 
 ## See also
 
+- [`vibium html`](/docs/commands/html) — read the markup instead of setting it.
+- [`vibium eval`](/docs/commands/eval) — finer-grained DOM changes.
+- [`vibium go`](/docs/commands/go) — restore the real page.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Reading page state](/docs/commands#reading-page-state) — related commands.

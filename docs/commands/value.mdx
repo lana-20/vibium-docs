@@ -6,28 +6,109 @@ description: "Get the current value of a form element"
 
 # vibium value
 
-Get the current value of a form element.
+Read the current value of a form field.
 
-:::info[Generated reference]
-Derived from `vibium help value` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium value [selector]
+vibium value <selector>
 ```
 
-## Examples
+## Flags
+
+`value` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Reading a field
+
+`value` reflects what is in the field *now*, including anything typed since load:
 
 ```sh
-vibium value "input[name=email]"
-# Print the current value of the email input
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
+
+$ vibium value "#email"
+
+$ vibium fill "#email" "a@b.com"
+Filled "a@b.com" into #email
+
+$ vibium value "#email"
+a@b.com
+```
+
+It is the standard way to check that a [`fill`](/docs/commands/fill) or
+[`type`](/docs/commands/type) did what you expected — and on this version
+[`type` frequently does not](/docs/commands/type#type-does-not-append).
+
+## A `<select>` returns the option's value, not its label
+
+```sh
+$ vibium value "#country"
+us
+```
+
+The dropdown displays "United States"; `value` returns `us`, the `value`
+attribute of the selected `<option>`. [`map`](/docs/commands/map) shows the
+labels instead, so the two never agree on a select.
+
+## Checkboxes: `value` tells you nothing about checked
+
+:::danger[`value` on a checkbox is not its state]
+A checkbox's value is the string it would submit *if* checked — `on` by default.
+It does not change when the box is ticked:
+
+```sh
+$ vibium value "#terms"
+on
+$ vibium is checked "#terms"
+false
+
+$ vibium check "#terms"
+Checked #terms
+
+$ vibium value "#terms"
+on
+$ vibium is checked "#terms"
+true
+```
+
+`value` returned `on` both times. Use
+[`vibium is checked`](/docs/commands/is) for the state — always.
+:::
+
+## Elements that have no value
+
+A non-form element is not an error. `value` prints nothing and exits 0:
+
+```sh
+$ vibium value "h1"
+$ echo $?
+0
+```
+
+So empty output means "no value", "empty value", or "not a form field", and
+nothing distinguishes them.
+
+## JSON output
+
+```sh
+$ vibium value "#email" --json
+{"ok":true,"result":"a@b.com"}
 ```
 
 ## See also
 
+- [`vibium fill`](/docs/commands/fill) — set a value.
+- [`vibium is checked`](/docs/commands/is) — checkbox and radio state.
+- [`vibium text`](/docs/commands/text) — text content, which fields do not have.
+- [`vibium select`](/docs/commands/select) — choose an option by value.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Reading page state](/docs/commands#reading-page-state) — related commands.

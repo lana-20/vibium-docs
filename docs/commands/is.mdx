@@ -6,103 +6,166 @@ description: "Check element state (visible, enabled, checked, actionable)"
 
 # vibium is
 
-Check element state (visible, enabled, checked, actionable).
+Test an element's state. Four subcommands: `visible`, `enabled`, `checked` and
+`actionable`.
 
-:::info[Generated reference]
-Derived from `vibium help is` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
+:::
+
+:::danger[Every `is` command exits 0, whatever the answer]
+The answer is on **stdout**, not in the exit status. A shell conditional
+therefore always takes the success branch:
+
+```sh
+$ vibium is visible "#panel"
+false
+$ echo $?
+0
+
+$ if vibium is visible "#panel" >/dev/null; then echo "taken"; else echo "not taken"; fi
+taken
+```
+
+The panel is not visible, and the `if` ran anyway. Compare the output instead:
+
+```sh
+[ "$(vibium is visible '#panel')" = "true" ] && echo "visible"
+```
 :::
 
 ## Synopsis
 
 ```
-vibium is
+vibium is <visible|enabled|checked> <selector>
+vibium is actionable <selector>
 ```
 
-## Subcommands
+## Flags
 
-| Subcommand | Description |
-| --- | --- |
-| [`vibium is actionable`](#vibium-is-actionable) | Check actionability of an element (Visible, Stable, ReceivesEvents, Enabled, Editable) |
-| [`vibium is checked`](#vibium-is-checked) | Check if a checkbox or radio is checked |
-| [`vibium is enabled`](#vibium-is-enabled) | Check if an element is enabled |
-| [`vibium is visible`](#vibium-is-visible) | Check if an element is visible on the page |
+`is` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
 
-### `vibium is actionable`
+## `visible`, `enabled`, `checked`
 
-Check actionability of an element (Visible, Stable, ReceivesEvents, Enabled, Editable).
-
-```
-vibium is actionable [url] [selector]
-```
+Each prints `true` or `false`:
 
 ```sh
-vibium is actionable "a"
-# Output:
-# Checking actionability for selector: a
-# ✓ Visible: true
-# ✓ Stable: true
-# ✓ ReceivesEvents: true
-# ✓ Enabled: true
-# ✗ Editable: false
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium is actionable https://example.com "a"
-# Navigate first, then check
+$ vibium is visible "h1"
+true
+
+$ vibium is visible "#panel"
+false
+
+$ vibium is enabled "#counter"
+true
+
+$ vibium is enabled "#locked"
+false
+
+$ vibium is checked "#terms"
+false
 ```
 
-### `vibium is checked`
+`is checked` is the only correct way to read a checkbox — its
+[`value`](/docs/commands/value) is `on` whether ticked or not.
 
-Check if a checkbox or radio is checked.
-
+:::warning[A missing element is reported as `false`, not as an error]
+```sh
+$ vibium is visible ".nope"
+false
+$ echo $?
+0
 ```
-vibium is checked [selector]
-```
 
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--fail` | — | Exit non-zero when the answer is false |
+"Not visible" and "does not exist" are the same answer. If the difference
+matters, check existence first with [`find`](/docs/commands/find), which does
+exit 1 when nothing matches.
+:::
+
+## `actionable`
+
+`is actionable` runs the five checks an interaction command performs before
+acting, and prints them as a human-readable list:
 
 ```sh
-vibium is checked "input[type=checkbox]"
-# Prints true or false
+$ vibium is actionable "#counter"
+
+Checking actionability for selector: #counter
+✓ Visible: true
+✓ Stable: true
+✓ ReceivesEvents: true
+✓ Enabled: true
+✗ Editable: false
 ```
 
-### `vibium is enabled`
+All five are always reported, whether or not they apply — a button is not
+editable, so `✗ Editable` is expected here rather than a problem. It is the
+check that matches your intended action that matters.
 
-Check if an element is enabled.
-
-```
-vibium is enabled [selector]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--fail` | — | Exit non-zero when the answer is false |
+On the disabled button, the check that would block a
+[`click`](/docs/commands/click) shows as failed:
 
 ```sh
-vibium is enabled "button[type=submit]"
-# Prints true or false
+$ vibium is actionable "#locked"
+
+Checking actionability for selector: #locked
+✓ Visible: true
+✓ Stable: true
+✓ ReceivesEvents: true
+✗ Enabled: false
+✗ Editable: false
 ```
 
-### `vibium is visible`
+This maps directly onto the errors the action commands produce —
+`enabled check failed` from [`click`](/docs/commands/click), `editable check
+failed` from [`fill`](/docs/commands/fill).
 
-Check if an element is visible on the page.
+## JSON output
 
-```
-vibium is visible [selector]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--fail` | — | Exit non-zero when the answer is false |
+`visible`, `enabled` and `checked` honour `--json`, with the boolean as a
+**string**:
 
 ```sh
-vibium is visible "h1"
-# Prints true or false
+$ vibium is visible "#panel" --json
+{"ok":true,"result":"false"}
+
+$ vibium is checked "#terms" --json
+{"ok":true,"result":"false"}
 ```
+
+:::warning[`is actionable` ignores `--json` on this version]
+It prints the same human-readable checklist and exits 0:
+
+```sh
+$ vibium is actionable "#locked" --json
+
+Checking actionability for selector: #locked
+✓ Visible: true
+✓ Stable: true
+✓ ReceivesEvents: true
+✗ Enabled: false
+✗ Editable: false
+```
+
+There is no machine-readable form, and since the exit status is 0 however many
+checks fail, a script has no channel to read the result from at all. Reported
+upstream as [#451](https://github.com/VibiumDev/vibium/issues/451) and fixed
+after this release. Until then, use the individual subcommands, which do emit
+envelopes.
+:::
 
 ## See also
 
+- [`vibium wait`](/docs/commands/wait) — block until a state is reached instead of testing now.
+- [`vibium find`](/docs/commands/find) — existence, with a non-zero exit when absent.
+- [`vibium value`](/docs/commands/value) — field contents, not state.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Reading page state](/docs/commands#reading-page-state) — related commands.
