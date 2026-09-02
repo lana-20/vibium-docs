@@ -57,6 +57,31 @@
     <p>Status: <span id="status">Ready</span></p>
   </section>
 
+  <section id="advanced">
+    <h2>Advanced</h2>
+
+    <div id="drag-source" draggable="true"
+         style="width:8rem;padding:.5rem;border:1px solid #888">Drag me</div>
+    <div id="drop-target"
+         style="width:8rem;padding:.5rem;border:1px dashed #888;margin-top:.5rem">Drop here</div>
+
+    <label for="file-input">Attachment</label>
+    <input type="file" id="file-input">
+
+    <button type="button" id="alert-btn">Show alert</button>
+    <button type="button" id="confirm-btn">Show confirm</button>
+    <button type="button" id="prompt-btn">Show prompt</button>
+
+    <p><a id="download-link" href="sample.txt" download="sample.txt">Download sample</a></p>
+
+    <div id="hover-target"
+         style="width:8rem;padding:.5rem;border:1px solid #888">Hover me</div>
+    <p>Hover state: <span id="hover-status">out</span></p>
+
+    <iframe id="inner-frame" name="inner" src="frame.html"
+            width="320" height="120" style="border:1px solid #888"></iframe>
+  </section>
+
   <section class="filler">
     <h2>Reference notes</h2>
     <p>The paragraphs below exist only to make this page taller than the
@@ -92,6 +117,35 @@
       document.getElementById('panel').hidden = false;
       document.getElementById('status').textContent = 'Panel revealed';
     }, 1000);
+  });
+  document.getElementById('alert-btn').addEventListener('click', function () {
+    alert('This is an alert');
+  });
+  document.getElementById('confirm-btn').addEventListener('click', function () {
+    document.getElementById('status').textContent =
+      confirm('Proceed?') ? 'Confirmed' : 'Dismissed';
+  });
+  document.getElementById('prompt-btn').addEventListener('click', function () {
+    var v = prompt('Your name?');
+    document.getElementById('status').textContent = 'Prompt: ' + v;
+  });
+  var ht = document.getElementById('hover-target');
+  ht.addEventListener('mouseenter', function () {
+    document.getElementById('hover-status').textContent = 'in';
+  });
+  ht.addEventListener('mouseleave', function () {
+    document.getElementById('hover-status').textContent = 'out';
+  });
+  var src = document.getElementById('drag-source');
+  var tgt = document.getElementById('drop-target');
+  src.addEventListener('dragstart', function (e) {
+    e.dataTransfer.setData('text/plain', 'dragged');
+  });
+  tgt.addEventListener('dragover', function (e) { e.preventDefault(); });
+  tgt.addEventListener('drop', function (e) {
+    e.preventDefault();
+    tgt.textContent = 'Dropped';
+    document.getElementById('status').textContent = 'Drop received';
   });
   document.querySelector('form').addEventListener('submit', function (e) {
     e.preventDefault();
