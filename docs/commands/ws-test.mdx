@@ -1,26 +1,60 @@
 ---
 title: "vibium ws-test"
 sidebar_label: ws-test
-description: "Test WebSocket connection (type messages, see echoes)"
+description: "Test WebSocket connection"
 ---
 
 # vibium ws-test
 
-Test WebSocket connection (type messages, see echoes).
+Test a WebSocket connection interactively.
 
-:::info[Generated reference]
-Derived from `vibium help ws-test` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths, ports and ids will differ on your machine.
 :::
 
 ## Synopsis
 
 ```
-vibium ws-test [url]
+vibium ws-test <url>
 ```
+
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## The URL is required
+
+```sh
+$ vibium ws-test
+Error: accepts 1 arg(s), received 0
+Usage:
+  vibium ws-test [url] [flags]
+$ echo $?
+1
+```
+
+Unlike [`launch-test`](/docs/commands/launch-test) and
+[`bidi-test`](/docs/commands/bidi-test), this one does not launch anything — it
+connects to an endpoint you name:
+
+```sh
+vibium ws-test ws://localhost:9515
+```
+
+It then echoes what you type, which makes it a way to check a
+[`vibium serve`](/docs/commands/serve) endpoint or a remote browser is reachable
+before pointing [`start`](/docs/commands/start) at it.
+
+:::warning[This command does not exit on its own]
+It runs until interrupted, printing `Press Ctrl+C to stop...`. Do not call it
+from a script that waits for completion — it will hang. Run it in the
+background, or bound it explicitly (macOS has no `timeout(1)`).
+:::
 
 ## See also
 
+- [`vibium serve`](/docs/commands/serve) — something to point this at.
+- [`vibium start`](/docs/commands/start) — connect for real once this passes.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Diagnostics](/docs/commands#diagnostics) — related commands.

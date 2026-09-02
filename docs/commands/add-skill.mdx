@@ -6,39 +6,56 @@ description: "Install Vibium browser skill for Claude Code"
 
 # vibium add-skill
 
-Install Vibium browser skill for Claude Code.
+Install the vibium browser skill for Claude Code.
 
-:::info[Generated reference]
-Derived from `vibium help add-skill` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths, ports and ids will differ on your machine.
 :::
 
 ## Synopsis
 
 ```
 vibium add-skill
+vibium add-skill --stdout
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--stdout` | — | Print skill content to stdout instead of installing |
+| `--stdout` | — | Print the skill content instead of installing it |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## What it installs
+
+A bare `add-skill` writes a skill to `~/.claude/skills/vibe-check/`, giving
+Claude Code the command reference it needs to drive vibium.
+
+:::warning[It overwrites an existing skill without asking]
+There is no prompt, no backup and no `--dry-run`. If you have customised
+`~/.claude/skills/vibe-check/`, your changes are lost.
+
+Inspect first with `--stdout`, which prints the skill and installs nothing:
 
 ```sh
-vibium add-skill
-# Installs skill to ~/.claude/skills/vibe-check/
-
-vibium add-skill --stdout
-# Print skill content to stdout
+$ vibium add-skill --stdout | head -4
+---
+name: vibe-check
+description: Browser automation for AI agents. Use when the user needs to navigate websites, read page content, fill forms, click elements, take screenshots, or manage browser pages.
+---
 ```
+
+The skill is 394 lines at this version. Diff it against what you have before
+overwriting:
+
+```sh
+vibium add-skill --stdout | diff ~/.claude/skills/vibe-check/SKILL.md -
+```
+:::
 
 ## See also
 
+- [`vibium mcp`](/docs/commands/mcp) — the MCP server route instead.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Agent integration](/docs/commands#agent-integration) — related commands.

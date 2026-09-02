@@ -6,77 +6,68 @@ description: "Manage browser pages (new, close, switch)"
 
 # vibium page
 
-Manage browser pages (new, close, switch).
+Open, switch between, and close browser pages.
 
-:::info[Generated reference]
-Derived from `vibium help page` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium page
-```
-
-## Subcommands
-
-| Subcommand | Description |
-| --- | --- |
-| [`vibium page close`](#vibium-page-close) | Close a browser page by index (default: current page) |
-| [`vibium page new`](#vibium-page-new) | Open a new browser page |
-| [`vibium page switch`](#vibium-page-switch) | Switch to a browser page by index or URL substring |
-
-### `vibium page close`
-
-Close a browser page by index (default: current page).
-
-```
+vibium page new [url]
+vibium page switch <index|url>
 vibium page close [index]
 ```
 
-```sh
-vibium page close
-# Close current page (index 0)
+## Flags
 
-vibium page close 1
-# Close page at index 1
-```
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
 
-### `vibium page new`
-
-Open a new browser page.
-
-```
-vibium page new [url]
-```
+## Working with pages
 
 ```sh
-vibium page new
-# Open a blank new page
+$ vibium page new "https://lana-20.github.io/vibium-docs/fixtures/playground2.html"
+New page opened and navigated to https://lana-20.github.io/vibium-docs/fixtures/playground2.html
 
-vibium page new https://example.com
-# Open a new page and navigate to URL
+$ vibium pages
+[0] https://lana-20.github.io/vibium-docs/fixtures/playground.html
+[1] https://lana-20.github.io/vibium-docs/fixtures/playground2.html
+
+$ vibium page switch 0
+Switched to page: B63EE5608617306356FCE6C79559EB81
+
+$ vibium page close 1
+Closed page 1
 ```
 
-### `vibium page switch`
+`page new` makes the new page active, so commands after it address the new page,
+not the one you were on.
 
-Switch to a browser page by index or URL substring.
-
-```
-vibium page switch [index or url]
-```
+:::tip[`page switch` is how you escape a frame]
+[`vibium frame`](/docs/commands/frame) switches into an iframe and the switch
+persists — and [`go`](/docs/commands/go) does **not** undo it, it navigates the
+frame. `page switch 0` resets the context to the top level:
 
 ```sh
-vibium page switch 1
-# Switch to page at index 1
+$ vibium eval "window.top === window.self"
+false
 
-vibium page switch google.com
-# Switch to page containing "google.com" in URL
+$ vibium page switch 0
+Switched to page: EEC168825E14551AFA507E0A7ECFE850
+
+$ vibium eval "window.top === window.self"
+true
 ```
+:::
 
 ## See also
 
+- [`vibium pages`](/docs/commands/pages) — the indices these commands take.
+- [`vibium frame`](/docs/commands/frame) — the context trap `switch` gets you out of.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

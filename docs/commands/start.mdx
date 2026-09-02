@@ -1,54 +1,72 @@
 ---
 title: "vibium start"
 sidebar_label: start
-description: "Start a browser session. Without arguments, launches a local browser."
+description: "Start a browser session"
 ---
 
 # vibium start
 
-Start a browser session. Without arguments, launches a local browser.
+Launch the browser session.
 
-:::info[Generated reference]
-Derived from `vibium help start` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
-
-With a URL argument, connects to a remote BiDi WebSocket endpoint.
-
-If no URL is given, checks VIBIUM_CONNECT_URL env var before falling
-back to a local browser launch.
-
-Set VIBIUM_CONNECT_API_KEY to send an Authorization: Bearer header.
 
 ## Synopsis
 
 ```
-vibium start [url]
+vibium start [ws-url]
 ```
 
-## Examples
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Starting
+
+Every other command launches the browser on demand, so `start` is only needed
+when you want the launch to happen at a predictable moment:
 
 ```sh
-vibium start
-# Start with a local browser
-
-vibium start --engine firefox
-# Start with Firefox instead of Chrome
-
-vibium start --engine firefox --channel beta
-# Start with the installed Firefox beta instead of the release build
-
-vibium start ws://remote:9515/session
-# Connect to a remote browser
-
-export VIBIUM_CONNECT_URL=wss://cloud.example.com/session
-export VIBIUM_CONNECT_API_KEY=my-api-key
-vibium start
-# Connect using env vars
+$ vibium start
+Browser launched (chrome, headless: true)
+$ echo $?
+0
 ```
+
+It is **idempotent** — a second call reports the existing session rather than
+launching another:
+
+```sh
+$ vibium start
+Browser already running
+$ echo $?
+0
+```
+
+## Connecting to a remote browser
+
+Given a WebSocket URL, `start` connects instead of launching:
+
+```sh
+vibium start ws://remote-host:9515/session
+```
+
+:::note[The remote form ignores `--json` on this version]
+`vibium start` with no URL emits an envelope under `--json`; the remote-connect
+branch prints `Connected to …` as plain text either way. Reported upstream as
+[#451](https://github.com/VibiumDev/vibium/issues/451) and fixed after this
+release.
+:::
 
 ## See also
 
+- [`vibium stop`](/docs/commands/stop) — the inverse, which also stops the daemon.
+- [`vibium daemon`](/docs/commands/daemon) — the background process behind the session.
+- [`vibium is-installed`](/docs/commands/is-installed) — check before launching.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

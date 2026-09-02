@@ -1,20 +1,17 @@
 ---
 title: "vibium help"
 sidebar_label: help
-description: "Help provides help for any command in the application."
+description: "Help about any command"
 ---
 
 # vibium help
 
-Help provides help for any command in the application.
+Show help for vibium or one of its commands.
 
-:::info[Generated reference]
-Derived from `vibium help help` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths and ids will differ on your machine.
 :::
-
-Simply type vibium help [path to command] for full details.
 
 ## Synopsis
 
@@ -22,7 +19,57 @@ Simply type vibium help [path to command] for full details.
 vibium help [command]
 ```
 
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Use this instead of `--help`
+
+:::tip[`vibium help <cmd>` works where `<cmd> --help` does not]
+Four commands — [`fill`](/docs/commands/fill), [`type`](/docs/commands/type),
+[`geolocation`](/docs/commands/geolocation) and
+[`sleep`](/docs/commands/sleep) — disable flag parsing and read `--help` as a
+missing argument:
+
+```sh
+$ vibium fill --help
+Error: accepts 2 arg(s), received 0
+```
+
+`help` takes a different path and works for every command:
+
+```sh
+$ vibium help fill
+Clear an input field and type new text
+
+Usage:
+  vibium fill [selector] [text] [flags]
+```
+
+Because of this, the generator behind this site reads `vibium help <cmd>` rather
+than `<cmd> --help`. Reported upstream as
+[#422](https://github.com/VibiumDev/vibium/issues/422) and
+[#423](https://github.com/VibiumDev/vibium/issues/423), fixed after this
+release.
+:::
+
+## Listing everything
+
+`vibium help` with no argument prints the root help, the authoritative list of
+all 67 commands:
+
+```sh
+$ vibium help
+Browser automation for AI agents and humans
+
+Usage:
+  vibium [flags]
+```
+
+Subcommands take a path: `vibium help find role`, `vibium help record start`.
+
 ## See also
 
-- [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Meta](/docs/commands#meta) — related commands.
+- [Command reference](/docs/commands) — the same surface, with verified examples.
+- [Global flags](/docs/global-flags) — the flags shown under "Global Flags".

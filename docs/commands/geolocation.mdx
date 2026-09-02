@@ -6,39 +6,57 @@ description: "Override the browser geolocation"
 
 # vibium geolocation
 
-Override the browser geolocation.
+Override the browser's reported position.
 
-:::info[Generated reference]
-Derived from `vibium help geolocation` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium geolocation [latitude] [longitude]
+vibium geolocation <latitude> <longitude>
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--accuracy` | `float` | Accuracy in meters (default: 1) |
+| `--accuracy` | `float` | Accuracy in metres |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Setting a position
 
 ```sh
-vibium geolocation 40.7128 -74.006
-# Set location to New York City
-
-vibium geolocation 51.5074 -0.1278 --accuracy 10
-# Set location to London with 10m accuracy
+$ vibium geolocation 51.5 -0.12
+Geolocation set to (51.500000, -0.120000)
 ```
+
+The override applies to the session, so it survives navigation and persists
+until the browser stops. There is no command to read the current override back,
+and no way to clear it other than [`vibium stop`](/docs/commands/stop).
+
+Pages still have to be granted permission and to call the Geolocation API; the
+override changes what they receive, not whether they ask.
+
+## Known issue: `--help` does not work on this version
+
+```sh
+$ vibium geolocation --help
+Error: accepts 2 arg(s), received 0
+```
+
+Use `vibium help geolocation`. Same family as [`fill`](/docs/commands/fill),
+[`type`](/docs/commands/type) and [`sleep`](/docs/commands/sleep) — upstream
+[#422](https://github.com/VibiumDev/vibium/issues/422) /
+[#423](https://github.com/VibiumDev/vibium/issues/423).
 
 ## See also
 
+- [`vibium media`](/docs/commands/media) — the other emulation command.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

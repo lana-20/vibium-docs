@@ -1,17 +1,16 @@
 ---
 title: "vibium is-installed"
 sidebar_label: is-installed
-description: "Check if the selected browser is installed (exit 0 = yes, exit 1 = no)"
+description: "Check if the selected browser is installed"
 ---
 
 # vibium is-installed
 
-Check if the selected browser is installed (exit 0 = yes, exit 1 = no).
+Test whether the selected browser is installed.
 
-:::info[Generated reference]
-Derived from `vibium help is-installed` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths and ids will differ on your machine.
 :::
 
 ## Synopsis
@@ -20,7 +19,43 @@ command's own built-in samples, not captured terminal output. Pages marked
 vibium is-installed
 ```
 
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## The answer is the exit code
+
+:::warning[This command prints nothing at all]
+There is no output on either path. The result is *only* the exit status:
+
+```sh
+$ vibium is-installed
+$ echo $?
+0
+```
+
+`0` means installed, `1` means not. That makes it the rare vibium command that
+is genuinely safe in a conditional, unlike [`vibium is`](/docs/commands/is),
+which always exits 0:
+
+```sh
+vibium is-installed || vibium install
+```
+
+`--json` produces no output either, so there is nothing to parse in any mode.
+:::
+
+## Per engine
+
+The check follows `--engine`:
+
+```sh
+vibium --engine firefox is-installed
+```
+
 ## See also
 
+- [`vibium install`](/docs/commands/install) — download the browser.
+- [`vibium paths`](/docs/commands/paths) — where it is looked for.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

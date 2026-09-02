@@ -6,12 +6,11 @@ description: "Launch browser, connect via BiDi, send session.status"
 
 # vibium bidi-test
 
-Launch browser, connect via BiDi, send session.status.
+Launch, connect over BiDi, and send `session.status`.
 
-:::info[Generated reference]
-Derived from `vibium help bidi-test` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths, ports and ids will differ on your machine.
 :::
 
 ## Synopsis
@@ -20,7 +19,51 @@ command's own built-in samples, not captured terminal output. Pages marked
 vibium bidi-test
 ```
 
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Running
+
+Unlike the other two diagnostics, `bidi-test` **completes and exits**, walking
+five numbered stages:
+
+```sh
+$ vibium bidi-test
+[1/5] Launching chromedriver...
+       ------- chromedriver -------
+       Starting ChromeDriver 152.0.7977.54 on port 56554
+       Only local connections are allowed.
+       ChromeDriver was started successfully on port 56554.
+       ----------------------------
+       Chromedriver started on port 56554
+       Session ID: cca10e7503c13620a50a9788fb0f7dc3
+[2/5] WebDriver session created with BiDi enabled
+[3/5] Reusing BiDi WebSocket from launch...
+       Connected!
+[4/5] Sending BiDi command: session.status
+       --> [2] {"id":2,"method":"session.status","params":{}}
+       <-- [2] {"id":2,"result":{"build":{"version":"152.0.7977.54"},"message":"already connected","os":{"arch":"arm64","name":"Mac OS X","version":"26.6.2"},"ready":false},"type":"success"}
+[5/5] Parsed response:
+       Ready: false
+       Message: already connected
+
+Test complete!
+```
+
+The stage numbers make it obvious where a broken setup fails — a launch problem
+stops at 1, a driver problem at 2, a socket problem at 3.
+
+:::note[`Ready: false` is not a failure here]
+The response says `ready: false` with `message: already connected`, and the run
+still reports `Test complete!`. That is the WebDriver session reporting it
+cannot accept a *new* session because it already has one. Read
+`Test complete!` as the verdict.
+:::
+
 ## See also
 
+- [`vibium launch-test`](/docs/commands/launch-test) — launch only, no protocol.
+- [`vibium ws-test`](/docs/commands/ws-test) — a plain WebSocket check.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Diagnostics](/docs/commands#diagnostics) — related commands.

@@ -6,12 +6,14 @@ description: "List all open browser pages"
 
 # vibium pages
 
-List all open browser pages.
+List the open browser pages.
 
-:::info[Generated reference]
-Derived from `vibium help pages` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
@@ -20,15 +22,32 @@ command's own built-in samples, not captured terminal output. Pages marked
 vibium pages
 ```
 
-## Examples
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Listing
+
+Pages are listed by index, which is what
+[`vibium page switch`](/docs/commands/page) takes:
 
 ```sh
-vibium pages
-# [0] https://example.com
-# [1] https://google.com
+$ vibium pages
+[0] https://lana-20.github.io/vibium-docs/fixtures/playground.html
+
+$ vibium page new "https://lana-20.github.io/vibium-docs/fixtures/playground2.html"
+New page opened and navigated to https://lana-20.github.io/vibium-docs/fixtures/playground2.html
+
+$ vibium pages
+[0] https://lana-20.github.io/vibium-docs/fixtures/playground.html
+[1] https://lana-20.github.io/vibium-docs/fixtures/playground2.html
 ```
+
+Indices are positional, so closing a page renumbers the ones after it. Re-run
+`pages` after any close rather than reusing an index.
 
 ## See also
 
+- [`vibium page`](/docs/commands/page) — open, switch and close.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

@@ -6,12 +6,14 @@ description: "Save page as PDF"
 
 # vibium pdf
 
-Save page as PDF.
+Save the current page as a PDF.
 
-:::info[Generated reference]
-Derived from `vibium help pdf` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
@@ -28,17 +30,36 @@ vibium pdf [url]
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Saving
+
+The command reports the path and the size it wrote:
 
 ```sh
-vibium pdf -o page.pdf
-# Save current page as PDF
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium pdf https://example.com -o page.pdf
-# Navigate to URL first, then save as PDF
+$ vibium pdf -o /tmp/cap/page.pdf
+PDF saved to /tmp/cap/page.pdf (124048 bytes)
+```
+
+The result is a real paginated PDF — the fixture comes out as two pages —
+rather than a single tall image. Unlike
+[`screenshot --full-page`](/docs/commands/screenshot), there is no flag to
+control the split; it follows the browser's own print layout.
+
+Print stylesheets apply, so a page with `@media print` rules will not match what
+a screenshot shows. Use [`vibium media`](/docs/commands/media) to preview that.
+
+## JSON output
+
+```sh
+$ vibium pdf -o /tmp/cap/j.pdf --json
+{"ok":true,"result":"PDF saved to /tmp/cap/j.pdf (124048 bytes)"}
 ```
 
 ## See also
 
+- [`vibium screenshot`](/docs/commands/screenshot) — a PNG instead, with `--full-page`.
+- [`vibium media`](/docs/commands/media) — emulate print media before capturing.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Capture](/docs/commands#capture) — related commands.

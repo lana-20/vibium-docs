@@ -6,12 +6,14 @@ description: "Stop the browser session"
 
 # vibium stop
 
-Stop the browser session.
+Close the browser session.
 
-:::info[Generated reference]
-Derived from `vibium help stop` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
@@ -20,14 +22,55 @@ command's own built-in samples, not captured terminal output. Pages marked
 vibium stop
 ```
 
-## Examples
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Stopping
 
 ```sh
-vibium stop
-# Stop the browser and daemon
+$ vibium stop
+Browser session closed
 ```
+
+Idempotent — a second call is not an error:
+
+```sh
+$ vibium stop
+No browser session to close
+$ echo $?
+0
+```
+
+## `stop` also stops the daemon
+
+:::warning[This is heavier than "close the browser"]
+The daemon goes with it, which is easy to miss:
+
+```sh
+$ vibium daemon status
+vibium daemon v26.8.21
+status:   running
+pid:      23998
+
+$ vibium stop
+Browser session closed
+
+$ vibium daemon status
+Daemon is not running.
+$ echo $?
+1
+```
+
+The next command therefore pays the full daemon-plus-browser startup cost, not
+just a browser launch. In a loop over many pages, avoid `stop` between
+iterations — state persists across commands by design, and that is the point of
+the daemon.
+:::
 
 ## See also
 
+- [`vibium start`](/docs/commands/start) — launch again.
+- [`vibium daemon stop`](/docs/commands/daemon) — the daemon alone.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

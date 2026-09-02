@@ -6,31 +6,84 @@ description: "Pause execution for a number of milliseconds"
 
 # vibium sleep
 
-Pause execution for a number of milliseconds.
+Pause for a number of milliseconds.
 
-:::info[Generated reference]
-Derived from `vibium help sleep` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium sleep [ms]
+vibium sleep <ms>
 ```
 
-## Examples
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Sleeping
 
 ```sh
-vibium sleep 1000
-# Wait 1 second
+$ vibium sleep 500
+Slept for 500 ms
+```
 
-vibium sleep 500
-# Wait 500ms
+## There is a 30-second ceiling
+
+```sh
+$ vibium sleep 40000
+Error: ms must be 30000 or less (got 40000)
+$ echo $?
+1
+```
+
+## Prefer a real signal
+
+:::warning[`sleep` is the last resort, not the default]
+A fixed delay is either too short (flaky) or too long (slow), and usually both
+on different machines. Every case where you might reach for `sleep` has a
+better answer in [`vibium wait`](/docs/commands/wait):
+
+| instead of | use |
+| --- | --- |
+| sleep after a click | [`wait text`](/docs/commands/wait) for the result |
+| sleep after navigation | [`wait url`](/docs/commands/wait) or [`wait load`](/docs/commands/wait) |
+| sleep for an element | [`wait --state visible`](/docs/commands/wait) |
+| sleep for anything else | [`wait fn`](/docs/commands/wait) with a condition |
+
+`sleep` is justified only when there is genuinely no observable signal — an
+animation you cannot query, or a rate limit you must respect.
+:::
+
+## Known issue: `--help` does not work on this version
+
+`sleep` is one of four commands whose `--help` is broken at v26.8.21:
+
+```sh
+$ vibium sleep --help
+Error: accepts 1 arg(s), received 0
+```
+
+Use `vibium help sleep`. The same applies to [`fill`](/docs/commands/fill),
+[`type`](/docs/commands/type) and
+[`geolocation`](/docs/commands/geolocation) — upstream
+[#422](https://github.com/VibiumDev/vibium/issues/422) /
+[#423](https://github.com/VibiumDev/vibium/issues/423).
+
+## JSON output
+
+```sh
+$ vibium sleep 100 --json
+{"ok":true,"result":"Slept for 100 ms"}
 ```
 
 ## See also
 
+- [`vibium wait`](/docs/commands/wait) — what you should almost always use instead.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Waiting](/docs/commands#waiting) — related commands.

@@ -1,83 +1,85 @@
 ---
 title: "vibium daemon"
 sidebar_label: daemon
-description: "Manage the vibium daemon (background browser process)"
+description: "Manage the vibium daemon"
 ---
 
 # vibium daemon
 
-Manage the vibium daemon (background browser process).
+Manage the background process that owns the browser.
 
-:::info[Generated reference]
-Derived from `vibium help daemon` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium daemon
-```
-
-## Subcommands
-
-| Subcommand | Description |
-| --- | --- |
-| [`vibium daemon start`](#vibium-daemon-start) | Start the vibium daemon |
-| [`vibium daemon status`](#vibium-daemon-status) | Show daemon status |
-| [`vibium daemon stop`](#vibium-daemon-stop) | Stop the vibium daemon |
-
-### `vibium daemon start`
-
-Start the vibium daemon.
-
-```
 vibium daemon start
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--connect` | `string` | Connect to a remote BiDi WebSocket URL instead of launching a local browser |
-| `--connect-header` | `stringArray` | HTTP header for WebSocket connect (repeatable, format: "Key: Value") |
-| `--foreground` | — | Run daemon in foreground (for debugging) |
-| `--idle-timeout` | `duration` | Shutdown after this duration of inactivity (0 to disable) (default 30m0s) |
-
-```sh
-vibium daemon start
-# Starts daemon in background
-
-vibium daemon start --foreground
-# Starts daemon in foreground (for debugging)
-
-vibium daemon start --idle-timeout 30m
-# Auto-shutdown after 30 minutes of inactivity
-
-vibium daemon start --connect ws://remote:9515/session
-# Connect to a remote browser instead of launching a local one
-
-vibium --session projA daemon start
-# Isolated session "projA": own daemon, own browser, socket
-# vibium-projA.sock; VIBIUM_SESSION=projA does the same
-```
-
-### `vibium daemon status`
-
-Show daemon status.
-
-```
 vibium daemon status
-```
-
-### `vibium daemon stop`
-
-Stop the vibium daemon.
-
-```
 vibium daemon stop
 ```
 
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Why there is a daemon
+
+Every command talks to a long-lived daemon over a unix socket, which is why
+state persists between invocations — the browser, the page, the element
+references and the cookies all outlive any single command.
+
+## `status`
+
+```sh
+$ vibium daemon status
+vibium daemon v26.8.21
+status:   running
+pid:      23998
+uptime:   12m1s
+socket:   /Users/lanabegunova/Library/Caches/vibium/vibium.sock
+```
+
+:::tip[`daemon status` is one of the few commands with a useful exit code]
+It exits **1** when the daemon is down, so it works in a conditional — unlike
+[`vibium is`](/docs/commands/is), which always exits 0:
+
+```sh
+$ vibium daemon status
+Daemon is not running.
+$ echo $?
+1
+```
+
+```sh
+vibium daemon status >/dev/null || vibium daemon start
+```
+:::
+
+## `stop`
+
+Stopping when nothing is running is not an error:
+
+```sh
+$ vibium daemon stop
+Daemon is not running.
+$ echo $?
+0
+```
+
+Note the asymmetry with `status`, which exits 1 in the same situation.
+
+[`vibium stop`](/docs/commands/stop) stops the daemon too, so you rarely need
+`daemon stop` directly.
+
 ## See also
 
+- [`vibium stop`](/docs/commands/stop) — closes the browser and the daemon.
+- [Global flags](/docs/global-flags) — `--session` gives you an isolated daemon.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

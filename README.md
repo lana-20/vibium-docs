@@ -61,7 +61,7 @@ which the generator will never overwrite it.
 
 <!-- BEGIN COMMAND STATUS -->
 
-**37 of 67 verified** — 30 still generated from `--help`. Measured against `vibium v26.8.21`.
+**67 of 67 verified** — 0 still generated from `--help`. Measured against `vibium v26.8.21`.
 
 <details open>
 <summary><strong>Navigation</strong> — 6/6 verified</summary>
@@ -139,82 +139,82 @@ which the generator will never overwrite it.
 </details>
 
 <details open>
-<summary><strong>Capture</strong> — 1/4 verified</summary>
+<summary><strong>Capture</strong> — 4/4 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
 | [x] | [`screenshot`](https://lana-20.github.io/vibium-docs/docs/commands/screenshot) | Capture a screenshot (optionally navigate to URL first) |
-| [ ] | [`pdf`](https://lana-20.github.io/vibium-docs/docs/commands/pdf) | Save page as PDF |
-| [ ] | [`eval`](https://lana-20.github.io/vibium-docs/docs/commands/eval) | Evaluate a JavaScript expression (optionally navigate to URL first) |
-| [ ] | [`record`](https://lana-20.github.io/vibium-docs/docs/commands/record) | Record browser sessions (screenshots and snapshots) |
+| [x] | [`pdf`](https://lana-20.github.io/vibium-docs/docs/commands/pdf) | Save page as PDF |
+| [x] | [`eval`](https://lana-20.github.io/vibium-docs/docs/commands/eval) | Evaluate a JavaScript expression (optionally navigate to URL first) |
+| [x] | [`record`](https://lana-20.github.io/vibium-docs/docs/commands/record) | Record browser sessions (screenshots and snapshots) |
 
 </details>
 
 <details open>
-<summary><strong>Waiting</strong> — 1/2 verified</summary>
+<summary><strong>Waiting</strong> — 2/2 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
 | [x] | [`wait`](https://lana-20.github.io/vibium-docs/docs/commands/wait) | Wait for an element, URL, text, page load, or JS condition |
-| [ ] | [`sleep`](https://lana-20.github.io/vibium-docs/docs/commands/sleep) | Pause execution for a number of milliseconds |
+| [x] | [`sleep`](https://lana-20.github.io/vibium-docs/docs/commands/sleep) | Pause execution for a number of milliseconds |
 
 </details>
 
-<details>
-<summary><strong>Browser & session</strong> — 0/16 verified</summary>
+<details open>
+<summary><strong>Browser & session</strong> — 16/16 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
-| [ ] | [`start`](https://lana-20.github.io/vibium-docs/docs/commands/start) | Start a browser session. Without arguments, launches a local browser. |
-| [ ] | [`stop`](https://lana-20.github.io/vibium-docs/docs/commands/stop) | Stop the browser session |
-| [ ] | [`daemon`](https://lana-20.github.io/vibium-docs/docs/commands/daemon) | Manage the vibium daemon (background browser process) |
-| [ ] | [`page`](https://lana-20.github.io/vibium-docs/docs/commands/page) | Manage browser pages (new, close, switch) |
-| [ ] | [`pages`](https://lana-20.github.io/vibium-docs/docs/commands/pages) | List all open browser pages |
-| [ ] | [`viewport`](https://lana-20.github.io/vibium-docs/docs/commands/viewport) | Get or set the browser viewport size |
-| [ ] | [`window`](https://lana-20.github.io/vibium-docs/docs/commands/window) | Get or set the OS browser window size, position, or state |
-| [ ] | [`install`](https://lana-20.github.io/vibium-docs/docs/commands/install) | Download the selected browser (Chrome for Testing by default) |
-| [ ] | [`is-installed`](https://lana-20.github.io/vibium-docs/docs/commands/is-installed) | Check if the selected browser is installed (exit 0 = yes, exit 1 = no) |
-| [ ] | [`paths`](https://lana-20.github.io/vibium-docs/docs/commands/paths) | Print browser and cache paths |
-| [ ] | [`storage`](https://lana-20.github.io/vibium-docs/docs/commands/storage) | Export or restore browser state (cookies, localStorage, sessionStorage) |
-| [ ] | [`cookies`](https://lana-20.github.io/vibium-docs/docs/commands/cookies) | Manage browser cookies |
-| [ ] | [`download`](https://lana-20.github.io/vibium-docs/docs/commands/download) | Manage browser downloads |
-| [ ] | [`dialog`](https://lana-20.github.io/vibium-docs/docs/commands/dialog) | Handle browser dialogs (alert, confirm, prompt) |
-| [ ] | [`geolocation`](https://lana-20.github.io/vibium-docs/docs/commands/geolocation) | Override the browser geolocation |
-| [ ] | [`media`](https://lana-20.github.io/vibium-docs/docs/commands/media) | Override CSS media features |
+| [x] | [`start`](https://lana-20.github.io/vibium-docs/docs/commands/start) | Start a browser session. Without arguments, launches a local browser. |
+| [x] | [`stop`](https://lana-20.github.io/vibium-docs/docs/commands/stop) | Stop the browser session |
+| [x] | [`daemon`](https://lana-20.github.io/vibium-docs/docs/commands/daemon) | Manage the vibium daemon (background browser process) |
+| [x] | [`page`](https://lana-20.github.io/vibium-docs/docs/commands/page) | Manage browser pages (new, close, switch) |
+| [x] | [`pages`](https://lana-20.github.io/vibium-docs/docs/commands/pages) | List all open browser pages |
+| [x] | [`viewport`](https://lana-20.github.io/vibium-docs/docs/commands/viewport) | Get or set the browser viewport size |
+| [x] | [`window`](https://lana-20.github.io/vibium-docs/docs/commands/window) | Get or set the OS browser window size, position, or state |
+| [x] | [`install`](https://lana-20.github.io/vibium-docs/docs/commands/install) | Download the selected browser (Chrome for Testing by default) |
+| [x] | [`is-installed`](https://lana-20.github.io/vibium-docs/docs/commands/is-installed) | Check if the selected browser is installed (exit 0 = yes, exit 1 = no) |
+| [x] | [`paths`](https://lana-20.github.io/vibium-docs/docs/commands/paths) | Print browser and cache paths |
+| [x] | [`storage`](https://lana-20.github.io/vibium-docs/docs/commands/storage) | Export or restore browser state (cookies, localStorage, sessionStorage) |
+| [x] | [`cookies`](https://lana-20.github.io/vibium-docs/docs/commands/cookies) | Manage browser cookies |
+| [x] | [`download`](https://lana-20.github.io/vibium-docs/docs/commands/download) | Manage browser downloads |
+| [x] | [`dialog`](https://lana-20.github.io/vibium-docs/docs/commands/dialog) | Handle browser dialogs (alert, confirm, prompt) |
+| [x] | [`geolocation`](https://lana-20.github.io/vibium-docs/docs/commands/geolocation) | Override the browser geolocation |
+| [x] | [`media`](https://lana-20.github.io/vibium-docs/docs/commands/media) | Override CSS media features |
 
 </details>
 
-<details>
-<summary><strong>Agent integration</strong> — 0/4 verified</summary>
+<details open>
+<summary><strong>Agent integration</strong> — 4/4 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
-| [ ] | [`mcp`](https://lana-20.github.io/vibium-docs/docs/commands/mcp) | Start the Model Context Protocol (MCP) server. |
-| [ ] | [`add-skill`](https://lana-20.github.io/vibium-docs/docs/commands/add-skill) | Install Vibium browser skill for Claude Code |
-| [ ] | [`pipe`](https://lana-20.github.io/vibium-docs/docs/commands/pipe) | Start vibium in pipe mode where protocol messages are exchanged |
-| [ ] | [`serve`](https://lana-20.github.io/vibium-docs/docs/commands/serve) | Start WebSocket proxy server for browser automation |
+| [x] | [`mcp`](https://lana-20.github.io/vibium-docs/docs/commands/mcp) | Start the Model Context Protocol (MCP) server. |
+| [x] | [`add-skill`](https://lana-20.github.io/vibium-docs/docs/commands/add-skill) | Install Vibium browser skill for Claude Code |
+| [x] | [`pipe`](https://lana-20.github.io/vibium-docs/docs/commands/pipe) | Start vibium in pipe mode where protocol messages are exchanged |
+| [x] | [`serve`](https://lana-20.github.io/vibium-docs/docs/commands/serve) | Start WebSocket proxy server for browser automation |
 
 </details>
 
-<details>
-<summary><strong>Diagnostics</strong> — 0/3 verified</summary>
+<details open>
+<summary><strong>Diagnostics</strong> — 3/3 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
-| [ ] | [`launch-test`](https://lana-20.github.io/vibium-docs/docs/commands/launch-test) | Launch the selected browser and print BiDi session info |
-| [ ] | [`bidi-test`](https://lana-20.github.io/vibium-docs/docs/commands/bidi-test) | Launch browser, connect via BiDi, send session.status |
-| [ ] | [`ws-test`](https://lana-20.github.io/vibium-docs/docs/commands/ws-test) | Test WebSocket connection (type messages, see echoes) |
+| [x] | [`launch-test`](https://lana-20.github.io/vibium-docs/docs/commands/launch-test) | Launch the selected browser and print BiDi session info |
+| [x] | [`bidi-test`](https://lana-20.github.io/vibium-docs/docs/commands/bidi-test) | Launch browser, connect via BiDi, send session.status |
+| [x] | [`ws-test`](https://lana-20.github.io/vibium-docs/docs/commands/ws-test) | Test WebSocket connection (type messages, see echoes) |
 
 </details>
 
-<details>
-<summary><strong>Meta</strong> — 0/3 verified</summary>
+<details open>
+<summary><strong>Meta</strong> — 3/3 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
-| [ ] | [`version`](https://lana-20.github.io/vibium-docs/docs/commands/version) | Print the version number |
-| [ ] | [`help`](https://lana-20.github.io/vibium-docs/docs/commands/help) | Help provides help for any command in the application. |
-| [ ] | [`completion`](https://lana-20.github.io/vibium-docs/docs/commands/completion) | Generate a shell completion script. |
+| [x] | [`version`](https://lana-20.github.io/vibium-docs/docs/commands/version) | Print the version number |
+| [x] | [`help`](https://lana-20.github.io/vibium-docs/docs/commands/help) | Help provides help for any command in the application. |
+| [x] | [`completion`](https://lana-20.github.io/vibium-docs/docs/commands/completion) | Generate a shell completion script. |
 
 </details>
 

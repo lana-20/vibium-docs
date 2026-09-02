@@ -6,50 +6,64 @@ description: "Manage browser cookies"
 
 # vibium cookies
 
-Manage browser cookies.
+List, set and clear cookies.
 
-:::info[Generated reference]
-Derived from `vibium help cookies` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium cookies [name] [value]
-```
-
-## Examples
-
-```sh
 vibium cookies
-# List all cookies
-
-vibium cookies "session" "abc123"
-# Set a cookie with name and value
-```
-
-## Subcommands
-
-| Subcommand | Description |
-| --- | --- |
-| [`vibium cookies clear`](#vibium-cookies-clear) | Clear all cookies |
-
-### `vibium cookies clear`
-
-Clear all cookies.
-
-```
+vibium cookies <name> <value>
 vibium cookies clear
 ```
+
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Listing and setting
 
 ```sh
-vibium cookies clear
-# Delete all cookies
+$ vibium cookies
+No cookies
+
+$ vibium cookies "session" "abc123"
+Cookie set: session=abc123
+
+$ vibium cookies
+session=abc123 (domain=lana-20.github.io, path=/)
 ```
+
+The cookie is scoped to the current page's origin; there is no flag for domain,
+path, expiry or the `Secure`/`HttpOnly` attributes. For anything beyond a simple
+name/value pair on the current origin, use
+[`vibium storage`](/docs/commands/storage), which round-trips the full cookie
+records.
+
+## Clearing
+
+```sh
+$ vibium cookies clear
+All cookies deleted
+
+$ vibium cookies
+No cookies
+```
+
+`clear` removes everything for the session, not just the current origin's.
+
+An empty list is reported as `No cookies` and exits 0, so parse the output
+rather than relying on the exit code.
 
 ## See also
 
+- [`vibium storage`](/docs/commands/storage) — cookies plus localStorage, as JSON.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

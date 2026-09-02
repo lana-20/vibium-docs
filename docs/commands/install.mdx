@@ -1,17 +1,16 @@
 ---
 title: "vibium install"
 sidebar_label: install
-description: "Download the selected browser (Chrome for Testing by default)"
+description: "Download the selected browser"
 ---
 
 # vibium install
 
-Download the selected browser (Chrome for Testing by default).
+Download the browser vibium will drive.
 
-:::info[Generated reference]
-Derived from `vibium help install` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths and ids will differ on your machine.
 :::
 
 ## Synopsis
@@ -20,20 +19,43 @@ command's own built-in samples, not captured terminal output. Pages marked
 vibium install
 ```
 
-## Examples
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Installing
+
+`install` is idempotent — running it when the browser is present re-reports the
+existing install rather than downloading again:
 
 ```sh
-vibium install
-# Installing Chrome for Testing v139.0.7258.68...
-
-vibium install --engine firefox
-# Installing Firefox v153.0.3 (release channel)...
-
-vibium install --engine firefox --channel beta
-# Installing Firefox v154.0b6 (beta channel)...
+$ vibium install
+Chrome for Testing v152.0.7977.54 already installed.
+Installation complete!
+Chrome: /Users/lanabegunova/Library/Caches/vibium/chrome-for-testing/152.0.7977.54/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing
+Chromedriver: /Users/lanabegunova/Library/Caches/vibium/chrome-for-testing/152.0.7977.54/chromedriver
+Version: 152.0.7977.54
 ```
+
+Note that `Installation complete!` is printed in **both** cases, so it does not
+tell you whether anything was downloaded — the line above it does.
+
+Chrome for Testing is the default; `--engine firefox` installs Firefox, and
+`--channel beta` selects the beta channel (Firefox only).
+
+Commands launch the browser on demand, so `install` is only needed to
+pre-populate the cache — in a Docker build or a CI image, for instance.
+
+:::warning[`--json` is ignored on this version]
+Output is identical with and without the flag. This is the family of gaps
+reported upstream as
+[#451](https://github.com/VibiumDev/vibium/issues/451); several members were
+fixed after this release.
+:::
 
 ## See also
 
+- [`vibium is-installed`](/docs/commands/is-installed) — the check to gate this on.
+- [`vibium paths`](/docs/commands/paths) — where it lands.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

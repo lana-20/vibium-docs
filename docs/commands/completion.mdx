@@ -1,45 +1,63 @@
 ---
 title: "vibium completion"
 sidebar_label: completion
-description: "Generate a shell completion script."
+description: "Generate a shell completion script"
 ---
 
 # vibium completion
 
 Generate a shell completion script.
 
-:::info[Generated reference]
-Derived from `vibium help completion` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths and ids will differ on your machine.
 :::
-
-zsh — source it directly, or install it on your fpath:
-
-  source &lt;(vibium completion zsh)
-  vibium completion zsh &gt; "$&#123;fpath[1]&#125;/_vibium"
-
-bash:
-
-  source &lt;(vibium completion bash)
 
 ## Synopsis
 
 ```
-vibium completion [bash|zsh|fish|powershell]
+vibium completion <bash|zsh|fish|powershell>
 ```
 
-## Examples
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Generating
+
+The shell is required — there is no default:
 
 ```sh
-vibium completion zsh
-# → #compdef vibium
-#   (( $+functions[compdef] )) || { autoload -Uz compinit && compinit -u; }
-#   compdef _vibium vibium
-#   ...
+$ vibium completion
+Error: accepts 1 arg(s), received 0
+Usage:
+  vibium completion [bash|zsh|fish|powershell] [flags]
+```
+
+Each shell emits its own script to stdout:
+
+```sh
+$ vibium completion zsh | head -1
+#compdef vibium
+
+$ vibium completion bash | head -1
+# bash completion for vibium                               -*- shell-script -*-
+```
+
+`fish` and `powershell` are also accepted.
+
+## Installing it
+
+```sh
+# zsh
+vibium completion zsh > "${fpath[1]}/_vibium"
+
+# bash
+vibium completion bash > /usr/local/etc/bash_completion.d/vibium
 ```
 
 ## See also
 
+- [`vibium help`](/docs/commands/help) — the command list completion is built from.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Meta](/docs/commands#meta) — related commands.

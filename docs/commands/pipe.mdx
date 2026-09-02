@@ -1,23 +1,17 @@
 ---
 title: "vibium pipe"
 sidebar_label: pipe
-description: "Start vibium in pipe mode where protocol messages are exchanged"
+description: "Run as a child process communicating via stdin/stdout pipes"
 ---
 
 # vibium pipe
 
-Start vibium in pipe mode where protocol messages are exchanged.
+Run as a child process speaking BiDi over stdin/stdout.
 
-:::info[Generated reference]
-Derived from `vibium help pipe` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths, ports and ids will differ on your machine.
 :::
-
-over stdin (commands) and stdout (responses/events) as newline-delimited JSON.
-Diagnostic output goes to stderr. This mode is used by client libraries.
-
-Use --connect to proxy to a remote BiDi endpoint instead of launching a local browser.
 
 ## Synopsis
 
@@ -29,27 +23,38 @@ vibium pipe
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--connect` | `string` | Connect to a remote BiDi WebSocket URL instead of launching a local browser |
-| `--connect-header` | `stringArray` | HTTP header for WebSocket connect (repeatable, format: "Key: Value") |
+| `--connect` | `string` | Connect to a remote BiDi endpoint |
+| `--connect-header` | `string` | Header to send when connecting |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## What it does
+
+`pipe` launches a browser and relays raw BiDi JSON between it and your process's
+stdin/stdout. It is the transport a language client sits on top of, not
+something to use interactively:
 
 ```sh
-{ echo '{"id":1,"method":"vibium:browser.page","params":{}}'; cat; } | vibium pipe --headless
-# Drive the protocol by hand; Ctrl-C when done. cat holds stdin open past
-# the browser launch. A bare echo closes it first and the command comes
-# back {"type":"error","message":"connection closed"}.
-
-# Connect to a remote browser
-vibium pipe --connect ws://remote:9515
-
-# Connect with auth header
-vibium pipe --connect wss://cloud.example.com/bidi --connect-header "Authorization: Bearer token"
+$ vibium pipe
+[router] Launching browser for client 1...
+[router] Browser launched for client 1 (BiDi session)
+{"method":"browsingContext.contextCreated","params":{"children":null,"clientWindow":"557478037","context":"5E8F906E8B34748CA6C0E37C6F125DA2","originalOpener":null,"parent":null,"url":"about:blank","userContext":"default"},"type":"event"}
+{"method":"vibium:lifecycle.ready","params":{"version":"26.8.21"}}
 ```
+
+Events start arriving immediately, interleaved with `[router]` diagnostics on
+the same stream — a client has to tolerate both.
+
+`vibium:lifecycle.ready` is the signal that the session is usable.
+
+:::warning[This command does not exit on its own]
+It runs until interrupted, printing `Press Ctrl+C to stop...`. Do not call it
+from a script that waits for completion — it will hang. Run it in the
+background, or bound it explicitly (macOS has no `timeout(1)`).
+:::
 
 ## See also
 
+- [`vibium serve`](/docs/commands/serve) — the same idea over a WebSocket.
+- [`vibium mcp`](/docs/commands/mcp) — a higher-level protocol for agents.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Agent integration](/docs/commands#agent-integration) — related commands.

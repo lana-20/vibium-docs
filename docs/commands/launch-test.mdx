@@ -6,12 +6,11 @@ description: "Launch the selected browser and print BiDi session info"
 
 # vibium launch-test
 
-Launch the selected browser and print BiDi session info.
+Launch the browser and print BiDi session info.
 
-:::info[Generated reference]
-Derived from `vibium help launch-test` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths, ports and ids will differ on your machine.
 :::
 
 ## Synopsis
@@ -20,7 +19,39 @@ command's own built-in samples, not captured terminal output. Pages marked
 vibium launch-test
 ```
 
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Running
+
+```sh
+$ vibium launch-test
+Session ID: ce3252b1c8fa75f6419a9e1e49c0b9bd
+BiDi WebSocket: 
+Press Ctrl+C to stop...
+```
+
+A minimal "can this machine launch the browser at all" check, below the daemon
+and below the command layer. Reach for it when
+[`vibium go`](/docs/commands/go) fails and you need to know whether the problem
+is the browser or vibium.
+
+:::note[`BiDi WebSocket` can come back empty]
+It did here, on a successful launch — the session was created and usable. Treat
+an empty value as uninformative rather than as a failure;
+[`vibium bidi-test`](/docs/commands/bidi-test) actually exercises the socket.
+:::
+
+:::warning[This command does not exit on its own]
+It runs until interrupted, printing `Press Ctrl+C to stop...`. Do not call it
+from a script that waits for completion — it will hang. Run it in the
+background, or bound it explicitly (macOS has no `timeout(1)`).
+:::
+
 ## See also
 
+- [`vibium bidi-test`](/docs/commands/bidi-test) — goes one step further and speaks BiDi.
+- [`vibium paths`](/docs/commands/paths) — which binary is being launched.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Diagnostics](/docs/commands#diagnostics) — related commands.

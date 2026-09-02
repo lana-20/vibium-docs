@@ -20,13 +20,21 @@ import sys
 from pathlib import Path
 
 # Pages written by hand against real terminal output. Never overwritten.
-CURATED = {"back", "forward", "reload", "url", "title", "map", "find",
-           "click", "screenshot", "fill", "wait", "type", "press",
-           "go", "diff",
-           "text", "html", "attr", "value", "is", "a11y-tree", "content",
-           "frame", "frames", "count",
-           "check", "uncheck", "select", "hover", "focus", "dblclick",
-           "highlight", "keys", "scroll", "drag", "upload", "mouse"}
+CURATED = {
+    # Every command is verified; the generator now only rebuilds the
+    # index, the global-flags page and the README tracker.
+    "a11y-tree", "add-skill", "attr", "back", "bidi-test", "check",
+    "click", "completion", "content", "cookies", "count", "daemon",
+    "dblclick", "dialog", "diff", "download", "drag", "eval", "fill",
+    "find", "focus", "forward", "frame", "frames", "geolocation", "go",
+    "help", "highlight", "hover", "html", "install", "is",
+    "is-installed", "keys", "launch-test", "map", "mcp", "media",
+    "mouse", "page", "pages", "paths", "pdf", "pipe", "press",
+    "record", "reload", "screenshot", "scroll", "select", "serve",
+    "sleep", "start", "stop", "storage", "text", "title", "type",
+    "uncheck", "upload", "url", "value", "version", "viewport", "wait",
+    "window", "ws-test",
+}
 
 # Every top-level command, grouped for the sidebar. Checked for drift against
 # the binary at run time: an uncategorized command is a hard error, so a new

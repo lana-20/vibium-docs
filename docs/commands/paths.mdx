@@ -6,12 +6,11 @@ description: "Print browser and cache paths"
 
 # vibium paths
 
-Print browser and cache paths.
+Print the browser and cache paths vibium uses.
 
-:::info[Generated reference]
-Derived from `vibium help paths` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths and ids will differ on your machine.
 :::
 
 ## Synopsis
@@ -20,7 +19,36 @@ command's own built-in samples, not captured terminal output. Pages marked
 vibium paths
 ```
 
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Output
+
+```sh
+$ vibium paths
+Cache directory: /Users/lanabegunova/Library/Caches/vibium
+Chrome: /Users/lanabegunova/Library/Caches/vibium/chrome-for-testing/152.0.7977.54/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing
+Chromedriver: /Users/lanabegunova/Library/Caches/vibium/chrome-for-testing/152.0.7977.54/chromedriver
+```
+
+The first stop when a launch fails: it shows exactly which binary vibium will
+run, including the version directory, so a stale or partial download is visible
+immediately.
+
+Paths follow `--engine`, so `vibium --engine firefox paths` reports the Firefox
+locations instead.
+
+:::warning[`--json` is ignored on this version]
+Output is identical with and without the flag. This is the family of gaps
+reported upstream as
+[#451](https://github.com/VibiumDev/vibium/issues/451); several members were
+fixed after this release.
+:::
+
 ## See also
 
+- [`vibium is-installed`](/docs/commands/is-installed) — whether that binary is actually there.
+- [`vibium install`](/docs/commands/install) — put it there.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

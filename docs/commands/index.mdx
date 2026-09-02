@@ -81,62 +81,62 @@ reference can be re-derived whenever vibium ships a new release.
 | Command | Description |
 | --- | --- |
 | [`vibium screenshot`](/docs/commands/screenshot) *(Verified)* | Capture a screenshot (optionally navigate to URL first) |
-| [`vibium pdf`](/docs/commands/pdf) | Save page as PDF |
-| [`vibium eval`](/docs/commands/eval) | Evaluate a JavaScript expression (optionally navigate to URL first) |
-| [`vibium record`](/docs/commands/record) | Record browser sessions (screenshots and snapshots) |
+| [`vibium pdf`](/docs/commands/pdf) *(Verified)* | Save page as PDF |
+| [`vibium eval`](/docs/commands/eval) *(Verified)* | Evaluate a JavaScript expression (optionally navigate to URL first) |
+| [`vibium record`](/docs/commands/record) *(Verified)* | Record browser sessions (screenshots and snapshots) |
 
 ## Waiting
 
 | Command | Description |
 | --- | --- |
 | [`vibium wait`](/docs/commands/wait) *(Verified)* | Wait for an element, URL, text, page load, or JS condition |
-| [`vibium sleep`](/docs/commands/sleep) | Pause execution for a number of milliseconds |
+| [`vibium sleep`](/docs/commands/sleep) *(Verified)* | Pause execution for a number of milliseconds |
 
 ## Browser & session
 
 | Command | Description |
 | --- | --- |
-| [`vibium start`](/docs/commands/start) | Start a browser session. Without arguments, launches a local browser. |
-| [`vibium stop`](/docs/commands/stop) | Stop the browser session |
-| [`vibium daemon`](/docs/commands/daemon) | Manage the vibium daemon (background browser process) |
-| [`vibium page`](/docs/commands/page) | Manage browser pages (new, close, switch) |
-| [`vibium pages`](/docs/commands/pages) | List all open browser pages |
-| [`vibium viewport`](/docs/commands/viewport) | Get or set the browser viewport size |
-| [`vibium window`](/docs/commands/window) | Get or set the OS browser window size, position, or state |
-| [`vibium install`](/docs/commands/install) | Download the selected browser (Chrome for Testing by default) |
-| [`vibium is-installed`](/docs/commands/is-installed) | Check if the selected browser is installed (exit 0 = yes, exit 1 = no) |
-| [`vibium paths`](/docs/commands/paths) | Print browser and cache paths |
-| [`vibium storage`](/docs/commands/storage) | Export or restore browser state (cookies, localStorage, sessionStorage) |
-| [`vibium cookies`](/docs/commands/cookies) | Manage browser cookies |
-| [`vibium download`](/docs/commands/download) | Manage browser downloads |
-| [`vibium dialog`](/docs/commands/dialog) | Handle browser dialogs (alert, confirm, prompt) |
-| [`vibium geolocation`](/docs/commands/geolocation) | Override the browser geolocation |
-| [`vibium media`](/docs/commands/media) | Override CSS media features |
+| [`vibium start`](/docs/commands/start) *(Verified)* | Start a browser session. Without arguments, launches a local browser. |
+| [`vibium stop`](/docs/commands/stop) *(Verified)* | Stop the browser session |
+| [`vibium daemon`](/docs/commands/daemon) *(Verified)* | Manage the vibium daemon (background browser process) |
+| [`vibium page`](/docs/commands/page) *(Verified)* | Manage browser pages (new, close, switch) |
+| [`vibium pages`](/docs/commands/pages) *(Verified)* | List all open browser pages |
+| [`vibium viewport`](/docs/commands/viewport) *(Verified)* | Get or set the browser viewport size |
+| [`vibium window`](/docs/commands/window) *(Verified)* | Get or set the OS browser window size, position, or state |
+| [`vibium install`](/docs/commands/install) *(Verified)* | Download the selected browser (Chrome for Testing by default) |
+| [`vibium is-installed`](/docs/commands/is-installed) *(Verified)* | Check if the selected browser is installed (exit 0 = yes, exit 1 = no) |
+| [`vibium paths`](/docs/commands/paths) *(Verified)* | Print browser and cache paths |
+| [`vibium storage`](/docs/commands/storage) *(Verified)* | Export or restore browser state (cookies, localStorage, sessionStorage) |
+| [`vibium cookies`](/docs/commands/cookies) *(Verified)* | Manage browser cookies |
+| [`vibium download`](/docs/commands/download) *(Verified)* | Manage browser downloads |
+| [`vibium dialog`](/docs/commands/dialog) *(Verified)* | Handle browser dialogs (alert, confirm, prompt) |
+| [`vibium geolocation`](/docs/commands/geolocation) *(Verified)* | Override the browser geolocation |
+| [`vibium media`](/docs/commands/media) *(Verified)* | Override CSS media features |
 
 ## Agent integration
 
 | Command | Description |
 | --- | --- |
-| [`vibium mcp`](/docs/commands/mcp) | Start the Model Context Protocol (MCP) server. |
-| [`vibium add-skill`](/docs/commands/add-skill) | Install Vibium browser skill for Claude Code |
-| [`vibium pipe`](/docs/commands/pipe) | Start vibium in pipe mode where protocol messages are exchanged |
-| [`vibium serve`](/docs/commands/serve) | Start WebSocket proxy server for browser automation |
+| [`vibium mcp`](/docs/commands/mcp) *(Verified)* | Start the Model Context Protocol (MCP) server. |
+| [`vibium add-skill`](/docs/commands/add-skill) *(Verified)* | Install Vibium browser skill for Claude Code |
+| [`vibium pipe`](/docs/commands/pipe) *(Verified)* | Start vibium in pipe mode where protocol messages are exchanged |
+| [`vibium serve`](/docs/commands/serve) *(Verified)* | Start WebSocket proxy server for browser automation |
 
 ## Diagnostics
 
 | Command | Description |
 | --- | --- |
-| [`vibium launch-test`](/docs/commands/launch-test) | Launch the selected browser and print BiDi session info |
-| [`vibium bidi-test`](/docs/commands/bidi-test) | Launch browser, connect via BiDi, send session.status |
-| [`vibium ws-test`](/docs/commands/ws-test) | Test WebSocket connection (type messages, see echoes) |
+| [`vibium launch-test`](/docs/commands/launch-test) *(Verified)* | Launch the selected browser and print BiDi session info |
+| [`vibium bidi-test`](/docs/commands/bidi-test) *(Verified)* | Launch browser, connect via BiDi, send session.status |
+| [`vibium ws-test`](/docs/commands/ws-test) *(Verified)* | Test WebSocket connection (type messages, see echoes) |
 
 ## Meta
 
 | Command | Description |
 | --- | --- |
-| [`vibium version`](/docs/commands/version) | Print the version number |
-| [`vibium help`](/docs/commands/help) | Help provides help for any command in the application. |
-| [`vibium completion`](/docs/commands/completion) | Generate a shell completion script. |
+| [`vibium version`](/docs/commands/version) *(Verified)* | Print the version number |
+| [`vibium help`](/docs/commands/help) *(Verified)* | Help provides help for any command in the application. |
+| [`vibium completion`](/docs/commands/completion) *(Verified)* | Generate a shell completion script. |
 
 ## Conventions
 

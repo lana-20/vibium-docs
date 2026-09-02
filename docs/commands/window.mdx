@@ -6,45 +6,48 @@ description: "Get or set the OS browser window size, position, or state"
 
 # vibium window
 
-Get or set the OS browser window size, position, or state.
+Get or set the OS browser window.
 
-:::info[Generated reference]
-Derived from `vibium help window` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium window [width] [height] [x] [y]
+vibium window
+vibium window <width> <height> [x] [y]
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--state` | `string` | Window state: normal, maximized, minimized, fullscreen |
+| `--state` | `string` | normal, minimized, maximized, fullscreen |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Reading
 
 ```sh
-vibium window
-# {"state":"normal","x":0,"y":25,"width":1280,"height":720}
-
-vibium window 1920 1080
-# Set window to 1920x1080
-
-vibium window 1920 1080 0 0
-# Set window to 1920x1080 at position (0, 0)
-
-vibium window --state maximized
-# Maximize the window
+$ vibium window
+{"state":"normal","x":22,"y":22,"width":756,"height":556}
 ```
+
+This is the operating-system window, including browser chrome — which is why
+its height exceeds the [`viewport`](/docs/commands/viewport)'s 469 by the
+toolbar's worth of pixels.
+
+Setting the window resizes the viewport as a side effect, but not to the same
+numbers. If what you need is a specific *page* size — for a screenshot, or to
+reproduce a layout bug — set the
+[`viewport`](/docs/commands/viewport) directly instead.
 
 ## See also
 
+- [`vibium viewport`](/docs/commands/viewport) — the page's own dimensions.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

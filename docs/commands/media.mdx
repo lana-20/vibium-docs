@@ -8,44 +8,57 @@ description: "Override CSS media features"
 
 Override CSS media features.
 
-:::info[Generated reference]
-Derived from `vibium help media` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium media
+vibium media [--color-scheme dark|light] [--reduced-motion ...] [...]
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--color-scheme` | `string` | Color scheme: light, dark, no-preference |
-| `--contrast` | `string` | Contrast: more, less, no-preference |
-| `--forced-colors` | `string` | Forced colors: active, none |
-| `--media` | `string` | Media type: screen, print |
-| `--reduced-motion` | `string` | Reduced motion: reduce, no-preference |
+| `--color-scheme` | `string` | `light` or `dark` |
+| `--reduced-motion` | `string` | `reduce` or `no-preference` |
+| `--forced-colors` | `string` | `active` or `none` |
+| `--contrast` | `string` | contrast preference |
+| `--media` | `string` | media type, e.g. `print` |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Emulating dark mode
+
+The command names the features it applied, and the page sees the change
+immediately:
 
 ```sh
-vibium media --color-scheme dark
-# Enable dark mode
+$ vibium media --color-scheme dark
+Media emulation applied: [colorScheme]
 
-vibium media --reduced-motion reduce
-# Reduce motion
+$ vibium eval "matchMedia('(prefers-color-scheme: dark)').matches"
+true
+```
 
-vibium media --color-scheme light --forced-colors active
-# Override multiple features
+`--media print` is the way to preview print styles before
+[`vibium pdf`](/docs/commands/pdf), which applies them anyway.
+
+Overrides persist for the session. Set the feature back explicitly to undo it —
+there is no reset:
+
+```sh
+vibium media --color-scheme light
 ```
 
 ## See also
 
+- [`vibium pdf`](/docs/commands/pdf) — print rendering, which uses print media.
+- [`vibium screenshot`](/docs/commands/screenshot) — capture the emulated result.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

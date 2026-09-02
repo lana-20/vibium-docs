@@ -6,40 +6,47 @@ description: "Manage browser downloads"
 
 # vibium download
 
-Manage browser downloads.
+Set where downloads are saved.
 
-:::info[Generated reference]
-Derived from `vibium help download` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium download
+vibium download dir <path>
 ```
 
-## Subcommands
+## Flags
 
-| Subcommand | Description |
-| --- | --- |
-| [`vibium download dir`](#vibium-download-dir) | Set the download directory |
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
 
-### `vibium download dir`
-
-Set the download directory.
-
-```
-vibium download dir [path]
-```
+## Setting the directory
 
 ```sh
-vibium download dir ./downloads
-# Set download directory to ./downloads
+$ vibium download dir /tmp/cap
+Download directory set to /tmp/cap
+```
+
+Set this **before** triggering the download; changing it afterwards does not
+move a file already saved.
+
+There is no command to list, wait for, or inspect downloads — `download dir` is
+the whole surface. To know a download finished, poll for the file:
+
+```sh
+vibium download dir /tmp/cap
+vibium click "#download-link"
+until [ -s /tmp/cap/sample.txt ]; do sleep 0.2; done
 ```
 
 ## See also
 
+- [`vibium upload`](/docs/commands/upload) — the other direction.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

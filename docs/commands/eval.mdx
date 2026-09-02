@@ -1,47 +1,118 @@
 ---
 title: "vibium eval"
 sidebar_label: eval
-description: "Evaluate a JavaScript expression (optionally navigate to URL first)"
+description: "Evaluate a JavaScript expression"
 ---
 
 # vibium eval
 
-Evaluate a JavaScript expression (optionally navigate to URL first).
+Run a JavaScript expression in the page and print the result.
 
-:::info[Generated reference]
-Derived from `vibium help eval` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium eval [url] [expression]
+vibium eval [url] <expression>
+vibium eval --stdin
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--stdin` | — | Read expression from stdin |
+| `--stdin` | — | Read the expression from stdin |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Evaluating
+
+The **value of the last expression** is printed. Objects and arrays come back as
+JSON:
 
 ```sh
-vibium eval "document.title"
-# Evaluates on current page
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium eval https://example.com "document.title"
-# Navigates to URL first, then evaluates
+$ vibium eval "1+1"
+2
 
-echo 'document.title' | vibium eval --stdin
-# Read expression from stdin (avoids shell quoting issues)
+$ vibium eval "document.title"
+Vibium docs playground
+
+$ vibium eval "[1,2,3]"
+[1,2,3]
+
+$ vibium eval "({a:1})"
+{"a":1}
+```
+
+Note the parentheses around the object literal — without them the braces parse
+as a block.
+
+## `null` is overloaded
+
+:::warning[Four different outcomes all print `null`]
+```sh
+$ vibium eval "null"
+null
+
+$ vibium eval "undefined"
+null
+
+$ vibium eval "var x = 5;"
+null
+```
+
+A genuine `null`, an `undefined`, and a statement that returns nothing are
+indistinguishable in the output. If the difference matters, return something
+explicit:
+
+```sh
+vibium eval "JSON.stringify({value: x, type: typeof x})"
+```
+:::
+
+## Errors
+
+A thrown exception is reported and exits 1:
+
+```sh
+$ vibium eval "nope.nope"
+Error: failed to evaluate: script exception: ReferenceError: nope is not defined
+$ echo $?
+1
+```
+
+## Longer scripts
+
+`--stdin` avoids shell quoting entirely, which is the practical way to run
+anything non-trivial:
+
+```sh
+vibium eval --stdin <<'EOF'
+const rows = [...document.querySelectorAll('nav a')];
+JSON.stringify(rows.map(a => a.textContent));
+EOF
+```
+
+## JSON output
+
+```sh
+$ vibium eval "document.title" --json
+{"ok":true,"result":"Vibium docs playground"}
 ```
 
 ## See also
 
+- [`vibium text`](/docs/commands/text) / [`html`](/docs/commands/html) — the common reads, without JavaScript.
+- [`vibium attr`](/docs/commands/attr) — attributes; `eval` gets you DOM properties.
+- [`vibium wait fn`](/docs/commands/wait) — the same expressions, as a condition.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Capture](/docs/commands#capture) — related commands.

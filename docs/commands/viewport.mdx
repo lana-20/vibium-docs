@@ -6,42 +6,65 @@ description: "Get or set the browser viewport size"
 
 # vibium viewport
 
-Get or set the browser viewport size.
+Get or set the page viewport size.
 
-:::info[Generated reference]
-Derived from `vibium help viewport` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium viewport [width] [height]
+vibium viewport
+vibium viewport <width> <height>
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--dpr` | `float` | Device pixel ratio (e.g., 2 for Retina) |
+| `--dpr` | `float` | Device pixel ratio |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Reading and setting
+
+With no arguments it reports the current size as JSON:
 
 ```sh
-vibium viewport
-# {"width":1280,"height":720,"devicePixelRatio":1}
+$ vibium viewport
+{"width":756,"height":469,"devicePixelRatio":1}
 
-vibium viewport 1280 720
-# Set viewport to 1280x720
+$ vibium viewport 1024 768
+Viewport set to 1024x768
 
-vibium viewport 375 812 --dpr 3
-# Simulate iPhone X viewport
+$ vibium viewport
+{"width":1024,"height":768,"devicePixelRatio":1}
 ```
+
+The viewport is the coordinate space for
+[`vibium mouse`](/docs/commands/mouse) and the size of a plain
+[`screenshot`](/docs/commands/screenshot) — if a capture comes back an
+unexpected size, this is the command to check.
+
+:::note[Viewport is not the OS window]
+[`vibium window`](/docs/commands/window) reports the outer window, which is
+larger — it includes the browser chrome. On the fixture the viewport is
+756×469 while the window is 756×556.
+:::
+
+## Inside a frame, `viewport` reports the frame
+
+After [`vibium frame`](/docs/commands/frame), this reports the iframe's
+dimensions rather than the page's — on the fixture, `320x120`. That is a useful
+way to notice you are still inside a frame.
 
 ## See also
 
+- [`vibium window`](/docs/commands/window) — the OS window instead.
+- [`vibium screenshot`](/docs/commands/screenshot) — sized by the viewport.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

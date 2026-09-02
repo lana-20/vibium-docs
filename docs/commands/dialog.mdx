@@ -6,57 +6,93 @@ description: "Handle browser dialogs (alert, confirm, prompt)"
 
 # vibium dialog
 
-Handle browser dialogs (alert, confirm, prompt).
+Accept or dismiss a JavaScript dialog.
 
-:::info[Generated reference]
-Derived from `vibium help dialog` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium dialog
-```
-
-## Subcommands
-
-| Subcommand | Description |
-| --- | --- |
-| [`vibium dialog accept`](#vibium-dialog-accept) | Accept a dialog (optionally with prompt text) |
-| [`vibium dialog dismiss`](#vibium-dialog-dismiss) | Dismiss a dialog |
-
-### `vibium dialog accept`
-
-Accept a dialog (optionally with prompt text).
-
-```
 vibium dialog accept [text]
-```
-
-```sh
-vibium dialog accept
-# Accept an alert or confirm dialog
-
-vibium dialog accept "my input"
-# Accept a prompt dialog with text
-```
-
-### `vibium dialog dismiss`
-
-Dismiss a dialog.
-
-```
 vibium dialog dismiss
 ```
 
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## The click that opens a dialog appears to fail
+
+:::danger[Read this before anything else on this page]
+A JavaScript dialog blocks the page, so the command that triggered it cannot get
+a response. [`click`](/docs/commands/click) therefore **times out and exits 1**
+even though the click worked and the dialog is open:
+
 ```sh
-vibium dialog dismiss
-# Dismiss/cancel a dialog
+$ vibium click "#alert-btn"
+Error: read response: read unix ->/Users/…/vibium.sock: i/o timeout
+$ echo $?
+1
+
+$ vibium dialog accept
+Dialog accepted
 ```
+
+The `dialog accept` succeeds, which proves the click had opened it. Reproducible
+on every run.
+
+So a click that opens a dialog must be treated as expected-to-fail: ignore its
+exit status, and assert on the dialog instead.
+:::
+
+## Confirm and prompt
+
+`accept` and `dismiss` map onto the two answers, and the fixture records which
+it received:
+
+```sh
+$ vibium dialog accept
+Dialog accepted
+$ vibium text "#status"
+Confirmed
+
+$ vibium dialog dismiss
+Dialog dismissed
+$ vibium text "#status"
+Dismissed
+```
+
+For a `prompt`, pass the reply as an argument to `accept`:
+
+```sh
+$ vibium dialog accept "Lana"
+Dialog accepted with text: "Lana"
+
+$ vibium text "#status"
+Prompt: Lana
+```
+
+## When no dialog is open
+
+```sh
+$ vibium dialog accept
+Error: failed to accept dialog: BiDi error: no such alert - no such alert
+$ echo $?
+1
+```
+
+There is no command to test whether a dialog is open, so this error is also the
+way to find out — which makes the exit status ambiguous between "no dialog" and
+"something else went wrong".
 
 ## See also
 
+- [`vibium click`](/docs/commands/click) — the command that will appear to fail.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Browser & session](/docs/commands#browser--session) — related commands.

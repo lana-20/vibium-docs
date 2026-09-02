@@ -6,121 +6,91 @@ description: "Record browser sessions (screenshots and snapshots)"
 
 # vibium record
 
-Record browser sessions (screenshots and snapshots).
+Record a session to a trace ZIP.
 
-:::info[Generated reference]
-Derived from `vibium help record` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium record
+vibium record start [-o file.zip]
+vibium record stop
+vibium record chunk ...
+vibium record group ...
 ```
 
-## Subcommands
-
-| Subcommand | Description |
-| --- | --- |
-| [`vibium record chunk`](#vibium-record-chunk) | Manage recording chunks |
-| [`vibium record group`](#vibium-record-group) | Manage recording groups |
-| [`vibium record start`](#vibium-record-start) | Start a recording |
-| [`vibium record stop`](#vibium-record-stop) | Stop recording and save |
-
-### `vibium record chunk`
-
-Manage recording chunks.
-
-```
-vibium record chunk
-```
-
-### `vibium record group`
-
-Manage recording groups.
-
-```
-vibium record group
-```
-
-### `vibium record start`
-
-Start a recording.
-
-```
-vibium record start
-```
+## Flags (`record start`)
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--bidi` | — | Record raw BiDi commands in the recording |
-| `--format` | `string` | Screenshot format: jpeg or png (default "jpeg") |
-| `--name` | `string` | Name for the recording (also seeds the default filename stem) |
-| `--output`, `-o` | `string` | Where the recording ZIP lands at stop (default: record-&lt;timestamp&gt;.zip) |
-| `--quality` | `float` | JPEG quality 0.0-1.0 (ignored for png) (default 0.5) |
-| `--screenshots` | — | Capture screenshots after each action (default true) |
+| `--output`, `-o` | `string` | Where the ZIP lands at stop (default `record-<timestamp>.zip`) |
+| `--name` | `string` | Name for the recording; seeds the default filename |
+| `--screenshots` | — | Capture a screenshot after each action (default true) |
 | `--snapshots` | — | Capture HTML snapshots |
+| `--format` | `string` | Screenshot format: `jpeg` or `png` (default jpeg) |
+| `--quality` | `float` | JPEG quality 0.0–1.0 (default 0.5) |
+| `--video` | — | Require video; omit for "when supported", `=false` for off |
+| `--video-fps` | `int` | Frame rate |
+| `--video-size` | `string` | Dimensions, e.g. `1280x720` |
+| `--bidi` | — | Include raw BiDi commands |
 | `--sources` | — | Include source information |
-| `--title` | `string` | Title shown in trace viewer (defaults to name) |
-| `--video` | — | Require video (omit: video when the engine supports it; =false: off) |
-| `--video-fps` | `int` | Video frame rate (engine default if omitted) |
-| `--video-remote` | `string` | On a remote connection, "keep" records anyway and leaves the video on the remote host |
-| `--video-size` | `string` | Video dimensions as WxH, e.g. 1280x720 (default: viewport) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Recording a session
 
 ```sh
-vibium record start
-# Start recording with screenshots (default); video too when the
-# engine supports it (Firefox 154+)
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium record start --video -o record.zip
-# Require video — fails with an explanatory error on Chrome
-# Recording "record" started (video: on, ...), saving to record.zip
+$ vibium record start -o /tmp/cap/rec.zip
+Recording "record" started (video: unavailable, screenshots: true, snapshots: false), saving to /tmp/cap/rec.zip
 
-vibium record start --video --video-size 1280x720 --video-fps 30
-# Explicit video dimensions (defaults follow the viewport)
+$ vibium click "#counter"
+Clicked element: #counter
 
-vibium record start --video=false
-# Record without video
-
-vibium record start --screenshots=false
-# Record without screenshots
-
-vibium record start --snapshots
-# Record with screenshots and HTML snapshots
-
-vibium record start --format png
-# Use PNG format instead of JPEG (larger files, lossless)
-
-vibium record start --quality 0.1
-# Lower JPEG quality for smaller recording files
-
-vibium record start --title "Login Flow"
-# Set a title shown in the trace viewer
+$ vibium record stop
+Saved /tmp/cap/rec.zip (4 steps) — video unavailable: BiDi error: unsupported operation - unsupported operation
 ```
 
-### `vibium record stop`
+The start line states up front what it will and will not capture, which is worth
+reading rather than assuming.
 
-Stop recording and save.
+## What lands in the ZIP
 
 ```
-vibium record stop
+trace.trace
+trace.network
+resources/page@<hash>-<timestamp>.jpeg   (one per step)
 ```
 
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--output`, `-o` | `string` | Output file path (default: record-&lt;timestamp&gt;.zip) |
+Four steps produced four JPEGs at default quality, totalling about 64KB.
 
-```sh
-vibium record stop
-# Saved record-20260808-094123.zip (23 steps, 14s video)
+## Video is engine-dependent
 
-vibium record stop -o my-recording.zip
-# Save to a custom path (overrides the path declared at start)
+:::warning[No video on Chrome]
+Video recording needs Firefox 154+. On Chrome the engine rejects it, and both
+the start and stop lines say so explicitly — `video: unavailable` at start, and
+the reason at stop:
+
 ```
+video unavailable: BiDi error: unsupported operation - unsupported operation
+```
+
+The recording still succeeds with screenshots. Passing `--video` **requires**
+video and fails the command instead of degrading, so use it only when you have
+committed to an engine that supports it.
+:::
 
 ## See also
 
+- [`vibium screenshot`](/docs/commands/screenshot) — one frame instead of a session.
+- [`vibium diff map`](/docs/commands/diff) — what changed, without a trace file.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Capture](/docs/commands#capture) — related commands.

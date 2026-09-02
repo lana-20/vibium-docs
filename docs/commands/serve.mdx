@@ -6,12 +6,11 @@ description: "Start WebSocket proxy server for browser automation"
 
 # vibium serve
 
-Start WebSocket proxy server for browser automation.
+Run a WebSocket proxy in front of the browser.
 
-:::info[Generated reference]
-Derived from `vibium help serve` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21** on macOS. Paths, ports and ids will differ on your machine.
 :::
 
 ## Synopsis
@@ -24,24 +23,31 @@ vibium serve
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--port`, `-p` | `int` | Port to listen on (default 9515) |
+| `--port` | `int` | Port to listen on (default 9515) |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Running
 
 ```sh
-vibium serve
-# Starts server on default port 9515, visible browser
-
-vibium serve --port 8080
-# Starts server on port 8080
-
-vibium serve --headless
-# Starts server with headless browser
+$ vibium serve
+Starting Vibium proxy server on port 9515...
+Server listening on ws://localhost:9515
+Press Ctrl+C to stop...
 ```
+
+Clients then connect to `ws://localhost:9515` — including vibium itself, via
+[`vibium start <ws-url>`](/docs/commands/start), which is how you drive a
+browser on another host.
+
+:::warning[This command does not exit on its own]
+It runs until interrupted, printing `Press Ctrl+C to stop...`. Do not call it
+from a script that waits for completion — it will hang. Run it in the
+background, or bound it explicitly (macOS has no `timeout(1)`).
+:::
 
 ## See also
 
+- [`vibium start`](/docs/commands/start) — connect to a served browser.
+- [`vibium pipe`](/docs/commands/pipe) — the same relay over stdio.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Agent integration](/docs/commands#agent-integration) — related commands.
