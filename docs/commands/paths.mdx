@@ -40,11 +40,16 @@ immediately.
 Paths follow `--engine`, so `vibium --engine firefox paths` reports the Firefox
 locations instead.
 
-:::warning[`--json` is ignored on this version]
-Output is identical with and without the flag. This is the family of gaps
-reported upstream as
-[#451](https://github.com/VibiumDev/vibium/issues/451); several members were
-fixed after this release.
+:::note[`--json` is ignored on this version, and fixed after it]
+On v26.8.21 the output is identical with and without the flag. This was
+[#392](https://github.com/VibiumDev/vibium/issues/392), fixed on 2026-08-24 —
+after this release was cut. Current `main` returns a proper envelope:
+
+```json
+{"ok":true,"result":{"engine":"chrome","cacheDir":"…","chrome":"…","chromedriver":"…"}}
+```
+
+So this is a version gap rather than a live defect; upgrading fixes it.
 :::
 
 ## See also

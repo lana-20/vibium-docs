@@ -71,6 +71,12 @@ output tells you *how many* buttons there are and their structure, but not which
 is which — which is usually the question. Use
 [`vibium map`](/docs/commands/map) when you need to identify elements, and
 `a11y-tree` when you need roles and nesting.
+
+The rule is that names taken from **attributes** survive and names computed from
+an element's own **text content** do not. `find` does not share the limitation —
+`vibium find role button --name "Count"` matches the very button the tree reports
+as unnamed, so the two commands disagree about the same element. Verified still
+present on current `main` as of 2026-09-01.
 :::
 
 ## Hidden elements are included

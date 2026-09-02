@@ -78,6 +78,22 @@ Note the asymmetry with `status`, which exits 1 in the same situation.
 [`vibium stop`](/docs/commands/stop) stops the daemon too, so you rarely need
 `daemon stop` directly.
 
+## `--json` returns JSON, but not the envelope
+
+:::warning[`daemon status --json` has no `ok` key]
+```sh
+$ vibium daemon status --json
+{"running":false}
+```
+
+Every other command's `--json` wraps its result as `{"ok":true,"result":…}`. This
+one returns a bare object, so a consumer that parses first and reads `ok` second
+gets a missing-key error rather than a clean "not JSON" signal. Verified still
+present on current `main`.
+
+`daemon start` and `daemon stop` ignore `--json` entirely and print plain text.
+:::
+
 ## See also
 
 - [`vibium stop`](/docs/commands/stop) — closes the browser and the daemon.

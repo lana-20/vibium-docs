@@ -54,6 +54,29 @@ vibium text                       # read the page back
 All commands share a single browser and daemon, so state persists between
 invocations — there is no session to thread through by hand.
 
+## Behaviours worth knowing before you script anything
+
+Verifying all 67 commands turned up a number of cases where a command reports
+success and does not do what you would expect. They are documented in full on
+the relevant pages; these are the ones that cost the most time:
+
+| Behaviour | Page |
+| --- | --- |
+| `type` does not append — it inserts wherever the focus-click lands, mid-value | [type](/docs/commands/type) |
+| `type` reports success on elements it cannot type into at all | [type](/docs/commands/type) |
+| Every `is` subcommand exits 0, so `if vibium is visible …` always runs | [is](/docs/commands/is) |
+| A click that opens a dialog times out after 60s and exits 1 — the click worked | [dialog](/docs/commands/dialog) |
+| `upload` accepts a path that does not exist and attaches a zero-byte file | [upload](/docs/commands/upload) |
+| `frame` switches context permanently, and `go` navigates the frame rather than leaving it | [frame](/docs/commands/frame) |
+| `scroll <direction>` does nothing inside a frame, while reporting success | [scroll](/docs/commands/scroll) |
+| A failed `go` leaves you on the engine's error page, which maps and reads cleanly | [go](/docs/commands/go) |
+| `value` on a checkbox is `on` whether ticked or not | [value](/docs/commands/value) |
+| `a11y-tree` omits every accessible name that comes from text content | [a11y-tree](/docs/commands/a11y-tree) |
+
+Most share a shape: the command reports what it **dispatched**, not what the page
+did with it. Assert on the consequence — a [`text`](/docs/commands/text) read or
+a [`wait`](/docs/commands/wait) — rather than on the exit code.
+
 ## Where to go next
 
 - **[Command reference](/docs/commands)** — all 67 commands, grouped by purpose.
