@@ -61,7 +61,7 @@ which the generator will never overwrite it.
 
 <!-- BEGIN COMMAND STATUS -->
 
-**22 of 67 verified** — 45 still generated from `--help`. Measured against `vibium v26.8.21`.
+**37 of 67 verified** — 30 still generated from `--help`. Measured against `vibium v26.8.21`.
 
 <details open>
 <summary><strong>Navigation</strong> — 6/6 verified</summary>
@@ -88,38 +88,38 @@ which the generator will never overwrite it.
 </details>
 
 <details open>
-<summary><strong>Finding elements</strong> — 1/4 verified</summary>
+<summary><strong>Finding elements</strong> — 4/4 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
 | [x] | [`find`](https://lana-20.github.io/vibium-docs/docs/commands/find) | Find elements by CSS selector or semantic locator |
-| [ ] | [`frame`](https://lana-20.github.io/vibium-docs/docs/commands/frame) | Find a frame by name or URL substring |
-| [ ] | [`frames`](https://lana-20.github.io/vibium-docs/docs/commands/frames) | List all child frames (iframes) on the page |
-| [ ] | [`count`](https://lana-20.github.io/vibium-docs/docs/commands/count) | Count matching elements |
+| [x] | [`frame`](https://lana-20.github.io/vibium-docs/docs/commands/frame) | Find a frame by name or URL substring |
+| [x] | [`frames`](https://lana-20.github.io/vibium-docs/docs/commands/frames) | List all child frames (iframes) on the page |
+| [x] | [`count`](https://lana-20.github.io/vibium-docs/docs/commands/count) | Count matching elements |
 
 </details>
 
 <details open>
-<summary><strong>Interacting</strong> — 4/16 verified</summary>
+<summary><strong>Interacting</strong> — 16/16 verified</summary>
 
 | | Command | Description |
 | --- | --- | --- |
 | [x] | [`click`](https://lana-20.github.io/vibium-docs/docs/commands/click) | Click an element (optionally navigate to URL first) |
-| [ ] | [`dblclick`](https://lana-20.github.io/vibium-docs/docs/commands/dblclick) | Double-click an element |
+| [x] | [`dblclick`](https://lana-20.github.io/vibium-docs/docs/commands/dblclick) | Double-click an element |
 | [x] | [`fill`](https://lana-20.github.io/vibium-docs/docs/commands/fill) | Clear an input field and type new text |
 | [x] | [`type`](https://lana-20.github.io/vibium-docs/docs/commands/type) | Type text into an element (optionally navigate to URL first) |
 | [x] | [`press`](https://lana-20.github.io/vibium-docs/docs/commands/press) | Press a key on a specific element or the focused element |
-| [ ] | [`keys`](https://lana-20.github.io/vibium-docs/docs/commands/keys) | Press a key or key combination |
-| [ ] | [`check`](https://lana-20.github.io/vibium-docs/docs/commands/check) | Check a checkbox or radio button |
-| [ ] | [`uncheck`](https://lana-20.github.io/vibium-docs/docs/commands/uncheck) | Uncheck a checkbox |
-| [ ] | [`select`](https://lana-20.github.io/vibium-docs/docs/commands/select) | Select an option in a &lt;select&gt; element |
-| [ ] | [`hover`](https://lana-20.github.io/vibium-docs/docs/commands/hover) | Hover over an element by CSS selector |
-| [ ] | [`focus`](https://lana-20.github.io/vibium-docs/docs/commands/focus) | Focus an element |
-| [ ] | [`drag`](https://lana-20.github.io/vibium-docs/docs/commands/drag) | Drag from one element to another |
-| [ ] | [`upload`](https://lana-20.github.io/vibium-docs/docs/commands/upload) | Set files on an input[type=file] element |
-| [ ] | [`scroll`](https://lana-20.github.io/vibium-docs/docs/commands/scroll) | Scroll the page or an element |
-| [ ] | [`mouse`](https://lana-20.github.io/vibium-docs/docs/commands/mouse) | Mouse control (click, move, down, up) |
-| [ ] | [`highlight`](https://lana-20.github.io/vibium-docs/docs/commands/highlight) | Highlight an element with a red outline for 3 seconds |
+| [x] | [`keys`](https://lana-20.github.io/vibium-docs/docs/commands/keys) | Press a key or key combination |
+| [x] | [`check`](https://lana-20.github.io/vibium-docs/docs/commands/check) | Check a checkbox or radio button |
+| [x] | [`uncheck`](https://lana-20.github.io/vibium-docs/docs/commands/uncheck) | Uncheck a checkbox |
+| [x] | [`select`](https://lana-20.github.io/vibium-docs/docs/commands/select) | Select an option in a &lt;select&gt; element |
+| [x] | [`hover`](https://lana-20.github.io/vibium-docs/docs/commands/hover) | Hover over an element by CSS selector |
+| [x] | [`focus`](https://lana-20.github.io/vibium-docs/docs/commands/focus) | Focus an element |
+| [x] | [`drag`](https://lana-20.github.io/vibium-docs/docs/commands/drag) | Drag from one element to another |
+| [x] | [`upload`](https://lana-20.github.io/vibium-docs/docs/commands/upload) | Set files on an input[type=file] element |
+| [x] | [`scroll`](https://lana-20.github.io/vibium-docs/docs/commands/scroll) | Scroll the page or an element |
+| [x] | [`mouse`](https://lana-20.github.io/vibium-docs/docs/commands/mouse) | Mouse control (click, move, down, up) |
+| [x] | [`highlight`](https://lana-20.github.io/vibium-docs/docs/commands/highlight) | Highlight an element with a red outline for 3 seconds |
 
 </details>
 

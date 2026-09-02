@@ -6,31 +6,159 @@ description: "Find a frame by name or URL substring"
 
 # vibium frame
 
-Find a frame by name or URL substring.
+Switch the active browsing context into an iframe.
 
-:::info[Generated reference]
-Derived from `vibium help frame` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
+:::
+
+:::danger[`frame` is not a query — it changes state, and the change sticks]
+The help calls this "find a frame", which reads like a lookup. It is not. Every
+command after it runs **inside that frame** until you navigate away:
+
+```sh
+$ vibium go "$PLAYGROUND"
+$ vibium count "a"
+5
+$ vibium count "button"
+9
+
+$ vibium frame "inner"
+{"context":"...","url":".../frame.html","name":"inner"}
+
+$ vibium count "a"
+0
+$ vibium count "button"
+1
+```
+
+The page has five links and nine buttons; the iframe has none and one. Nothing
+in the second `count` says which document it counted.
+
+There is no "exit frame" command, and **[`go`](/docs/commands/go) does not get
+you out** — it navigates the frame you are in. See
+[Getting back out](#getting-back-out).
 :::
 
 ## Synopsis
 
 ```
-vibium frame [nameOrUrl]
+vibium frame <nameOrUrl>
 ```
 
-## Examples
+## Flags
+
+`frame` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Matching
+
+The argument matches the frame's `name` attribute, or any substring of its URL.
+All of these select the fixture's iframe:
 
 ```sh
-vibium frame "myIframe"
-# Find frame by name
-
-vibium frame "example.com"
-# Find frame by URL substring
+$ vibium frame "inner"
+$ vibium frame "frame.html"
+$ vibium frame "frame"
+$ vibium frame "fixtures/frame"
+$ vibium frame "https://lana-20.github.io/vibium-docs/fixtures/frame.html"
 ```
+
+Each prints the frame's descriptor:
+
+```sh
+$ vibium frame "inner"
+{"context":"6C83A8C08B7D8A3F9010A7147E558CCC","url":"https://lana-20.github.io/vibium-docs/fixtures/frame.html","name":"inner"}
+```
+
+:::note[Match from the top-level context]
+Matching only considers the *current* context's children. Running
+`vibium frame "frame.html"` while already inside that frame fails with
+`no frame matching "frame.html"` — the frame is not its own child. If a match
+unexpectedly fails, you are probably already in a frame; get out first, as
+below.
+:::
+
+## Getting back out
+
+:::danger[`go` navigates the frame, it does not leave it]
+This is the trap that costs the most time. After entering a frame, `go` loads
+the URL **into that frame**, so the page you asked for appears nested inside
+itself and every later command still runs in the frame:
+
+```sh
+$ vibium go "$PLAYGROUND"
+$ vibium eval "window.top === window.self"
+true
+
+$ vibium frame "inner"
+{"context":"...","name":"inner"}
+$ vibium eval "window.top === window.self"
+false
+
+$ vibium go "$PLAYGROUND"
+$ vibium eval "window.top === window.self"
+false
+```
+
+`location.href` and `document.title` now both read as the top page, because the
+frame really did load it — so the usual checks all look right while every
+command targets a 320×120 document.
+
+Switch pages to reset the context:
+
+```sh
+$ vibium page switch 0
+Switched to page: EEC168825E14551AFA507E0A7ECFE850
+
+$ vibium eval "window.top === window.self"
+true
+```
+
+[`vibium reload`](/docs/commands/reload) also lands you back at the top.
+:::
+
+## Working inside a frame
+
+Once switched, ordinary commands address the frame's document:
+
+```sh
+$ vibium frame "inner"
+{"context":"...","url":".../frame.html","name":"inner"}
+
+$ vibium text "#frame-text"
+Content inside the iframe
+```
+
+The same selector fails from the top-level context, because the element is not
+in that document:
+
+```sh
+$ vibium go "$PLAYGROUND"
+$ vibium text "#frame-text"
+Error: failed to get text: element not found
+$ echo $?
+1
+```
+
+## When nothing matches
+
+```sh
+$ vibium frame "nope"
+Error: no frame matching "nope"
+$ echo $?
+1
+```
+
+Unlike [`frames`](/docs/commands/frames), which reports an empty list and exits
+0, a failed `frame` is an error.
 
 ## See also
 
+- [`vibium frames`](/docs/commands/frames) — list what there is to switch into.
+- [`vibium page switch`](/docs/commands/page) — how you actually get back to the top level.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Finding elements](/docs/commands#finding-elements) — related commands.

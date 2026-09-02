@@ -8,40 +8,53 @@ description: "Double-click an element"
 
 Double-click an element.
 
-:::info[Generated reference]
-Derived from `vibium help dblclick` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium dblclick [selector]
+vibium dblclick <selector>
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+| `--timeout` | `timeout` | Max time to wait (default 30s) |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Double-clicking
 
 ```sh
-vibium dblclick "td.cell"
-# Double-click to edit a table cell
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium dblclick @e2
-# Double-click element from map
+$ vibium dblclick "#counter"
+Double-clicked element: #counter
 
-vibium dblclick "td.cell" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium text "#status"
+Counted 2
 ```
+
+:::warning[A double-click is two clicks]
+The fixture's counter increments **twice** — a `dblclick` dispatches both
+individual `click` events as well as `dblclick`. Any single-click handler on the
+element runs twice.
+
+If you only want the `dblclick` event, there is no way to suppress the clicks
+that precede it; that is how the browser delivers them.
+:::
 
 ## See also
 
+- [`vibium click`](/docs/commands/click) — a single click.
+- [`vibium mouse click`](/docs/commands/mouse) — clicks by coordinate.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

@@ -6,42 +6,59 @@ description: "Drag from one element to another"
 
 # vibium drag
 
-Drag from one element to another.
+Drag one element onto another.
 
-:::info[Generated reference]
-Derived from `vibium help drag` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium drag [source] [target]
+vibium drag <source> <target>
 ```
 
 ## Flags
 
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
 
-Global flags apply as well — see [Global flags](/docs/global-flags).
+## Dragging
 
-## Examples
+The fixture's drop target rewrites itself when something lands on it, so the
+effect is observable:
 
 ```sh
-vibium drag ".draggable" ".dropzone"
-# Drag element to drop target
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium drag @e1 @e3
-# Drag using map refs
+$ vibium text "#drop-target"
+Drop here
 
-vibium drag ".draggable" ".dropzone" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium drag "#drag-source" "#drop-target"
+Dragged "#drag-source" to "#drop-target"
+
+$ vibium text "#drop-target"
+Dropped
+
+$ vibium text "#status"
+Drop received
 ```
+
+`drag` performs a full pointer sequence — press on the source, move, release on
+the target — so pages that implement HTML5 drag-and-drop respond to it. Pages
+that implement dragging with their own pointer handlers generally do too.
+
+As with [`click`](/docs/commands/click), the command reports that the gesture
+was performed, not that the page accepted it. Assert on the consequence.
 
 ## See also
 
+- [`vibium mouse`](/docs/commands/mouse) — build a custom gesture from primitives.
+- [`vibium hover`](/docs/commands/hover) — move the pointer without pressing.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

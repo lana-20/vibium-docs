@@ -6,12 +6,14 @@ description: "List all child frames (iframes) on the page"
 
 # vibium frames
 
-List all child frames (iframes) on the page.
+List the iframes of the current browsing context.
 
-:::info[Generated reference]
-Derived from `vibium help frames` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
@@ -20,14 +22,68 @@ command's own built-in samples, not captured terminal output. Pages marked
 vibium frames
 ```
 
-## Examples
+## Flags
+
+`frames` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Output
+
+A JSON array, printed whether or not `--json` is given:
 
 ```sh
-vibium frames
-# [{"context":"abc","url":"https://example.com/frame","name":"myFrame"}]
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
+
+$ vibium frames
+[{"context":"FFE2F5B44DF9A9960FCC2F3D6167E031","url":"https://lana-20.github.io/vibium-docs/fixtures/frame.html","name":"inner"}]
 ```
+
+The `context` is the BiDi browsing-context id. It is regenerated on every page
+load, so do not cache it between runs — match on `name` or `url` instead, which
+is what [`vibium frame`](/docs/commands/frame) does.
+
+## Nothing to list
+
+Not an error — an empty page reports plainly and exits 0:
+
+```sh
+$ vibium go https://lana-20.github.io/vibium-docs/fixtures/playground2.html
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground2.html
+
+$ vibium frames
+No frames found
+$ echo $?
+0
+```
+
+:::warning[`frames` lists the frames of the *current* context, not the page]
+[`vibium frame`](/docs/commands/frame) switches the active context and the
+switch persists. Once you are inside a frame, `frames` lists **that frame's**
+children — so on the fixture it reports `No frames found`, because the inner
+frame has none of its own. That is not a contradiction of the output above; it
+is a different context.
+
+Getting back to the top needs [`vibium page switch 0`](/docs/commands/page) —
+`go` navigates the frame rather than leaving it. See
+[`frame`](/docs/commands/frame#getting-back-out).
+:::
+
+## JSON output
+
+`--json` wraps the array as a **string**, so consumers decode twice:
+
+```sh
+$ vibium frames --json
+{"ok":true,"result":"[{\"context\":\"FFE2F5B44DF9A9960FCC2F3D6167E031\",\"url\":\"https://lana-20.github.io/vibium-docs/fixtures/frame.html\",\"name\":\"inner\"}]"}
+```
+
+The bare form is the more useful one for scripting, as with
+[`a11y-tree`](/docs/commands/a11y-tree).
 
 ## See also
 
+- [`vibium frame`](/docs/commands/frame) — switch into one of these frames.
+- [`vibium go`](/docs/commands/go) — return to the top-level context.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Finding elements](/docs/commands#finding-elements) — related commands.

@@ -1,44 +1,97 @@
 ---
 title: "vibium select"
 sidebar_label: select
-description: "Select an option in a <select> element"
+description: "Select an option in a select element"
 ---
 
 # vibium select
 
-Select an option in a &lt;select&gt; element.
+Choose an option in a `<select>` dropdown.
 
-:::info[Generated reference]
-Derived from `vibium help select` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium select [selector] [value]
+vibium select <selector> <value>
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+| `--timeout` | `timeout` | Max time to wait (default 30s) |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Selecting by value
 
 ```sh
-vibium select "select#color" "blue"
-# Select "blue" in the color dropdown
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium select "select#color" "blue" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium value "#country"
+us
+
+$ vibium select "#country" "de"
+Selected value "de" in #country
+
+$ vibium value "#country"
+de
+```
+
+## The visible label works too
+
+The fixture's `de` option is labelled "Germany", and either identifier selects
+it:
+
+```sh
+$ vibium select "#country" "Germany"
+Selected value "Germany" in #country
+
+$ vibium value "#country"
+de
+```
+
+:::note[The message always says "value", whichever you passed]
+`Selected value "Germany"` is echoing your argument, not reporting what was
+set — the option's value is `de`, as the following
+[`value`](/docs/commands/value) call shows. Read back with `value` if you need
+to know what the form will actually submit.
+:::
+
+## No matching option
+
+A value that matches neither an option value nor a label is a hard error, and
+the selection is left untouched:
+
+```sh
+$ vibium select "#country" "nonsense"
+Error: failed to select: selectOption: no <option> matches "nonsense"
+$ echo $?
+1
+
+$ vibium value "#country"
+de
+```
+
+## JSON output
+
+```sh
+$ vibium select "#country" "us" --json
+{"ok":true,"result":"Selected value \"us\" in #country"}
 ```
 
 ## See also
 
+- [`vibium value`](/docs/commands/value) — read back the option value, not the label.
+- [`vibium map`](/docs/commands/map) — shows a select's labels run together.
+- [`vibium check`](/docs/commands/check) — checkboxes rather than dropdowns.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

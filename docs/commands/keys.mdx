@@ -6,34 +6,96 @@ description: "Press a key or key combination"
 
 # vibium keys
 
-Press a key or key combination.
+Press a key or key combination on the focused element.
 
-:::info[Generated reference]
-Derived from `vibium help keys` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium keys [keys]
+vibium keys <combination>
 ```
 
-## Examples
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Pressing
+
+`keys` acts on whatever currently has focus, so pair it with
+[`vibium focus`](/docs/commands/focus):
 
 ```sh
-vibium keys Enter
-# Press Enter
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium keys "Control+a"
-# Select all
+$ vibium focus "#email"
+Focused element: #email
 
-vibium keys "Shift+Tab"
-# Shift+Tab to previous field
+$ vibium keys "Enter"
+Pressed keys: Enter
+```
+
+Unlike [`press`](/docs/commands/press), `keys` never clicks, so it does not
+disturb the caret — see [`type`](/docs/commands/type#type-does-not-append) for
+why that matters.
+
+## Modifiers are passed through literally
+
+:::danger[`Control+a` is not select-all on macOS]
+`keys` sends the combination you name. It does not translate for the host
+platform, so the conventional example does the wrong thing on a Mac, where
+`Control+a` means "move to start of line":
+
+```sh
+$ vibium fill "#email" "hello"
+Filled "hello" into #email
+$ vibium focus "#email"
+Focused element: #email
+
+$ vibium keys "Control+a"
+Pressed keys: Control+a
+$ vibium keys "Backspace"
+Pressed keys: Backspace
+$ vibium value "#email"
+hell
+```
+
+One character was deleted, not the whole value. `Meta+a` is the macOS
+select-all, and clears as intended:
+
+```sh
+$ vibium fill "#email" "hello"
+$ vibium focus "#email"
+$ vibium keys "Meta+a"
+$ vibium keys "Backspace"
+$ vibium value "#email"
+
+```
+
+A script that must run on both platforms has to choose the modifier itself.
+To clear a field, [`vibium fill "#sel" ""`](/docs/commands/fill) avoids the
+question entirely.
+:::
+
+## JSON output
+
+```sh
+$ vibium keys "a" --json
+{"ok":true,"result":"Pressed keys: a"}
 ```
 
 ## See also
 
+- [`vibium focus`](/docs/commands/focus) — choose what `keys` acts on.
+- [`vibium press`](/docs/commands/press) — one key, targeted by selector.
+- [`vibium fill`](/docs/commands/fill) — set or clear a value without keystrokes.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

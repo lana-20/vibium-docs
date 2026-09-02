@@ -6,31 +6,57 @@ description: "Highlight an element with a red outline for 3 seconds"
 
 # vibium highlight
 
-Highlight an element with a red outline for 3 seconds.
+Draw a red outline around an element for three seconds.
 
-:::info[Generated reference]
-Derived from `vibium help highlight` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium highlight [selector]
+vibium highlight <selector>
 ```
 
-## Examples
+## Flags
+
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Highlighting
 
 ```sh
-vibium highlight "h1"
-# Highlights the first h1 element
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium highlight @e1
-# Highlights the element from map
+$ vibium highlight "h1"
+Highlighted h1 (3 seconds)
+```
+
+The command returns immediately; the outline fades on its own after three
+seconds. It is a debugging aid for watching a headed browser — with
+`--headless` there is nothing to see unless you capture it:
+
+```sh
+vibium highlight "h1" && vibium screenshot -o highlighted.png
+```
+
+The duration is fixed and cannot be configured.
+
+## JSON output
+
+```sh
+$ vibium highlight "h1" --json
+{"ok":true,"result":"Highlighted h1 (3 seconds)"}
 ```
 
 ## See also
 
+- [`vibium screenshot --annotate`](/docs/commands/screenshot) — label every interactive element at once.
+- [`vibium map`](/docs/commands/map) — identify elements without drawing on the page.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

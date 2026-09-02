@@ -6,31 +6,96 @@ description: "Count matching elements"
 
 # vibium count
 
-Count matching elements.
+Count the elements matching a CSS selector.
 
-:::info[Generated reference]
-Derived from `vibium help count` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium count [selector]
+vibium count <selector>
 ```
 
-## Examples
+## Flags
+
+`count` takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
+
+## Counting
 
 ```sh
-vibium count "a"
-# Print number of links on the page
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium count "li.item"
-# Count list items
+$ vibium count "a"
+5
+
+$ vibium count "button"
+9
+```
+
+## `count` includes hidden elements
+
+`count` is a plain DOM query, so it counts everything that matches whether or
+not it is rendered. [`map`](/docs/commands/map) counts only what is visible, so
+the two disagree by exactly the hidden elements:
+
+```sh
+$ vibium eval "document.querySelectorAll('button').length"
+9
+
+$ vibium count "button"
+9
+
+$ vibium map | grep -c button
+8
+```
+
+The missing one is the button inside the fixture's hidden panel. Use `count` for
+"how many exist", `map` for "how many can be seen".
+
+## No matches is zero, not an error
+
+```sh
+$ vibium count ".nope"
+0
+$ echo $?
+0
+```
+
+This is the opposite of [`find`](/docs/commands/find), which exits 1 when
+nothing matches. `count` never fails on the selector, so it is the safer choice
+inside a conditional — though note the value is on stdout, not in the exit code:
+
+```sh
+[ "$(vibium count '.modal')" -gt 0 ] && echo "modal present"
+```
+
+:::warning[`count` counts the current context]
+After [`vibium frame`](/docs/commands/frame), `count` counts inside that frame,
+not the page. On the fixture, `count "a"` drops from 5 to 0 with nothing in the
+output to say why. See [`frame`](/docs/commands/frame).
+:::
+
+## JSON output
+
+The number arrives as a **string**:
+
+```sh
+$ vibium count "a" --json
+{"ok":true,"result":"5"}
 ```
 
 ## See also
 
+- [`vibium find --all`](/docs/commands/find) — the matches themselves, with refs.
+- [`vibium map`](/docs/commands/map) — visible interactive elements only.
+- [`vibium is`](/docs/commands/is) — state of one element rather than a tally.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Finding elements](/docs/commands#finding-elements) — related commands.

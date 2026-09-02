@@ -6,39 +6,82 @@ description: "Check a checkbox or radio button"
 
 # vibium check
 
-Check a checkbox or radio button.
+Tick a checkbox or radio button, if it is not already ticked.
 
-:::info[Generated reference]
-Derived from `vibium help check` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium check [selector]
+vibium check <selector>
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+| `--timeout` | `timeout` | Max time to wait (default 30s) |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Setting rather than toggling
+
+`check` is **idempotent** — it sets a state instead of flipping one, and says
+which of the two happened:
 
 ```sh
-vibium check "input[name=agree]"
-# Check the "agree" checkbox (idempotent)
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium check "input[name=agree]" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium is checked "#terms"
+false
+
+$ vibium check "#terms"
+Checked #terms
+
+$ vibium is checked "#terms"
+true
+
+$ vibium check "#terms"
+Already checked: #terms
+
+$ vibium is checked "#terms"
+true
+```
+
+That second run is the difference from [`click`](/docs/commands/click), which
+would have unticked the box. Use `check`/[`uncheck`](/docs/commands/uncheck)
+whenever you want a known final state, exactly as you would prefer
+[`fill`](/docs/commands/fill) over [`type`](/docs/commands/type).
+
+## Wrong kind of element
+
+`check` fails immediately rather than waiting out the timeout:
+
+```sh
+$ vibium check "h1" --timeout 2s
+Error: failed to check: not a checkbox or radio element
+$ echo $?
+1
+```
+
+## JSON output
+
+```sh
+$ vibium check "#terms" --json
+{"ok":true,"result":"Checked #terms"}
 ```
 
 ## See also
 
+- [`vibium uncheck`](/docs/commands/uncheck) — the inverse.
+- [`vibium is checked`](/docs/commands/is) — read the state; `value` will not tell you.
+- [`vibium click`](/docs/commands/click) — toggles instead of setting.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

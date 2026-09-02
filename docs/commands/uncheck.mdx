@@ -6,39 +6,55 @@ description: "Uncheck a checkbox"
 
 # vibium uncheck
 
-Uncheck a checkbox.
+Untick a checkbox, if it is currently ticked.
 
-:::info[Generated reference]
-Derived from `vibium help uncheck` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium uncheck [selector]
+vibium uncheck <selector>
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+| `--timeout` | `timeout` | Max time to wait (default 30s) |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Idempotent, like `check`
 
 ```sh
-vibium uncheck "input[name=agree]"
-# Uncheck the "agree" checkbox (idempotent)
+$ vibium check "#terms"
+Checked #terms
 
-vibium uncheck "input[name=agree]" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium uncheck "#terms"
+Unchecked #terms
+
+$ vibium is checked "#terms"
+false
+
+$ vibium uncheck "#terms"
+Already unchecked: #terms
+
+$ vibium is checked "#terms"
+false
 ```
+
+Running it twice is safe: the second call reports `Already unchecked` and leaves
+the box alone, where a second [`click`](/docs/commands/click) would tick it
+again.
 
 ## See also
 
+- [`vibium check`](/docs/commands/check) — the inverse, and the fuller writeup.
+- [`vibium is checked`](/docs/commands/is) — read the state.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

@@ -6,106 +6,79 @@ description: "Mouse control (click, move, down, up)"
 
 # vibium mouse
 
-Mouse control (click, move, down, up).
+Move and click the pointer by coordinate.
 
-:::info[Generated reference]
-Derived from `vibium help mouse` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium mouse
-```
-
-## Subcommands
-
-| Subcommand | Description |
-| --- | --- |
-| [`vibium mouse click`](#vibium-mouse-click) | Click at coordinates or current position |
-| [`vibium mouse down`](#vibium-mouse-down) | Press a mouse button down |
-| [`vibium mouse move`](#vibium-mouse-move) | Move the mouse to coordinates |
-| [`vibium mouse up`](#vibium-mouse-up) | Release a mouse button |
-
-### `vibium mouse click`
-
-Click at coordinates or current position.
-
-```
+vibium mouse move <x> <y>
 vibium mouse click [x] [y]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--button` | `int` | Mouse button (0=left, 1=middle, 2=right) |
-
-```sh
-vibium mouse click 100 200
-# Left click at (100, 200)
-
-vibium mouse click 100 200 --button 2
-# Right click at (100, 200)
-
-vibium mouse click
-# Left click at current position
-```
-
-### `vibium mouse down`
-
-Press a mouse button down.
-
-```
 vibium mouse down
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--button` | `int` | Mouse button (0=left, 1=middle, 2=right) |
-
-```sh
-vibium mouse down
-# Press left mouse button
-
-vibium mouse down --button 2
-# Press right mouse button
-```
-
-### `vibium mouse move`
-
-Move the mouse to coordinates.
-
-```
-vibium mouse move [x] [y]
-```
-
-```sh
-vibium mouse move 100 200
-# Move mouse to position (100, 200)
-```
-
-### `vibium mouse up`
-
-Release a mouse button.
-
-```
 vibium mouse up
 ```
 
+## Flags
+
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--button` | `int` | Mouse button (0=left, 1=middle, 2=right) |
+| `--button` | `int` | 0 left, 1 middle, 2 right |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
+
+## Moving and clicking
 
 ```sh
-vibium mouse up
-# Release left mouse button
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium mouse up --button 2
-# Release right mouse button
+$ vibium mouse move 100 100
+Mouse moved to (100, 100)
+
+$ vibium mouse click
+Clicked at current position
+```
+
+With coordinates, `click` moves and presses in one step:
+
+```sh
+$ vibium mouse click 50 50
+Clicked at (50, 50)
+```
+
+## Coordinates are viewport-relative
+
+They are not page coordinates, so scrolling changes what sits under a given
+point. Check with [`vibium viewport`](/docs/commands/viewport) and remember that
+`--full-page` screenshots are taller than the coordinate space.
+
+Prefer [`vibium click`](/docs/commands/click) with a selector wherever possible:
+it waits for the element to be actionable, whereas `mouse click` presses a
+location whether or not anything is there — and reports success either way.
+
+## Building a gesture
+
+`down` and `up` allow a press-move-release sequence that
+[`drag`](/docs/commands/drag) otherwise does for you:
+
+```sh
+vibium mouse move 100 100
+vibium mouse down
+vibium mouse move 200 200
+vibium mouse up
 ```
 
 ## See also
 
+- [`vibium click`](/docs/commands/click) — click an element rather than a point.
+- [`vibium drag`](/docs/commands/drag) — the common gesture, done for you.
+- [`vibium viewport`](/docs/commands/viewport) — the coordinate space.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

@@ -1,47 +1,86 @@
 ---
 title: "vibium upload"
 sidebar_label: upload
-description: "Set files on an input[type=file] element"
+description: "Set files on an input file element"
 ---
 
 # vibium upload
 
-Set files on an input[type=file] element.
+Set files on a file input.
 
-:::info[Generated reference]
-Derived from `vibium help upload` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium upload [selector] [files...]
+vibium upload <selector> <file...>
 ```
 
 ## Flags
 
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
 
-Global flags apply as well — see [Global flags](/docs/global-flags).
-
-## Examples
+## Setting a file
 
 ```sh
-vibium upload "input[type=file]" ./photo.jpg
-# Upload a single file
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium upload "#file-input" ./photo.jpg ./doc.pdf
-# Upload multiple files
+$ vibium upload "#file-input" /tmp/up.txt
+Set 1 file(s) on #file-input
 
-vibium upload "input[type=file]" ./photo.jpg --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium eval "document.querySelector('#file-input').files[0].name"
+up.txt
+
+$ vibium eval "document.querySelector('#file-input').files[0].size"
+15
 ```
+
+:::note[`value` is not useful on a file input]
+Browsers report a file input's value as `C:\fakepath\<name>` for privacy, so
+[`vibium value`](/docs/commands/value) tells you almost nothing. Read
+`files[0].name` through [`eval`](/docs/commands/eval), as above.
+:::
+
+## A missing file is not an error
+
+:::danger[A wrong path uploads an empty file, and reports success]
+`upload` does not check that the path exists. Given one that does not, it still
+reports success, exits 0, and attaches a **zero-byte** file named after the path
+you gave:
+
+```sh
+$ ls /tmp/nope.txt
+ls: /tmp/nope.txt: No such file or directory
+
+$ vibium upload "#file-input" /tmp/nope.txt
+Set 1 file(s) on #file-input
+$ echo $?
+0
+
+$ vibium eval "document.querySelector('#file-input').files.length"
+1
+$ vibium eval "document.querySelector('#file-input').files[0].name"
+nope.txt
+$ vibium eval "document.querySelector('#file-input').files[0].size"
+0
+```
+
+A typo in the path therefore submits an empty attachment rather than failing.
+Check the file exists before calling `upload`, or assert on `files[0].size`
+afterwards.
+:::
 
 ## See also
 
+- [`vibium eval`](/docs/commands/eval) — inspect what was actually attached.
+- [`vibium download`](/docs/commands/download) — the other direction.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

@@ -6,72 +6,113 @@ description: "Scroll the page or an element"
 
 # vibium scroll
 
-Scroll the page or an element.
+Scroll the page, or bring an element into view.
 
-:::info[Generated reference]
-Derived from `vibium help scroll` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium scroll [direction]
+vibium scroll <up|down|left|right>
+vibium scroll into-view <selector>
 ```
 
 ## Flags
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--amount` | `int` | Number of scroll increments (default 3) |
-| `--selector` | `string` | CSS selector for element to scroll to |
+| `--amount` | `int` | How far to scroll |
+| `--selector` | `string` | Scroll within this element rather than the page |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
 
-## Examples
+## Scrolling the page
 
 ```sh
-vibium scroll
-# Scroll down by default
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium scroll up
-# Scroll up
+$ vibium eval "window.scrollY"
+0
 
-vibium scroll down --amount 5
-# Scroll down 5 increments
+$ vibium scroll down
+Scrolled down by 3
 
-vibium scroll down --selector "div.content"
-# Scroll within a specific element
+$ vibium eval "window.scrollY"
+360
+
+$ vibium scroll down --amount 300
+Scrolled down by 300
+
+$ vibium eval "window.scrollY"
+1055
 ```
 
-## Subcommands
+The bare direction scrolls by a default step of 3 wheel notches; `--amount`
+takes the count.
 
-| Subcommand | Description |
-| --- | --- |
-| [`vibium scroll into-view`](#vibium-scroll-into-view) | Scroll an element into view |
+## `into-view`
 
-### `vibium scroll into-view`
-
-Scroll an element into view.
-
-```
-vibium scroll into-view [selector]
-```
-
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+Bring a specific element to the viewport, without caring how far that is:
 
 ```sh
-vibium scroll into-view "#footer"
-# Scroll the footer element into view (centered on screen)
+$ vibium scroll into-view "#inner-frame"
+Scrolled #inner-frame into view
+```
 
-vibium scroll into-view "#footer" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+## Scrolling does nothing inside a frame
+
+:::danger[`scroll <direction>` silently fails in a frame context]
+After [`vibium frame`](/docs/commands/frame), a directional scroll reports
+success and moves nothing. The frame below holds a document 1833px tall in a
+120px viewport, so it is plainly scrollable:
+
+```sh
+$ vibium eval "window.top === window.self"
+false
+$ vibium eval "document.documentElement.scrollHeight"
+1833
+$ vibium eval "window.innerHeight"
+120
+
+$ vibium eval "window.scrollY"
+0
+$ vibium scroll down --amount 300
+Scrolled down by 300
+$ vibium eval "window.scrollY"
+0
+```
+
+`into-view` still works in the same context, and is the reliable choice inside
+frames:
+
+```sh
+$ vibium scroll into-view "#advanced"
+Scrolled #advanced into view
+$ vibium eval "window.scrollY"
+742
+```
+
+Directional scrolling is delivered as a wheel event at a point in the
+**top-level** viewport, which is why it does not reach the frame's document.
+:::
+
+## JSON output
+
+```sh
+$ vibium scroll up --json
+{"ok":true,"result":"Scrolled up by 3"}
 ```
 
 ## See also
 
+- [`vibium screenshot --full-page`](/docs/commands/screenshot) — capture below the fold without scrolling.
+- [`vibium frame`](/docs/commands/frame) — the context that breaks directional scrolling.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

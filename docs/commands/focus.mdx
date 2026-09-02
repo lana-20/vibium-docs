@@ -6,42 +6,69 @@ description: "Focus an element"
 
 # vibium focus
 
-Focus an element.
+Give an element keyboard focus, without clicking it.
 
-:::info[Generated reference]
-Derived from `vibium help focus` at **vibium v26.8.21**. The examples below are the
-command's own built-in samples, not captured terminal output. Pages marked
-*Verified* instead carry output from a live browser run.
+:::tip[Verified against a live browser]
+Every example on this page is real terminal output captured from **vibium
+v26.8.21**, run against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
+from this repo, so the output cannot drift when someone else's markup changes.
+Every example is reproducible against that URL exactly as shown.
 :::
 
 ## Synopsis
 
 ```
-vibium focus [selector]
+vibium focus <selector>
 ```
 
 ## Flags
 
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--timeout` | `timeout` | Max time to wait, e.g. 5s or 5000 (bare number = milliseconds) (default 30s) |
+This command takes no flags of its own. Global flags apply — see
+[Global flags](/docs/global-flags).
 
-Global flags apply as well — see [Global flags](/docs/global-flags).
-
-## Examples
+## Focusing
 
 ```sh
-vibium focus "input[name=email]"
-# Focus the email input
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
 
-vibium focus @e1
-# Focus element from map
+$ vibium focus "#email"
+Focused element: #email
 
-vibium focus "input[name=email]" --timeout 5s
-# Custom timeout (5s, or 5000 for milliseconds)
+$ vibium eval "document.activeElement.id"
+email
+```
+
+:::tip[`focus` does not move the caret; `type` and `press` do]
+[`type`](/docs/commands/type) and [`press`](/docs/commands/press) reach a field
+by *clicking* it, which places the caret wherever the click lands — often in the
+middle of existing text. `focus` uses the DOM method instead, leaving the caret
+at the end.
+
+So to append a keystroke without disturbing the value, focus first and use the
+no-selector form of [`keys`](/docs/commands/keys):
+
+```sh
+$ vibium focus "#email"
+Focused element: #email
+
+$ vibium keys "Enter"
+Pressed keys: Enter
+```
+:::
+
+## JSON output
+
+```sh
+$ vibium focus "#email" --json
+{"ok":true,"result":"Focused element: #email"}
 ```
 
 ## See also
 
+- [`vibium keys`](/docs/commands/keys) — act on the focused element.
+- [`vibium press`](/docs/commands/press) — one key, with a focus-click.
+- [`vibium type`](/docs/commands/type) — why the focus-click matters.
 - [Command reference](/docs/commands) — all commands, grouped by purpose.
-- [Interacting](/docs/commands#interacting) — related commands.

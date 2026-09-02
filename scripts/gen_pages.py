@@ -23,7 +23,10 @@ from pathlib import Path
 CURATED = {"back", "forward", "reload", "url", "title", "map", "find",
            "click", "screenshot", "fill", "wait", "type", "press",
            "go", "diff",
-           "text", "html", "attr", "value", "is", "a11y-tree", "content"}
+           "text", "html", "attr", "value", "is", "a11y-tree", "content",
+           "frame", "frames", "count",
+           "check", "uncheck", "select", "hover", "focus", "dblclick",
+           "highlight", "keys", "scroll", "drag", "upload", "mouse"}
 
 # Every top-level command, grouped for the sidebar. Checked for drift against
 # the binary at run time: an uncategorized command is a hard error, so a new
