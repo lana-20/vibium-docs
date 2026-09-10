@@ -15,7 +15,7 @@ all 67, plus their 37 subcommands.
 Every example on every page is real terminal output captured from `vibium
 v26.8.21`; nothing is transcribed from `--help`.
 
-## Artefacts
+## Artifacts
 
 | | |
 | --- | --- |
@@ -39,7 +39,7 @@ this site. That is deliberate: output captured against a third-party page rots
 silently when someone else's markup changes, and this fixture only changes when
 this repo does.
 
-It carries a nav, a form (labelled email input, select, checkbox, search field,
+It carries a nav, a form (labeled email input, select, checkbox, search field,
 submit and icon buttons), an interactions section (a counter, a **disabled**
 button, a button whose effect is delayed by one second, a link to a second
 page), and filler content tall enough that `--full-page` is demonstrable.

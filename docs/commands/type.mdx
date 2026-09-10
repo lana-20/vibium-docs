@@ -9,7 +9,7 @@ description: "Type text into an element (optionally navigate to URL first)"
 Send text to an element as keystrokes, after clicking it to focus.
 
 :::danger[Prefer `fill` unless you specifically need keystrokes]
-`type` has two behaviours on this version that cost people real time — it does
+`type` has two behaviors on this version that cost people real time — it does
 **not** append, and it reports success on elements it cannot type into. Both are
 documented below. [`vibium fill`](/docs/commands/fill) has neither problem and is
 the right default whenever you want a known final value.
@@ -51,7 +51,7 @@ hello
 ## `type` does not append
 
 The documented contract is that `type` "appends to existing content". It does
-not. `type` clicks the element's **centre** to focus it, which puts the caret
+not. `type` clicks the element's **center** to focus it, which puts the caret
 wherever that click lands — so text already in the field that reaches the
 midpoint gets the new text spliced into the middle of it:
 

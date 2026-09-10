@@ -52,7 +52,7 @@ markup's own indentation, returned verbatim. Trim before comparing.
 
 ## The whole document
 
-With no selector, `html` returns the serialised document as the browser holds
+With no selector, `html` returns the serialized document as the browser holds
 it now, not the bytes the server sent:
 
 ```sh
@@ -62,7 +62,7 @@ $ vibium html | head -3
 <title>Vibium docs playground</title>
 ```
 
-The parser has already normalised it, so expect `<head>` to be present even if
+The parser has already normalized it, so expect `<head>` to be present even if
 the source omitted it, and any DOM changes made since load to be included.
 
 ## When the element is missing

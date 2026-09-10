@@ -317,7 +317,7 @@ def render_global_flags(root_help: str, version: str) -> str:
            "| Flag | Argument | Description |", "| --- | --- | --- |"]
     out += [f"| {n} | {a} | {mdx_escape(d)} |" for n, a, d in flags]
     out += ["", "## Notes", "",
-            "- `--json` is honoured by most commands but not all. The gap is tracked",
+            "- `--json` is honored by most commands but not all. The gap is tracked",
             "  upstream in [vibium#451](https://github.com/VibiumDev/vibium/issues/451).",
             "- `--headless` is a persistent root flag; `vibium mcp` redeclared it,",
             "  which is tracked in [vibium#452](https://github.com/VibiumDev/vibium/issues/452).",
