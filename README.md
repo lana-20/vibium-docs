@@ -7,7 +7,7 @@ Docusaurus.
 **→ [lana-20.github.io/vibium-docs](https://lana-20.github.io/vibium-docs/)**
 
 The official documentation covers 16 of the CLI's 67 commands. This site covers
-all 67, plus their 37 subcommands.
+all 67, plus their 41 subcommands.
 
 > Community-maintained and not affiliated with the Vibium project. Where this
 > site disagrees with upstream, upstream wins.

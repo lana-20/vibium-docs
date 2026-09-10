@@ -13,8 +13,10 @@ Record a session to a trace ZIP.
 ```
 vibium record start [-o file.zip]
 vibium record stop
-vibium record chunk ...
-vibium record group ...
+vibium record chunk start [--name <name>]
+vibium record chunk stop [-o file.zip]
+vibium record group start <name>
+vibium record group stop
 ```
 
 ## Flags (`record start`)
@@ -64,6 +66,80 @@ resources/page@<hash>-<timestamp>.jpeg   (one per step)
 ```
 
 Four steps produced four JPEGs at default quality, totalling about 64KB.
+
+## Chunks and groups
+
+Four subcommands nest under `record`, two levels deep. All of them run while a
+recording is open.
+
+| Command | What it does |
+| --- | --- |
+| `record group start <name>` | Opens a named group; the actions after it nest under that name in the trace |
+| `record group stop` | Closes the open group |
+| `record chunk start` | Opens a new chunk; `--name` labels it |
+| `record chunk stop` | Writes a ZIP and leaves the recording running; `-o` sets the path, default `chunk.zip` |
+
+```sh
+$ PLAYGROUND=https://lana-20.github.io/vibium-docs/fixtures/playground.html
+$ vibium go "$PLAYGROUND"
+Navigated to https://lana-20.github.io/vibium-docs/fixtures/playground.html
+
+$ vibium record start -o /tmp/cap/rec.zip
+Recording "record" started (video: unavailable, screenshots: true, snapshots: false), saving to /tmp/cap/rec.zip
+
+$ vibium record group start "Counter"
+Started group "Counter"
+
+$ vibium click "#counter"
+Clicked element: #counter
+
+$ vibium click "#counter"
+Clicked element: #counter
+
+$ vibium click "#counter"
+Clicked element: #counter
+
+$ vibium record group stop
+Stopped group
+
+$ vibium record chunk start
+Started new recording chunk
+
+$ vibium click "#counter"
+Clicked element: #counter
+
+$ vibium record chunk stop -o /tmp/cap/chunk.zip
+Chunk saved to /tmp/cap/chunk.zip
+
+$ vibium record stop
+Saved /tmp/cap/rec.zip (5 steps) — video unavailable: BiDi error: unsupported operation - unsupported operation
+```
+
+### A chunk is a copy, not a slice
+
+`chunk start` reads as a divider, and its help calls it "for splitting long
+recordings". It does not split anything. Three clicks happened before
+`chunk start` and one after it, yet the chunk holds sixteen of the recording's
+seventeen screenshots — everything captured up to the moment of `chunk stop`,
+not the frames since the chunk opened:
+
+```console
+$ unzip -l /tmp/cap/chunk.zip | grep -c '\.jpeg'
+16
+$ unzip -l /tmp/cap/rec.zip | grep -c '\.jpeg'
+17
+```
+
+`record stop` still writes the whole session afterwards. Read `chunk stop` as
+"save a copy of the trace so far", not "close this part and begin the next".
+
+### Chunking renames the trace entries
+
+A plain recording carries `trace.trace` and `trace.network`, as above. Once a
+chunk has been opened, both the chunk ZIP and the final recording carry
+`1.trace` and `1.network` instead — the chunk index in place of the word
+`trace`. Tooling that looks for `trace.trace` by name will not find it in a
+chunked recording.
 
 ## Video is engine-dependent
 

@@ -340,6 +340,7 @@ def gh_escape(s: str) -> str:
 
 def render_full_index(summaries: dict[str, str],
                       subcommands: dict[str, list[tuple[str, str]]],
+                      subsubcommands: dict[str, list[tuple[str, str]]],
                       label_of: dict[str, str], version: str) -> str:
     """One numbered table of every command, one of every subcommand.
 
@@ -350,7 +351,8 @@ def render_full_index(summaries: dict[str, str],
     sidebar and the index already use.
     """
     cmds = [c for _, _, group in CATEGORIES for c in group]
-    total_subs = sum(len(subcommands.get(c, [])) for c in cmds)
+    total_subs = (sum(len(subcommands.get(c, [])) for c in cmds)
+                  + sum(len(v) for v in subsubcommands.values()))
     out = ["---", 'title: "Full index"', "sidebar_label: Full index",
            "sidebar_position: 1",
            "description: Every vibium command and subcommand, numbered.",
@@ -366,8 +368,10 @@ def render_full_index(summaries: dict[str, str],
     for i, c in enumerate(cmds, 1):
         out.append(f"| {i} | [`vibium {c}`](/docs/commands/{c}) | {label_of[c]} "
                    f"| {mdx_escape(summaries.get(c, ''))} |")
+    parents = sorted({c for c in cmds if subcommands.get(c)})
     out += ["", f"## Subcommands ({total_subs})", "",
-            "Thirteen commands take a subcommand. Each is documented inline on "
+            f"{len(parents)} commands take a subcommand, and two of those "
+            "subcommands take one of their own. Each is documented inline on "
             "its parent's page.", "",
             "| # | Subcommand | Parent | Description |",
             "| ---: | --- | --- | --- |"]
@@ -377,6 +381,10 @@ def render_full_index(summaries: dict[str, str],
             n += 1
             out.append(f"| {n} | [`vibium {c} {name}`](/docs/commands/{c}) "
                        f"| `{c}` | {mdx_escape(desc)} |")
+            for gname, gdesc in subsubcommands.get(f"{c} {name}", []):
+                n += 1
+                out.append(f"| {n} | [`vibium {c} {name} {gname}`](/docs/commands/{c}) "
+                           f"| `{c} {name}` | {mdx_escape(gdesc)} |")
     out.append("")
     return "\n".join(out)
 
@@ -456,11 +464,19 @@ def main() -> int:
     subs_total = [0]
     summaries: dict[str, str] = {}
     subcommands: dict[str, list[tuple[str, str]]] = {}
+    # The tree is three deep in one place: `record chunk start` and friends.
+    # Keyed by "<cmd> <sub>" so the full index can nest them under their parent.
+    subsubcommands: dict[str, list[tuple[str, str]]] = {}
     for cmd in listed:
         sections = parse_help(run_help(args.bin, [cmd]))
         desc = clean(sections.get("Description", []))
         summaries[cmd] = desc[0] if desc else ""
         subcommands[cmd] = parse_subcommands(sections.get("Available Commands", []))
+        for name, _ in subcommands[cmd]:
+            deeper = parse_subcommands(
+                parse_help(run_help(args.bin, [cmd, name])).get("Available Commands", []))
+            if deeper:
+                subsubcommands[f"{cmd} {name}"] = deeper
         if cmd in CURATED:
             skipped += 1
             continue
@@ -475,14 +491,15 @@ def main() -> int:
 
     (outdir / "index.mdx").write_text(render_index(summaries, version))
     (outdir / "full-index.mdx").write_text(
-        render_full_index(summaries, subcommands, label_of, version))
+        render_full_index(summaries, subcommands, subsubcommands, label_of, version))
     Path(outdir).parent.joinpath("global-flags.mdx").write_text(
         render_global_flags(root, version))
 
     readme_done = update_readme(summaries, version)
 
     print(f"{version}: {len(listed)} commands, "
-          f"{sum(len(v) for v in subcommands.values())} subcommands — "
+          f"{sum(len(v) for v in subcommands.values()) + sum(len(v) for v in subsubcommands.values())} "
+          f"subcommands — "
           f"{written} generated "
           f"({subs_total[0]} subcommands documented inline), "
           f"{skipped} curated left untouched"

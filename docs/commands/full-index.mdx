@@ -81,9 +81,9 @@ Every command the vibium binary exposes at **vibium v26.8.21**, numbered in the 
 | 66 | [`vibium help`](/docs/commands/help) | Meta | Help provides help for any command in the application. |
 | 67 | [`vibium completion`](/docs/commands/completion) | Meta | Generate a shell completion script. |
 
-## Subcommands (37)
+## Subcommands (41)
 
-Thirteen commands take a subcommand. Each is documented inline on its parent's page.
+13 commands take a subcommand, and two of those subcommands take one of their own. Each is documented inline on its parent's page.
 
 | # | Subcommand | Parent | Description |
 | ---: | --- | --- | --- |
@@ -106,21 +106,25 @@ Thirteen commands take a subcommand. Each is documented inline on its parent's p
 | 17 | [`vibium is enabled`](/docs/commands/is) | `is` | Check if an element is enabled |
 | 18 | [`vibium is visible`](/docs/commands/is) | `is` | Check if an element is visible on the page |
 | 19 | [`vibium record chunk`](/docs/commands/record) | `record` | Manage recording chunks |
-| 20 | [`vibium record group`](/docs/commands/record) | `record` | Manage recording groups |
-| 21 | [`vibium record start`](/docs/commands/record) | `record` | Start a recording |
-| 22 | [`vibium record stop`](/docs/commands/record) | `record` | Stop recording and save |
-| 23 | [`vibium wait fn`](/docs/commands/wait) | `wait` | Wait until a JS expression returns truthy |
-| 24 | [`vibium wait load`](/docs/commands/wait) | `wait` | Wait until the page is fully loaded |
-| 25 | [`vibium wait text`](/docs/commands/wait) | `wait` | Wait until text appears on the page |
-| 26 | [`vibium wait url`](/docs/commands/wait) | `wait` | Wait until the page URL contains a substring |
-| 27 | [`vibium daemon start`](/docs/commands/daemon) | `daemon` | Start the vibium daemon |
-| 28 | [`vibium daemon status`](/docs/commands/daemon) | `daemon` | Show daemon status |
-| 29 | [`vibium daemon stop`](/docs/commands/daemon) | `daemon` | Stop the vibium daemon |
-| 30 | [`vibium page close`](/docs/commands/page) | `page` | Close a browser page by index (default: current page) |
-| 31 | [`vibium page new`](/docs/commands/page) | `page` | Open a new browser page |
-| 32 | [`vibium page switch`](/docs/commands/page) | `page` | Switch to a browser page by index or URL substring |
-| 33 | [`vibium storage restore`](/docs/commands/storage) | `storage` | Restore browser state from a JSON file |
-| 34 | [`vibium cookies clear`](/docs/commands/cookies) | `cookies` | Clear all cookies |
-| 35 | [`vibium download dir`](/docs/commands/download) | `download` | Set the download directory |
-| 36 | [`vibium dialog accept`](/docs/commands/dialog) | `dialog` | Accept a dialog (optionally with prompt text) |
-| 37 | [`vibium dialog dismiss`](/docs/commands/dialog) | `dialog` | Dismiss a dialog |
+| 20 | [`vibium record chunk start`](/docs/commands/record) | `record chunk` | Start a new chunk within the current recording |
+| 21 | [`vibium record chunk stop`](/docs/commands/record) | `record chunk` | Package current chunk into a ZIP file (recording stays active) |
+| 22 | [`vibium record group`](/docs/commands/record) | `record` | Manage recording groups |
+| 23 | [`vibium record group start`](/docs/commands/record) | `record group` | Start a named group in the recording |
+| 24 | [`vibium record group stop`](/docs/commands/record) | `record group` | End the current recording group |
+| 25 | [`vibium record start`](/docs/commands/record) | `record` | Start a recording |
+| 26 | [`vibium record stop`](/docs/commands/record) | `record` | Stop recording and save |
+| 27 | [`vibium wait fn`](/docs/commands/wait) | `wait` | Wait until a JS expression returns truthy |
+| 28 | [`vibium wait load`](/docs/commands/wait) | `wait` | Wait until the page is fully loaded |
+| 29 | [`vibium wait text`](/docs/commands/wait) | `wait` | Wait until text appears on the page |
+| 30 | [`vibium wait url`](/docs/commands/wait) | `wait` | Wait until the page URL contains a substring |
+| 31 | [`vibium daemon start`](/docs/commands/daemon) | `daemon` | Start the vibium daemon |
+| 32 | [`vibium daemon status`](/docs/commands/daemon) | `daemon` | Show daemon status |
+| 33 | [`vibium daemon stop`](/docs/commands/daemon) | `daemon` | Stop the vibium daemon |
+| 34 | [`vibium page close`](/docs/commands/page) | `page` | Close a browser page by index (default: current page) |
+| 35 | [`vibium page new`](/docs/commands/page) | `page` | Open a new browser page |
+| 36 | [`vibium page switch`](/docs/commands/page) | `page` | Switch to a browser page by index or URL substring |
+| 37 | [`vibium storage restore`](/docs/commands/storage) | `storage` | Restore browser state from a JSON file |
+| 38 | [`vibium cookies clear`](/docs/commands/cookies) | `cookies` | Clear all cookies |
+| 39 | [`vibium download dir`](/docs/commands/download) | `download` | Set the download directory |
+| 40 | [`vibium dialog accept`](/docs/commands/dialog) | `dialog` | Accept a dialog (optionally with prompt text) |
+| 41 | [`vibium dialog dismiss`](/docs/commands/dialog) | `dialog` | Dismiss a dialog |
