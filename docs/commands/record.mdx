@@ -115,23 +115,27 @@ $ vibium record stop
 Saved /tmp/cap/rec.zip (5 steps) — video unavailable: BiDi error: unsupported operation - unsupported operation
 ```
 
-### A chunk is a copy, not a slice
+### The trace is split; the screenshots are not
 
-`chunk start` reads as a divider, and its help calls it "for splitting long
-recordings". It does not split anything. Three clicks happened before
-`chunk start` and one after it, yet the chunk holds sixteen of the recording's
-seventeen screenshots — everything captured up to the moment of `chunk stop`,
-not the frames since the chunk opened:
+Each chunk's trace holds only the actions since that chunk began — three clicks
+in, three clicks out. Its `resources/` directory does not: every chunk ZIP
+carries every screenshot captured since `record start`, so the second chunk
+ships the first chunk's frames as well as its own.
 
-```console
-$ unzip -l /tmp/cap/chunk.zip | grep -c '\.jpeg'
-16
-$ unzip -l /tmp/cap/rec.zip | grep -c '\.jpeg'
-17
-```
+| ZIP | trace | clicks in trace | resources | size |
+| --- | --- | ---: | ---: | ---: |
+| `c1.zip` | `1.trace` | 3 | 20 | 259 KB |
+| `c2.zip` | `2.trace` | 3 | 31 | 401 KB |
+| `rec.zip` | `2.trace` | 3 | 32 | 414 KB |
 
-`record stop` still writes the whole session afterwards. Read `chunk stop` as
-"save a copy of the trace so far", not "close this part and begin the next".
+Identical work in each chunk, and the second is 55% larger than the first.
+On a long session the *n*th chunk approaches the size of the whole recording,
+which is the thing chunking is meant to avoid. Same counts on Firefox; only the
+byte sizes differ.
+
+Note also that `record stop` writes `2.trace` — the last chunk's actions only.
+Once you have taken a chunk, the earlier parts of the trace live in the chunk
+files and nowhere else, while their screenshots live in every file.
 
 ### Chunking renames the trace entries
 
