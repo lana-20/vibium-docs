@@ -22,10 +22,14 @@ vibium mcp
 
 | Flag | Argument | Description |
 | --- | --- | --- |
-| `--headless` | — | Launch browsers with no visible window. Declared here rather than inherited — see below |
 | `--screenshot-dir` | `string` | Where screenshots are written (default `~/Pictures/Vibium`; `""` disables) |
 
 Global flags apply as well — see [Global flags](/docs/global-flags).
+
+`vibium help mcp` also lists `--headless` under **Flags:** rather than **Global
+Flags:**. That is not an `mcp` option — it is the root's global flag being
+shadowed by a duplicate declaration, and it is a bug; see
+[below](#known-issue-mcp-redeclares---headless).
 
 ## Running
 
