@@ -56,20 +56,25 @@ invocations — there is no session to thread through by hand.
 
 Verifying all 67 commands turned up a number of cases where a command reports
 success and does not do what you would expect. They are documented in full on
-the relevant pages; these are the ones that cost the most time:
+the relevant pages; these are the ones that cost the most time.
 
-| Behavior | Page |
-| --- | --- |
-| `type` does not append — it inserts wherever the focus-click lands, mid-value | [type](/docs/commands/type) |
-| `type` reports success on elements it cannot type into at all | [type](/docs/commands/type) |
-| Every `is` subcommand exits 0, so `if vibium is visible …` always runs | [is](/docs/commands/is) |
-| A click that opens a dialog times out after 60s and exits 1 — the click worked | [dialog](/docs/commands/dialog) |
-| `upload` accepts a path that does not exist and attaches a zero-byte file | [upload](/docs/commands/upload) |
-| `frame` switches context permanently, and `go` navigates the frame rather than leaving it | [frame](/docs/commands/frame) |
-| `scroll <direction>` does nothing inside a frame, while reporting success | [scroll](/docs/commands/scroll) |
-| A failed `go` leaves you on the engine's error page, which maps and reads cleanly | [go](/docs/commands/go) |
-| `value` on a checkbox is `on` whether ticked or not | [value](/docs/commands/value) |
-| `a11y-tree` omits every accessible name that comes from text content | [a11y-tree](/docs/commands/a11y-tree) |
+**Every one of them is still live in v26.8.21**, the current npm release. Two
+have been fixed since, but only on `main`, so the fix has not reached anyone
+installing the CLI today. Upstream status was re-measured against `main` on
+2026-09-09.
+
+| Behavior | Page | Upstream |
+| --- | --- | --- |
+| `type` does not append — it inserts wherever the focus-click lands, mid-value | [type](/docs/commands/type) | fixed on `main` ([#488](https://github.com/VibiumDev/vibium/issues/488)), except `input[type=number]` ([#507](https://github.com/VibiumDev/vibium/issues/507), open) |
+| `type` reports success on elements it cannot type into at all | [type](/docs/commands/type) | partly fixed on `main`: a `<button>` now errors, a `<span>` still reports a successful type. Unreported |
+| Every `is` subcommand exits 0, so `if vibium is visible …` always runs | [is](/docs/commands/is) | unchanged. Unreported |
+| A click that opens a dialog times out after 60s and exits 1 — the click worked | [dialog](/docs/commands/dialog) | unchanged. Unreported |
+| `upload` accepts a path that does not exist and attaches a zero-byte file | [upload](/docs/commands/upload) | fixed on `main` ([#480](https://github.com/VibiumDev/vibium/issues/480)) |
+| `frame` switches context permanently, and `go` navigates the frame rather than leaving it | [frame](/docs/commands/frame) | open ([#510](https://github.com/VibiumDev/vibium/issues/510)) |
+| `scroll <direction>` does nothing inside a frame, while reporting success | [scroll](/docs/commands/scroll) | open ([#511](https://github.com/VibiumDev/vibium/issues/511)) |
+| A failed `go` leaves you on the engine's error page, which maps and reads cleanly | [go](/docs/commands/go) | unchanged, and arguably correct. Unreported |
+| `value` on a checkbox is `on` whether ticked or not | [value](/docs/commands/value) | unchanged. Unreported |
+| `a11y-tree` omits every accessible name that comes from text content | [a11y-tree](/docs/commands/a11y-tree) | open ([#512](https://github.com/VibiumDev/vibium/issues/512)) |
 
 Most share a shape: the command reports what it **dispatched**, not what the page
 did with it. Assert on the consequence — a [`text`](/docs/commands/text) read or
