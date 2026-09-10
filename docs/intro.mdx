@@ -67,7 +67,7 @@ installing the CLI today. Upstream status was re-measured against `main` on
 | --- | --- | --- |
 | `type` does not append — it inserts wherever the focus-click lands, mid-value | [type](/docs/commands/type) | fixed on `main` ([#488](https://github.com/VibiumDev/vibium/issues/488)), except `input[type=number]` ([#507](https://github.com/VibiumDev/vibium/issues/507), open) |
 | `type` reports success on elements it cannot type into at all | [type](/docs/commands/type) | partly fixed on `main`: a `<button>` now errors, a `<span>` still reports a successful type. Unreported |
-| Every `is` subcommand exits 0, so `if vibium is visible …` always runs | [is](/docs/commands/is) | unchanged. Unreported |
+| Every `is` subcommand exits 0 by default, so `if vibium is visible …` always runs — `--fail` fixes it | [is](/docs/commands/is) | unchanged, and not a defect: the flag has always been there |
 | A click that opens a dialog times out after 60s and exits 1 — the click worked | [dialog](/docs/commands/dialog) | unchanged. Unreported |
 | `upload` accepts a path that does not exist and attaches a zero-byte file | [upload](/docs/commands/upload) | fixed on `main` ([#480](https://github.com/VibiumDev/vibium/issues/480)) |
 | `frame` switches context permanently, and `go` navigates the frame rather than leaving it | [frame](/docs/commands/frame) | open ([#510](https://github.com/VibiumDev/vibium/issues/510)) |

@@ -25,6 +25,7 @@ vibium record group stop
 | --- | --- | --- |
 | `--output`, `-o` | `string` | Where the ZIP lands at stop (default `record-<timestamp>.zip`) |
 | `--name` | `string` | Name for the recording; seeds the default filename |
+| `--title` | `string` | Title shown in the trace viewer (defaults to the name) |
 | `--screenshots` | — | Capture a screenshot after each action (default true) |
 | `--snapshots` | — | Capture HTML snapshots |
 | `--format` | `string` | Screenshot format: `jpeg` or `png` (default jpeg) |
@@ -32,6 +33,7 @@ vibium record group stop
 | `--video` | — | Require video; omit for "when supported", `=false` for off |
 | `--video-fps` | `int` | Frame rate |
 | `--video-size` | `string` | Dimensions, e.g. `1280x720` |
+| `--video-remote` | `string` | On a remote connection, `keep` records anyway and leaves the file on the remote host |
 | `--bidi` | — | Include raw BiDi commands |
 | `--sources` | — | Include source information |
 
@@ -76,7 +78,7 @@ recording is open.
 | --- | --- |
 | `record group start <name>` | Opens a named group; the actions after it nest under that name in the trace |
 | `record group stop` | Closes the open group |
-| `record chunk start` | Opens a new chunk; `--name` labels it |
+| `record chunk start` | Opens a new chunk; `--name` labels it and `--title` sets what the viewer shows |
 | `record chunk stop` | Writes a ZIP and leaves the recording running; `-o` sets the path, default `chunk.zip` |
 
 ```sh

@@ -9,9 +9,9 @@ description: "Check element state (visible, enabled, checked, actionable)"
 Test an element's state. Four subcommands: `visible`, `enabled`, `checked` and
 `actionable`.
 
-:::danger[Every `is` command exits 0, whatever the answer]
-The answer is on **stdout**, not in the exit status. A shell conditional
-therefore always takes the success branch:
+:::danger[By default every `is` command exits 0, whatever the answer]
+The answer is on **stdout**, not in the exit status, so a shell conditional
+always takes the success branch:
 
 ```sh
 $ vibium is visible "#panel"
@@ -23,11 +23,29 @@ $ if vibium is visible "#panel" >/dev/null; then echo "taken"; else echo "not ta
 taken
 ```
 
-The panel is not visible, and the `if` ran anyway. Compare the output instead:
+The panel is not visible, and the `if` ran anyway.
+
+**`--fail` is the fix**, and it is easy to miss: `visible`, `enabled` and
+`checked` each accept it, and it makes the exit status carry the answer.
+
+```sh
+$ vibium is visible "#panel" --fail
+false
+$ echo $?
+1
+
+$ if vibium is visible "#panel" --fail >/dev/null; then echo "taken"; else echo "not taken"; fi
+not taken
+```
+
+A true answer still exits 0, so the flag is safe to pass always. Without it,
+compare the output instead:
 
 ```sh
 [ "$(vibium is visible '#panel')" = "true" ] && echo "visible"
 ```
+
+`actionable` has no `--fail`; it prints a checklist and always exits 0.
 :::
 
 ## Synopsis
@@ -39,8 +57,15 @@ vibium is actionable <selector>
 
 ## Flags
 
-`is` takes no flags of its own. Global flags apply — see
-[Global flags](/docs/global-flags).
+`is` itself takes none. `visible`, `enabled` and `checked` each take one:
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--fail` | — | Exit non-zero when the answer is `false` |
+
+`actionable` does not take it.
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
 
 ## `visible`, `enabled`, `checked`
 

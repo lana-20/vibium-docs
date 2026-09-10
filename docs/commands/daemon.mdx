@@ -22,8 +22,16 @@ vibium daemon stop
 
 ## Flags
 
-This command takes no flags of its own. Global flags apply — see
-[Global flags](/docs/global-flags).
+All four are on `daemon start`. `daemon status` and `daemon stop` take none.
+
+| Flag | Argument | Description |
+| --- | --- | --- |
+| `--connect` | `string` | Connect to a remote BiDi WebSocket URL instead of launching a local browser |
+| `--connect-header` | `string` | HTTP header for the WebSocket connect, `"Key: Value"`; repeatable |
+| `--foreground` | — | Run the daemon in the foreground, for debugging |
+| `--idle-timeout` | `duration` | Shut down after this much inactivity, `0` to disable (default 30m) |
+
+Global flags apply as well — see [Global flags](/docs/global-flags).
 
 ## Why there is a daemon
 
