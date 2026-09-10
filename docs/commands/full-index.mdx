@@ -1,0 +1,126 @@
+---
+title: "Full index"
+sidebar_label: Full index
+sidebar_position: 1
+description: Every vibium command and subcommand, numbered.
+---
+
+# Full index
+
+Every command the vibium binary exposes at **vibium v26.8.21**, numbered in the order the reference uses. The [Command reference](/docs/commands) groups the same commands by purpose; this page is the flat list, for checking coverage or counting the surface.
+
+## Commands (67)
+
+| # | Command | Group | Description |
+| ---: | --- | --- | --- |
+| 1 | [`vibium go`](/docs/commands/go) | Navigation | Go to a URL and print page info |
+| 2 | [`vibium back`](/docs/commands/back) | Navigation | Navigate back in browser history |
+| 3 | [`vibium forward`](/docs/commands/forward) | Navigation | Navigate forward in browser history |
+| 4 | [`vibium reload`](/docs/commands/reload) | Navigation | Reload the current page |
+| 5 | [`vibium url`](/docs/commands/url) | Navigation | Get the current page URL |
+| 6 | [`vibium title`](/docs/commands/title) | Navigation | Get the current page title |
+| 7 | [`vibium map`](/docs/commands/map) | Mapping & references | Map interactive page elements with @refs |
+| 8 | [`vibium diff`](/docs/commands/diff) | Mapping & references | Compare current state vs previous |
+| 9 | [`vibium find`](/docs/commands/find) | Finding elements | Find elements by CSS selector or semantic locator |
+| 10 | [`vibium frame`](/docs/commands/frame) | Finding elements | Find a frame by name or URL substring |
+| 11 | [`vibium frames`](/docs/commands/frames) | Finding elements | List all child frames (iframes) on the page |
+| 12 | [`vibium count`](/docs/commands/count) | Finding elements | Count matching elements |
+| 13 | [`vibium click`](/docs/commands/click) | Interacting | Click an element (optionally navigate to URL first) |
+| 14 | [`vibium dblclick`](/docs/commands/dblclick) | Interacting | Double-click an element |
+| 15 | [`vibium fill`](/docs/commands/fill) | Interacting | Clear an input field and type new text |
+| 16 | [`vibium type`](/docs/commands/type) | Interacting | Type text into an element (optionally navigate to URL first) |
+| 17 | [`vibium press`](/docs/commands/press) | Interacting | Press a key on a specific element or the focused element |
+| 18 | [`vibium keys`](/docs/commands/keys) | Interacting | Press a key or key combination |
+| 19 | [`vibium check`](/docs/commands/check) | Interacting | Check a checkbox or radio button |
+| 20 | [`vibium uncheck`](/docs/commands/uncheck) | Interacting | Uncheck a checkbox |
+| 21 | [`vibium select`](/docs/commands/select) | Interacting | Select an option in a &lt;select&gt; element |
+| 22 | [`vibium hover`](/docs/commands/hover) | Interacting | Hover over an element by CSS selector |
+| 23 | [`vibium focus`](/docs/commands/focus) | Interacting | Focus an element |
+| 24 | [`vibium drag`](/docs/commands/drag) | Interacting | Drag from one element to another |
+| 25 | [`vibium upload`](/docs/commands/upload) | Interacting | Set files on an input[type=file] element |
+| 26 | [`vibium scroll`](/docs/commands/scroll) | Interacting | Scroll the page or an element |
+| 27 | [`vibium mouse`](/docs/commands/mouse) | Interacting | Mouse control (click, move, down, up) |
+| 28 | [`vibium highlight`](/docs/commands/highlight) | Interacting | Highlight an element with a red outline for 3 seconds |
+| 29 | [`vibium text`](/docs/commands/text) | Reading page state | Get text content of the page or an element |
+| 30 | [`vibium html`](/docs/commands/html) | Reading page state | Get HTML content of the page or an element |
+| 31 | [`vibium attr`](/docs/commands/attr) | Reading page state | Get an HTML attribute value from an element |
+| 32 | [`vibium value`](/docs/commands/value) | Reading page state | Get the current value of a form element |
+| 33 | [`vibium a11y-tree`](/docs/commands/a11y-tree) | Reading page state | Get the accessibility tree of the current page |
+| 34 | [`vibium is`](/docs/commands/is) | Reading page state | Check element state (visible, enabled, checked, actionable) |
+| 35 | [`vibium content`](/docs/commands/content) | Reading page state | Replace the page HTML content |
+| 36 | [`vibium screenshot`](/docs/commands/screenshot) | Capture | Capture a screenshot (optionally navigate to URL first) |
+| 37 | [`vibium pdf`](/docs/commands/pdf) | Capture | Save page as PDF |
+| 38 | [`vibium eval`](/docs/commands/eval) | Capture | Evaluate a JavaScript expression (optionally navigate to URL first) |
+| 39 | [`vibium record`](/docs/commands/record) | Capture | Record browser sessions (screenshots and snapshots) |
+| 40 | [`vibium wait`](/docs/commands/wait) | Waiting | Wait for an element, URL, text, page load, or JS condition |
+| 41 | [`vibium sleep`](/docs/commands/sleep) | Waiting | Pause execution for a number of milliseconds |
+| 42 | [`vibium start`](/docs/commands/start) | Browser & session | Start a browser session. Without arguments, launches a local browser. |
+| 43 | [`vibium stop`](/docs/commands/stop) | Browser & session | Stop the browser session |
+| 44 | [`vibium daemon`](/docs/commands/daemon) | Browser & session | Manage the vibium daemon (background browser process) |
+| 45 | [`vibium page`](/docs/commands/page) | Browser & session | Manage browser pages (new, close, switch) |
+| 46 | [`vibium pages`](/docs/commands/pages) | Browser & session | List all open browser pages |
+| 47 | [`vibium viewport`](/docs/commands/viewport) | Browser & session | Get or set the browser viewport size |
+| 48 | [`vibium window`](/docs/commands/window) | Browser & session | Get or set the OS browser window size, position, or state |
+| 49 | [`vibium install`](/docs/commands/install) | Browser & session | Download the selected browser (Chrome for Testing by default) |
+| 50 | [`vibium is-installed`](/docs/commands/is-installed) | Browser & session | Check if the selected browser is installed (exit 0 = yes, exit 1 = no) |
+| 51 | [`vibium paths`](/docs/commands/paths) | Browser & session | Print browser and cache paths |
+| 52 | [`vibium storage`](/docs/commands/storage) | Browser & session | Export or restore browser state (cookies, localStorage, sessionStorage) |
+| 53 | [`vibium cookies`](/docs/commands/cookies) | Browser & session | Manage browser cookies |
+| 54 | [`vibium download`](/docs/commands/download) | Browser & session | Manage browser downloads |
+| 55 | [`vibium dialog`](/docs/commands/dialog) | Browser & session | Handle browser dialogs (alert, confirm, prompt) |
+| 56 | [`vibium geolocation`](/docs/commands/geolocation) | Browser & session | Override the browser geolocation |
+| 57 | [`vibium media`](/docs/commands/media) | Browser & session | Override CSS media features |
+| 58 | [`vibium mcp`](/docs/commands/mcp) | Agent integration | Start the Model Context Protocol (MCP) server. |
+| 59 | [`vibium add-skill`](/docs/commands/add-skill) | Agent integration | Install Vibium browser skill for Claude Code |
+| 60 | [`vibium pipe`](/docs/commands/pipe) | Agent integration | Start vibium in pipe mode where protocol messages are exchanged |
+| 61 | [`vibium serve`](/docs/commands/serve) | Agent integration | Start WebSocket proxy server for browser automation |
+| 62 | [`vibium launch-test`](/docs/commands/launch-test) | Diagnostics | Launch the selected browser and print BiDi session info |
+| 63 | [`vibium bidi-test`](/docs/commands/bidi-test) | Diagnostics | Launch browser, connect via BiDi, send session.status |
+| 64 | [`vibium ws-test`](/docs/commands/ws-test) | Diagnostics | Test WebSocket connection (type messages, see echoes) |
+| 65 | [`vibium version`](/docs/commands/version) | Meta | Print the version number |
+| 66 | [`vibium help`](/docs/commands/help) | Meta | Help provides help for any command in the application. |
+| 67 | [`vibium completion`](/docs/commands/completion) | Meta | Generate a shell completion script. |
+
+## Subcommands (37)
+
+Thirteen commands take a subcommand. Each is documented inline on its parent's page.
+
+| # | Subcommand | Parent | Description |
+| ---: | --- | --- | --- |
+| 1 | [`vibium diff map`](/docs/commands/diff) | `diff` | Compare current page elements vs last map |
+| 2 | [`vibium find alt`](/docs/commands/find) | `find` | Find element by alt attribute |
+| 3 | [`vibium find label`](/docs/commands/find) | `find` | Find input by associated label text |
+| 4 | [`vibium find placeholder`](/docs/commands/find) | `find` | Find element by placeholder attribute |
+| 5 | [`vibium find role`](/docs/commands/find) | `find` | Find element by ARIA role |
+| 6 | [`vibium find testid`](/docs/commands/find) | `find` | Find element by data-testid attribute |
+| 7 | [`vibium find text`](/docs/commands/find) | `find` | Find element by text content |
+| 8 | [`vibium find title`](/docs/commands/find) | `find` | Find element by title attribute |
+| 9 | [`vibium find xpath`](/docs/commands/find) | `find` | Find element by XPath expression |
+| 10 | [`vibium scroll into-view`](/docs/commands/scroll) | `scroll` | Scroll an element into view |
+| 11 | [`vibium mouse click`](/docs/commands/mouse) | `mouse` | Click at coordinates or current position |
+| 12 | [`vibium mouse down`](/docs/commands/mouse) | `mouse` | Press a mouse button down |
+| 13 | [`vibium mouse move`](/docs/commands/mouse) | `mouse` | Move the mouse to coordinates |
+| 14 | [`vibium mouse up`](/docs/commands/mouse) | `mouse` | Release a mouse button |
+| 15 | [`vibium is actionable`](/docs/commands/is) | `is` | Check actionability of an element (Visible, Stable, ReceivesEvents, Enabled, Editable) |
+| 16 | [`vibium is checked`](/docs/commands/is) | `is` | Check if a checkbox or radio is checked |
+| 17 | [`vibium is enabled`](/docs/commands/is) | `is` | Check if an element is enabled |
+| 18 | [`vibium is visible`](/docs/commands/is) | `is` | Check if an element is visible on the page |
+| 19 | [`vibium record chunk`](/docs/commands/record) | `record` | Manage recording chunks |
+| 20 | [`vibium record group`](/docs/commands/record) | `record` | Manage recording groups |
+| 21 | [`vibium record start`](/docs/commands/record) | `record` | Start a recording |
+| 22 | [`vibium record stop`](/docs/commands/record) | `record` | Stop recording and save |
+| 23 | [`vibium wait fn`](/docs/commands/wait) | `wait` | Wait until a JS expression returns truthy |
+| 24 | [`vibium wait load`](/docs/commands/wait) | `wait` | Wait until the page is fully loaded |
+| 25 | [`vibium wait text`](/docs/commands/wait) | `wait` | Wait until text appears on the page |
+| 26 | [`vibium wait url`](/docs/commands/wait) | `wait` | Wait until the page URL contains a substring |
+| 27 | [`vibium daemon start`](/docs/commands/daemon) | `daemon` | Start the vibium daemon |
+| 28 | [`vibium daemon status`](/docs/commands/daemon) | `daemon` | Show daemon status |
+| 29 | [`vibium daemon stop`](/docs/commands/daemon) | `daemon` | Stop the vibium daemon |
+| 30 | [`vibium page close`](/docs/commands/page) | `page` | Close a browser page by index (default: current page) |
+| 31 | [`vibium page new`](/docs/commands/page) | `page` | Open a new browser page |
+| 32 | [`vibium page switch`](/docs/commands/page) | `page` | Switch to a browser page by index or URL substring |
+| 33 | [`vibium storage restore`](/docs/commands/storage) | `storage` | Restore browser state from a JSON file |
+| 34 | [`vibium cookies clear`](/docs/commands/cookies) | `cookies` | Clear all cookies |
+| 35 | [`vibium download dir`](/docs/commands/download) | `download` | Set the download directory |
+| 36 | [`vibium dialog accept`](/docs/commands/dialog) | `dialog` | Accept a dialog (optionally with prompt text) |
+| 37 | [`vibium dialog dismiss`](/docs/commands/dialog) | `dialog` | Dismiss a dialog |

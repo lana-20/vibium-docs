@@ -281,7 +281,10 @@ def render_index(summaries: dict[str, str], version: str) -> str:
            "Every example in this reference is real terminal output captured from",
            f"**{version}** — see [how the examples were produced]"
            "(/docs/intro#how-the-examples-were-produced).",
-           ":::", ""]
+           ":::", "",
+           "Grouped by purpose below. For the flat list — every command "
+           "numbered, and all the subcommands in one table — see the "
+           "[full index](/docs/commands/full-index).", ""]
     for _, label, cmds in CATEGORIES:
         out += [f"## {label}", "", "| Command | Description |", "| --- | --- |"]
         for c in cmds:
@@ -333,6 +336,49 @@ README_END = "<!-- END COMMAND STATUS -->"
 def gh_escape(s: str) -> str:
     """GitHub renders raw tags in README tables as HTML; `<select>` would vanish."""
     return s.replace("<", "&lt;").replace(">", "&gt;")
+
+
+def render_full_index(summaries: dict[str, str],
+                      subcommands: dict[str, list[tuple[str, str]]],
+                      label_of: dict[str, str], version: str) -> str:
+    """One numbered table of every command, one of every subcommand.
+
+    The grouped tables on the reference index answer "what is there for this
+    job". This page answers "how many are there, and is anything missing" —
+    which needs a single ordered list with a count you can read off the last
+    row. Both tables follow CATEGORIES, so the numbering matches the order the
+    sidebar and the index already use.
+    """
+    cmds = [c for _, _, group in CATEGORIES for c in group]
+    total_subs = sum(len(subcommands.get(c, [])) for c in cmds)
+    out = ["---", 'title: "Full index"', "sidebar_label: Full index",
+           "sidebar_position: 1",
+           "description: Every vibium command and subcommand, numbered.",
+           "---", "",
+           "# Full index", "",
+           f"Every command the vibium binary exposes at **{version}**, numbered "
+           "in the order the reference uses. The "
+           "[Command reference](/docs/commands) groups the same commands by "
+           "purpose; this page is the flat list, for checking coverage or "
+           "counting the surface.", "",
+           f"## Commands ({len(cmds)})", "",
+           "| # | Command | Group | Description |", "| ---: | --- | --- | --- |"]
+    for i, c in enumerate(cmds, 1):
+        out.append(f"| {i} | [`vibium {c}`](/docs/commands/{c}) | {label_of[c]} "
+                   f"| {mdx_escape(summaries.get(c, ''))} |")
+    out += ["", f"## Subcommands ({total_subs})", "",
+            "Thirteen commands take a subcommand. Each is documented inline on "
+            "its parent's page.", "",
+            "| # | Subcommand | Parent | Description |",
+            "| ---: | --- | --- | --- |"]
+    n = 0
+    for c in cmds:
+        for name, desc in subcommands.get(c, []):
+            n += 1
+            out.append(f"| {n} | [`vibium {c} {name}`](/docs/commands/{c}) "
+                       f"| `{c}` | {mdx_escape(desc)} |")
+    out.append("")
+    return "\n".join(out)
 
 
 def render_status_block(summaries: dict[str, str], version: str) -> str:
@@ -409,10 +455,12 @@ def main() -> int:
     written = skipped = 0
     subs_total = [0]
     summaries: dict[str, str] = {}
+    subcommands: dict[str, list[tuple[str, str]]] = {}
     for cmd in listed:
         sections = parse_help(run_help(args.bin, [cmd]))
         desc = clean(sections.get("Description", []))
         summaries[cmd] = desc[0] if desc else ""
+        subcommands[cmd] = parse_subcommands(sections.get("Available Commands", []))
         if cmd in CURATED:
             skipped += 1
             continue
@@ -426,12 +474,16 @@ def main() -> int:
         written += 1
 
     (outdir / "index.mdx").write_text(render_index(summaries, version))
+    (outdir / "full-index.mdx").write_text(
+        render_full_index(summaries, subcommands, label_of, version))
     Path(outdir).parent.joinpath("global-flags.mdx").write_text(
         render_global_flags(root, version))
 
     readme_done = update_readme(summaries, version)
 
-    print(f"{version}: {len(listed)} commands — {written} generated "
+    print(f"{version}: {len(listed)} commands, "
+          f"{sum(len(v) for v in subcommands.values())} subcommands — "
+          f"{written} generated "
           f"({subs_total[0]} subcommands documented inline), "
           f"{skipped} curated left untouched"
           + (", README tracker updated" if readme_done else ""))
