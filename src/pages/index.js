@@ -36,23 +36,25 @@ export default function Home() {
           <div className="col col--4">
             <Heading as="h3">Complete</Heading>
             <p>
-              All 67 commands and their 37 subcommands, with synopsis, flags and
+              All 67 commands and their 41 subcommands, with synopsis, flags and
               examples. The official docs cover 16.
             </p>
           </div>
           <div className="col col--4">
-            <Heading as="h3">Honest about its sources</Heading>
+            <Heading as="h3">Real captured output</Heading>
             <p>
-              Every page says whether its examples are real captured output or
-              derived from the binary's <code>--help</code>. No page pretends to
-              be more verified than it is.
+              Every example on every page is terminal output captured from a
+              live browser, most of it against this site's own fixture so it
+              cannot drift. Nothing is transcribed from the binary's{' '}
+              <code>--help</code>.
             </p>
           </div>
           <div className="col col--4">
             <Heading as="h3">Regenerable</Heading>
             <p>
-              A script reads the installed binary and rewrites the reference, so
-              a new vibium release is one command away from documented.
+              A script reads the installed binary and rebuilds the indexes, the
+              global flags page and the command lists, so a new vibium release
+              is one command away from being accounted for.
             </p>
           </div>
         </div>
