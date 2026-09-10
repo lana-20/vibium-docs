@@ -26,7 +26,8 @@ taken
 The panel is not visible, and the `if` ran anyway.
 
 **`--fail` is the fix**, and it is easy to miss: `visible`, `enabled` and
-`checked` each accept it, and it makes the exit status carry the answer.
+`checked` each accept it, and it makes the exit status carry the answer. It was
+added for exactly this complaint, upstream [#206](https://github.com/VibiumDev/vibium/issues/206).
 
 ```sh
 $ vibium is visible "#panel" --fail
