@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """Generate the Vibium command reference from the installed binary.
 
-Every page under docs/commands/ except the curated ones in CURATED is
-regenerated from `vibium <cmd> --help`, so the reference can be re-derived
-whenever the binary moves.
+Every command page is now written by hand against captured terminal output and
+listed in CURATED, so this rebuilds the pieces that are still derived from the
+binary: the command reference index, the global flags page, and the command list
+in the README. A command absent from CURATED is regenerated from
+`vibium <cmd> --help` as a starting point for capture.
 
     python3 scripts/gen_pages.py [--bin vibium] [--out docs/commands]
-
-Curated pages are never touched: they carry examples captured from a live
-browser, which help text cannot supply.
 """
 
 from __future__ import annotations
@@ -21,8 +20,8 @@ from pathlib import Path
 
 # Pages written by hand against real terminal output. Never overwritten.
 CURATED = {
-    # Every command is verified; the generator now only rebuilds the
-    # index, the global-flags page and the README tracker.
+    # Every command has captured output, so the generator now only rebuilds the
+    # index, the global-flags page and the README command list.
     "a11y-tree", "add-skill", "attr", "back", "bidi-test", "check",
     "click", "completion", "content", "cookies", "count", "daemon",
     "dblclick", "dialog", "diff", "download", "drag", "eval", "fill",
@@ -209,10 +208,13 @@ def render(cmd: str, sections: dict[str, list[str]], binary: str,
     out.append("")
     out.append(mdx_escape(summary) + ("." if summary and not summary.endswith(".") else ""))
     out.append("")
-    out.append(":::info[Generated reference]")
+    # Reached only by a command that is not yet in CURATED — a new one upstream.
+    # Every other page carries captured output, so this page has to say plainly
+    # that it does not, rather than passing as one of them.
+    out.append(":::caution[Not captured yet]")
     out.append(f"Derived from `vibium help {cmd}` at **{version}**. The examples below are the")
-    out.append("command's own built-in samples, not captured terminal output. Pages marked")
-    out.append("*Verified* instead carry output from a live browser run.")
+    out.append("command's own built-in samples, not terminal output from a real run — this")
+    out.append("page is a placeholder until the command has actually been exercised.")
     out.append(":::")
     out.append("")
 
@@ -275,17 +277,15 @@ def render_index(summaries: dict[str, str], version: str) -> str:
            "# Command reference", "",
            f"Every command the vibium binary exposes at **{version}** — "
            f"all {len(summaries)} of them, grouped by purpose.", "",
-           ":::note[How this reference is built]",
-           "Pages marked *Verified* carry real terminal output captured from a live",
-           "browser. The rest are generated from the binary's own `--help` text by",
-           "[`scripts/gen_pages.py`](https://github.com/lana-20/vibium-docs), so the",
-           "reference can be re-derived whenever vibium ships a new release.",
+           ":::note",
+           "Every example in this reference is real terminal output captured from",
+           f"**{version}** — see [how the examples were produced]"
+           "(/docs/intro#how-the-examples-were-produced).",
            ":::", ""]
     for _, label, cmds in CATEGORIES:
         out += [f"## {label}", "", "| Command | Description |", "| --- | --- |"]
         for c in cmds:
-            mark = " *(Verified)*" if c in CURATED else ""
-            out.append(f"| [`vibium {c}`](/docs/commands/{c}){mark} "
+            out.append(f"| [`vibium {c}`](/docs/commands/{c}) "
                        f"| {mdx_escape(summaries.get(c, ''))} |")
         out.append("")
     out += ["## Conventions", "",
@@ -336,25 +336,21 @@ def gh_escape(s: str) -> str:
 
 
 def render_status_block(summaries: dict[str, str], version: str) -> str:
-    """The verified/generated tracker, written into README.md between markers.
+    """The command list, written into README.md between markers.
 
-    Generated from the same CATEGORIES and CURATED that drive the pages, so the
-    tracker cannot drift from what the site actually ships.
+    Generated from the same CATEGORIES that drive the pages, so the list cannot
+    drift from what the site actually ships.
     """
     total = len(summaries)
-    verified = sorted(CURATED)
     out = [README_BEGIN, "",
-           f"**{len(verified)} of {total} verified** — "
-           f"{total - len(verified)} still generated from `--help`. "
+           f"All **{total} commands**, grouped as they are on the site. "
            f"Measured against `{version}`.", ""]
     for _, label, cmds in CATEGORIES:
-        done = sum(1 for c in cmds if c in CURATED)
-        out += [f"<details{' open' if done else ''}>",
-                f"<summary><strong>{label}</strong> — {done}/{len(cmds)} verified</summary>",
-                "", "| | Command | Description |", "| --- | --- | --- |"]
+        out += ["<details open>",
+                f"<summary><strong>{label}</strong> — {len(cmds)}</summary>",
+                "", "| Command | Description |", "| --- | --- |"]
         for c in cmds:
-            mark = "x" if c in CURATED else " "
-            out.append(f"| [{mark}] | [`{c}`](https://lana-20.github.io/vibium-docs/docs/commands/{c}) "
+            out.append(f"| [`{c}`](https://lana-20.github.io/vibium-docs/docs/commands/{c}) "
                        f"| {gh_escape(summaries.get(c, ''))} |")
         out += ["", "</details>", ""]
     out.append(README_END)

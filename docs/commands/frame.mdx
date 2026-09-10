@@ -8,14 +8,6 @@ description: "Find a frame by name or URL substring"
 
 Switch the active browsing context into an iframe.
 
-:::tip[Verified against a live browser]
-Every example on this page is real terminal output captured from **vibium
-v26.8.21**, run against this site's own
-[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
-from this repo, so the output cannot drift when someone else's markup changes.
-Every example is reproducible against that URL exactly as shown.
-:::
-
 :::danger[`frame` is not a query — it changes state, and the change sticks]
 The help calls this "find a frame", which reads like a lookup. It is not. Every
 command after it runs **inside that frame** until you navigate away:

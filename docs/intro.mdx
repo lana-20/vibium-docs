@@ -17,18 +17,16 @@ with the Vibium project; where behaviour here disagrees with upstream, upstream
 wins.
 :::
 
-## Two tiers of page
+## How the examples were produced
 
-The reference is deliberately honest about where each page comes from, because
-the two kinds are not equally trustworthy.
-
-| Tier | What it means |
-| --- | --- |
-| **Verified** | Examples are real terminal output, captured from a live browser at the version named on the page. |
-| **Generated** | Derived from the command's own `--help` output. Accurate as to syntax and flags; the examples are the binary's built-in samples. |
-
-Every page says which it is, at the top. Pages get promoted from Generated to
-Verified as their behaviour is actually exercised — see [Contributing](#contributing).
+Every example on every page is real terminal output, captured from **vibium
+v26.8.21**. Nothing on this site is transcribed from `--help`. Most pages run
+against this site's own
+[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed
+page served from this repo, so the output cannot drift when someone else's
+markup changes — and those examples are reproducible against that URL exactly as
+shown. Where output is machine-specific, the page says so: paths, ports and
+process ids differ per machine, and a captured home directory is shown as `~`.
 
 ## Install
 
@@ -84,13 +82,15 @@ a [`wait`](/docs/commands/wait) — rather than on the exit code.
 
 ## Contributing
 
-The generated pages come from `scripts/gen_pages.py`, which reads the installed
-binary. After a vibium release:
+`scripts/gen_pages.py` reads the installed binary and rebuilds the command
+reference index, the global flags page and the command list in the README. After
+a vibium release:
 
 ```sh
 python3 scripts/gen_pages.py
 ```
 
-Curated pages are listed in that script's `CURATED` set and are never
-overwritten, so promoting a page means writing real output into it and adding
-its name to that set.
+The per-command pages are written by hand, because captured output is not
+something help text can supply. They are listed in that script's `CURATED` set,
+which it never overwrites; a command added upstream joins the list once its
+output has actually been captured.

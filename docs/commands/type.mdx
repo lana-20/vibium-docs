@@ -8,14 +8,6 @@ description: "Type text into an element (optionally navigate to URL first)"
 
 Send text to an element as keystrokes, after clicking it to focus.
 
-:::tip[Verified against a live browser]
-Every example on this page is real terminal output captured from **vibium
-v26.8.21**, run against this site's own
-[playground fixture](pathname:///vibium-docs/fixtures/playground.html) — a fixed page served
-from this repo, so the output cannot drift when someone else's markup changes.
-Every example is reproducible against that URL exactly as shown.
-:::
-
 :::danger[Prefer `fill` unless you specifically need keystrokes]
 `type` has two behaviours on this version that cost people real time — it does
 **not** append, and it reports success on elements it cannot type into. Both are
