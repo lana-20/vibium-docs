@@ -231,6 +231,27 @@ Two guards make silent drift impossible rather than merely unlikely:
   so a newly added command cannot quietly fail to appear in the sidebar.
 - A category entry that no longer exists in the binary is likewise a hard error.
 
+> **Before regenerating against anything newer than v26.8.21 — four commands are
+> renamed on `main`.**
+> [`d9082eb`](https://github.com/VibiumDev/vibium/commit/d9082eb) (2026-09-07)
+> renames `check` → `set`, `uncheck` → `unset` and `is checked` → `is set`, and
+> moves the old `verify` command into the name `check`. The MCP tool
+> `browser_check` becomes `browser_set`. None of it is in a stable tag — npm
+> `latest` is still v26.8.21 — so this reference is correct as it stands, and
+> re-deriving it against a nightly would document names that may still move.
+>
+> When a release after v26.8.21 ships: `docs/commands/check.mdx` and
+> `uncheck.mdx` need renaming to `set`/`unset` with their examples re-captured,
+> `is.mdx` needs its `checked` subcommand renamed, the new `check` needs a page
+> of its own, and `CATEGORIES` needs the new names — the hard error above will
+> catch that last one by itself.
+>
+> `check` is the one to watch, because it was reused rather than retired. On a
+> newer binary `vibium check "#terms"` does not fail as an unknown command: it
+> enters the AI verification workflow and errors about `VIBIUM_AI_PROVIDER`,
+> which reads like a configuration problem rather than a renamed command. The
+> checkbox is left untouched.
+
 It shells out to `vibium help <cmd>` rather than `vibium <cmd> --help`, because
 on v26.8.21 the latter is broken for `fill`, `type`, `geolocation` and `sleep` —
 they set `DisableFlagParsing` and surface `--help` as an arity error
