@@ -97,6 +97,70 @@ where the consequences and their measurement are documented in full. The help
 text does say `press` clicks to focus; what it does not say is that the caret
 moves with the click.
 
+## One Backspace empties a date, not one character of it
+
+On an ordinary text input, `Backspace` deletes one character. On the five
+segmented date and time types it clears the whole value:
+
+```sh
+$ vibium go 'data:text/html,<input id="x" type="text" value="abcdef"><input id="d" type="date" value="2020-01-02">'
+
+$ vibium press "Backspace" "#x"
+Pressed Backspace
+$ vibium value "#x"
+abcde
+
+$ vibium press "Backspace" "#d"
+Pressed Backspace
+$ echo $?
+0
+$ vibium value "#d"
+
+```
+
+The date field is now empty. `Backspace` clears the **focused segment** — the
+day, in a field the click landed on — and a segmented control with a missing
+segment has no complete value to report, so the whole thing reads back as `""`.
+The command has nothing to warn about: the key was delivered, and delivering it
+is all `press` claims to do.
+
+It applies to `date`, `time`, `month`, `week` and `datetime-local`, all of which
+go from a seeded value to `""` on one press:
+
+| type | seeded value | after one `Backspace` |
+|---|---|---|
+| `date` | `2020-01-02` | `""` |
+| `time` | `10:30` | `""` |
+| `month` | `2020-01` | `""` |
+| `week` | `2020-W02` | `""` |
+| `datetime-local` | `2020-01-02T10:30` | `""` |
+
+This is not the focus click described above, and not something Vibium adds. It
+is how the browser treats these controls, so
+[`vibium focus`](/docs/commands/focus) followed by a selector-less `press` gives
+the same empty field, and so does [`vibium keys`](/docs/commands/keys). Any tool
+sending that key gets the same result.
+
+:::warning[Firefox differs on `month` and `week`, and the difference confirms the mechanism]
+Firefox does not implement `month` or `week`, and renders them as ordinary text
+inputs. There, one `Backspace` deletes exactly one character — `2020-01` becomes
+`2020-0` and `2020-W02` becomes `2020-W0` — while `date`, `time` and
+`datetime-local` empty as they do on Chrome. Only the genuinely segmented
+controls lose everything.
+:::
+
+Read the value back if a partial edit was the point:
+
+```sh
+$ vibium press "Backspace" "#d"
+Pressed Backspace
+$ [ -n "$(vibium value '#d')" ] || echo "the field is now empty"
+the field is now empty
+```
+
+To clear one of these fields on purpose, [`vibium fill`](/docs/commands/fill)
+with `""` says what it means and does not depend on which segment had focus.
+
 ## Pressing on the focused element
 
 Omitting the selector presses on whatever currently has focus. There is no
