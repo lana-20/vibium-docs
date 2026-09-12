@@ -58,20 +58,21 @@ Verifying all 67 commands turned up a number of cases where a command reports
 success and does not do what you would expect. They are documented in full on
 the relevant pages; these are the ones that cost the most time.
 
-**Every one of them is still live in v26.8.21**, the current npm release. Two
+**Every one of them is still live in v26.8.21**, the current npm release. Four
 have been fixed since, but only on `main`, so the fix has not reached anyone
-installing the CLI today. Upstream status was re-measured against `main` on
-2026-09-09.
+installing the CLI today — and one of those fixes is partial. Upstream status was
+re-measured against `main` on 2026-09-12.
 
 | Behavior | Page | Upstream |
 | --- | --- | --- |
-| `type` does not append — it inserts wherever the focus-click lands, mid-value | [type](/docs/commands/type) | fixed on `main` ([#488](https://github.com/VibiumDev/vibium/issues/488)), except `input[type=number]` ([#507](https://github.com/VibiumDev/vibium/issues/507), open) |
+| `type` does not append — it inserts wherever the focus-click lands, mid-value | [type](/docs/commands/type) | fixed on `main` ([#488](https://github.com/VibiumDev/vibium/issues/488)) for text-like fields, but still broken on **seven input types** where the caret cannot be placed — `number`, `email` and the five segmented date types ([#529](https://github.com/VibiumDev/vibium/issues/529), open; [#507](https://github.com/VibiumDev/vibium/issues/507) covers `number` alone) |
 | `type` reports success on elements it cannot type into at all | [type](/docs/commands/type) | partly fixed on `main`: a `<button>` now errors, a `<span>` still reports a successful type. Unreported |
+| `fill` reports success for a value the field cannot hold — the field is left empty, or on a substitute the browser picked | [fill](/docs/commands/fill) | open ([#530](https://github.com/VibiumDev/vibium/issues/530)) |
 | Every `is` subcommand exits 0 by default, so `if vibium is visible …` always runs — `--fail` fixes it | [is](/docs/commands/is) | not a defect: `--fail` was added for this in [#206](https://github.com/VibiumDev/vibium/issues/206), before v26.8.21 |
 | A click that opens a dialog times out after 60s and exits 1 — the click worked | [dialog](/docs/commands/dialog) | unchanged. Unreported |
 | `upload` accepts a path that does not exist and attaches a zero-byte file | [upload](/docs/commands/upload) | fixed on `main` ([#480](https://github.com/VibiumDev/vibium/issues/480)) |
-| `frame` switches context permanently, and `go` navigates the frame rather than leaving it | [frame](/docs/commands/frame) | open ([#510](https://github.com/VibiumDev/vibium/issues/510)) |
-| `scroll <direction>` does nothing inside a frame, while reporting success | [scroll](/docs/commands/scroll) | open ([#511](https://github.com/VibiumDev/vibium/issues/511)) |
+| `frame` switches context permanently, and `go` navigates the frame rather than leaving it | [frame](/docs/commands/frame) | fixed on `main` ([#510](https://github.com/VibiumDev/vibium/issues/510), closed by [#527](https://github.com/VibiumDev/vibium/pull/527)) |
+| `scroll <direction>` does nothing inside a frame, while reporting success | [scroll](/docs/commands/scroll) | fixed on `main` ([#511](https://github.com/VibiumDev/vibium/issues/511), closed by [#528](https://github.com/VibiumDev/vibium/pull/528)) |
 | A failed `go` leaves you on the engine's error page, which maps and reads cleanly | [go](/docs/commands/go) | unchanged, and arguably correct. Unreported |
 | `value` on a checkbox is `on` whether ticked or not | [value](/docs/commands/value) | unchanged. Unreported |
 | `a11y-tree` omits every accessible name that comes from text content | [a11y-tree](/docs/commands/a11y-tree) | open ([#512](https://github.com/VibiumDev/vibium/issues/512)) |

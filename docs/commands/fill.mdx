@@ -7,7 +7,9 @@ description: "Clear an input field and type new text"
 # vibium fill
 
 Replace the contents of a text field. `fill` clears whatever is there and sets
-the value you give it.
+the value you give it — with one exception worth knowing before you rely on it:
+if the input type's sanitization discards the value, `fill` still reports
+success. See [Values the field discards](#values-the-field-discards-reported-as-success).
 
 ## Synopsis
 
@@ -126,6 +128,50 @@ $ echo $?
 The second names the check that failed, the same way
 [`click`](/docs/commands/click) reports `enabled check failed` on a disabled
 button.
+
+## Values the field discards, reported as success
+
+The failures above exit 1. This one does not. `fill` writes through the native
+value setter and reports success without reading the value back — so when the
+input type's own sanitization discards what you gave it, the command still prints
+its success line and exits 0:
+
+```sh
+$ vibium go 'data:text/html,<input id="d" type="date"><input id="n" type="number">'
+$ vibium fill "#d" "not-a-date"
+Filled "not-a-date" into #d
+$ echo $?
+0
+$ vibium value "#d"
+
+$ vibium fill "#n" "abc"
+Filled "abc" into #n
+$ vibium value "#n"
+
+```
+
+Both fields are empty. It affects `number` and the five segmented date types —
+`date`, `time`, `month`, `week`, `datetime-local` — which are left **empty**, and
+`color` and `range`, which are moved to a **substitute** the browser picked:
+`notacolor` becomes `#000000`, and a non-numeric value on a slider becomes its
+midpoint. The substitute is the quieter failure: an empty required field usually
+surfaces when the form is submitted, a plausible wrong value does not surface at
+all.
+
+This is not the same thing as a validation error. The value never reached the
+field, and nothing in the exit status, the output or the element says so. Read the
+value back with [`value`](/docs/commands/value) if it matters:
+
+```sh
+$ vibium fill "#d" "2020-01-02"
+Filled "2020-01-02" into #d
+$ [ "$(vibium value '#d')" = "2020-01-02" ] || echo "fill did not take"
+```
+
+Normalization is a different case and is not a failure: a single-line input strips
+line breaks, an `email` is trimmed, a `textarea` folds CRLF to LF, a `color`
+lowercases its hex, and a `range` snaps to its `step` and clamps to its bounds.
+Those values are stored; they are simply not byte-identical to what you sent.
 
 ## JSON output
 

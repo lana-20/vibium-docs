@@ -12,7 +12,9 @@ Send text to an element as keystrokes, after clicking it to focus.
 `type` has two behaviors on this version that cost people real time — it does
 **not** append, and it reports success on elements it cannot type into. Both are
 documented below. [`vibium fill`](/docs/commands/fill) has neither problem and is
-the right default whenever you want a known final value.
+the right default whenever you want a known final value — though it has one of
+its own: on `number`, the date types, `color` and `range` it reports success for
+a value the field discards, so read it back if it matters.
 :::
 
 ## Synopsis
